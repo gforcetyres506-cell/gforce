@@ -24,13 +24,6 @@ export const runtime = 'nodejs';
  * to manual tyre size entry, which is equally valid.
  */
 export async function POST(req: Request) {
-  if (!isMockDataEnabled()) {
-    return NextResponse.json(
-      { ok: false, error: 'not_implemented', message: 'Vehicle search is reserved for Phase 2.' },
-      { status: 501 },
-    );
-  }
-
   const ip = getClientIp(req);
 
   let body: unknown;

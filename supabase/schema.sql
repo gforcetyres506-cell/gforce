@@ -7,6 +7,26 @@
 create extension if not exists "pgcrypto";
 
 -- ─────────────────────────────────────────────────────────────
+-- ADMIN PROFILES — owner / admin role mappings
+-- ─────────────────────────────────────────────────────────────
+create table if not exists admin_profiles (
+  id         uuid primary key default gen_random_uuid(),
+  user_id    uuid not null unique references auth.users(id) on delete cascade,
+  name       text not null,
+  role       text not null check (role in ('owner', 'admin')),
+  active     boolean not null default true,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table admin_profiles enable row level security;
+
+drop policy if exists "users read own admin profile" on admin_profiles;
+create policy "users read own admin profile"
+  on admin_profiles for select to authenticated
+  using (auth.uid() = user_id);
+
+-- ─────────────────────────────────────────────────────────────
 -- TYRE INVENTORY
 -- ─────────────────────────────────────────────────────────────
 create table if not exists tyre_inventory (

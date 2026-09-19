@@ -84,22 +84,38 @@ function BookingWizard() {
 
   // Load tyre on mount
   useEffect(() => {
-    if (!mockMode) return;
-    let match = allTyres.find((t) => t.id === paramTyreId);
-    if (!match) {
-      match = allTyres.find((t) => t.width === paramWidth && t.profile === paramProfile && t.rim === paramRim) || allTyres[0];
-    }
-    setSelectedTyre(match ?? null);
+    fetch(`/api/tyres?w=${paramWidth}&p=${paramProfile}&r=${paramRim}`)
+      .then((r) => r.json())
+      .then((res) => {
+        if (res.ok && res.data && res.data.length > 0) {
+          setAllTyres(res.data);
+          let match = res.data.find((t: Tyre) => t.id === paramTyreId);
+          if (!match) match = res.data[0];
+          setSelectedTyre(match ?? null);
+        } else {
+          let match = allTyres.find((t) => t.id === paramTyreId);
+          if (!match) {
+            match = allTyres.find((t) => t.width === paramWidth && t.profile === paramProfile && t.rim === paramRim) || allTyres[0];
+          }
+          setSelectedTyre(match ?? null);
+        }
+      })
+      .catch(() => {
+        let match = allTyres.find((t) => t.id === paramTyreId);
+        if (!match) {
+          match = allTyres.find((t) => t.width === paramWidth && t.profile === paramProfile && t.rim === paramRim) || allTyres[0];
+        }
+        setSelectedTyre(match ?? null);
+      });
 
     // If postcode provided, validate it
     if (paramPostcode) {
       validateLocation(paramPostcode);
     }
-  }, [allTyres, mockMode, paramTyreId, paramWidth, paramProfile, paramRim, paramPostcode]);
+  }, [paramTyreId, paramWidth, paramProfile, paramRim, paramPostcode]);
 
   // Load available slots
   useEffect(() => {
-    if (!mockMode) return;
     setIsLoadingSlots(true);
     fetch('/api/slots')
       .then((r) => r.json())
@@ -115,20 +131,7 @@ function BookingWizard() {
         // Handled gracefully
       })
       .finally(() => setIsLoadingSlots(false));
-  }, [mockMode]);
-
-  if (!mockMode) {
-    return (
-      <div className="container-g section max-w-2xl text-center">
-        <MStripe className="mb-6 mx-auto" />
-        <h1 className="display-2">BOOKING IS NOT LIVE YET</h1>
-        <p className="mt-3 text-sm text-ink-2">
-          Real vehicle search, availability and checkout are being connected in the next production phases.
-        </p>
-        <Link href="/" className="btn btn-secondary mt-6">Return to homepage</Link>
-      </div>
-    );
-  }
+  }, []);
 
   async function validateLocation(pc: string) {
     if (pc.trim().length < 3) return;

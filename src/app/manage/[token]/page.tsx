@@ -43,10 +43,18 @@ export default function ManageBookingPage({
   const [actionMessage, setActionMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    const b = mockMode ? localStore.getBookingByToken(token) ?? null : null;
-    setBooking(b);
-    setLoading(false);
-  }, [mockMode, token]);
+    fetch(`/api/manage/${token}`)
+      .then((r) => r.json())
+      .then((res) => {
+        if (res.ok && res.data) {
+          setBooking(res.data);
+        } else {
+          setBooking(null);
+        }
+      })
+      .catch(() => setBooking(null))
+      .finally(() => setLoading(false));
+  }, [token]);
 
   if (loading) {
     return (
@@ -253,21 +261,36 @@ export default function ManageBookingPage({
               <button
                 type="button"
                 className="btn btn-secondary w-full btn-sm text-xs font-semibold"
-                onClick={() => setActionMessage('Rescheduling is a preview-only action. No live appointment has been changed (Ref: ' + b.booking_ref + ').')}
+                onClick={() => setActionMessage('To reschedule your fitting window, please call dispatch directly on 020 7946 0991 with your booking reference (' + b.booking_ref + ').')}
               >
-                Preview Reschedule Request
+                Request Reschedule Window
               </button>
 
               <button
                 type="button"
                 className="btn btn-danger w-full btn-sm text-xs font-semibold"
-                onClick={() => {
-                  localStore.updateBookingStatus(b.id, 'cancelled');
-                  setBooking({ ...b, status: 'cancelled' });
-                  setActionMessage('Local preview state updated to cancelled. No real payment or refund occurred.');
+                onClick={async () => {
+                  if (confirm('Are you sure you want to cancel this booking?')) {
+                    try {
+                      const res = await fetch(`/api/manage/${token}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'cancel' }),
+                      });
+                      const json = await res.json();
+                      if (json.ok && json.data) {
+                        setBooking(json.data);
+                        setActionMessage('Your booking has been cancelled and tyres returned to inventory.');
+                      } else {
+                        setActionMessage(json.message ?? 'Could not cancel booking.');
+                      }
+                    } catch {
+                      setActionMessage('Failed to submit cancellation request.');
+                    }
+                  }
                 }}
               >
-                Preview Cancellation State
+                Cancel Booking
               </button>
             </div>
           </div>

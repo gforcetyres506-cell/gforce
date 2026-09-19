@@ -1,43 +1,32 @@
 import { NextResponse } from 'next/server';
-import { createServiceClient, isSupabaseConfigured } from '@/lib/supabase';
-import { localStore } from '@/lib/mockData';
-import { isMockDataEnabled } from '@/lib/mock-mode';
-import type { BookingSlot, SlotWithAvailability } from '@/types';
+import { getSlots, generateSlots } from '@/lib/db';
 
 export const runtime = 'nodejs';
 
-/** GET /api/slots?date=YYYY-MM-DD */
+/**
+ * GET /api/slots?date=YYYY-MM-DD
+ * Returns all active booking slots and their current remaining capacity.
+ */
 export async function GET(req: Request) {
-  if (!isMockDataEnabled()) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const date = searchParams.get('date') ?? undefined;
+
+    let slots = await getSlots(date);
+
+    // If no slots exist for the next 14 days, auto-generate them
+    if (slots.length === 0 && !date) {
+      const todayStr = new Date().toISOString().split('T')[0];
+      await generateSlots(todayStr, 14);
+      slots = await getSlots(date);
+    }
+
+    return NextResponse.json({ ok: true, data: slots });
+  } catch (err) {
+    console.error('[api/slots] Error fetching slots:', err);
     return NextResponse.json(
-      { ok: false, error: 'not_implemented', message: "We couldn't load this right now." },
-      { status: 503 },
+      { ok: false, error: 'server_error', message: 'Could not fetch availability.' },
+      { status: 500 },
     );
   }
-
-  const { searchParams } = new URL(req.url);
-  const date = searchParams.get('date') ?? undefined;
-
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      let query = db.from('booking_slots').select('*').eq('active', true).order('slot_date').order('start_time');
-      if (date) query = query.eq('slot_date', date);
-
-      const { data, error } = await query.returns<BookingSlot[]>();
-      if (!error && data && data.length > 0) {
-        const withAvail: SlotWithAvailability[] = data.map((s) => ({
-          ...s,
-          remaining: 2,
-          available: true,
-        }));
-        return NextResponse.json({ ok: true, data: withAvail });
-      }
-    } catch {
-      // fallback
-    }
-  }
-
-  const slots = localStore.getSlots(date);
-  return NextResponse.json({ ok: true, data: slots });
 }

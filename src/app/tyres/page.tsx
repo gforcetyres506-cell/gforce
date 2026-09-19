@@ -1,6 +1,5 @@
 import Link from 'next/link';
-import { localStore } from '@/lib/mockData';
-import { isMockDataEnabled } from '@/lib/mock-mode';
+import { getTyres } from '@/lib/db';
 import { formatPrice, formatTyreSize } from '@/lib/utils';
 import MStripe from '@/components/ui/MStripe';
 import { ShieldCheck, Zap, Fuel, Volume2 } from 'lucide-react';
@@ -21,24 +20,13 @@ export default async function TyresPage({ searchParams }: Props) {
   const filterTier = sp.tier;
   const filterSeason = sp.season;
 
-  let tyres: Tyre[] = [];
-  const mockMode = isMockDataEnabled();
-
-  if (mockMode) {
-    if (width && profile && rim) {
-      tyres = localStore.getTyres(width, profile, rim);
-    } else {
-      tyres = localStore.getAllTyres().filter((t) => t.active && t.stock > 0);
-    }
-  }
-
-  // Apply tier / season filters if selected
-  if (filterTier && filterTier !== 'all') {
-    tyres = tyres.filter((t) => t.tier === filterTier);
-  }
-  if (filterSeason && filterSeason !== 'all') {
-    tyres = tyres.filter((t) => t.season === filterSeason);
-  }
+  const tyres = await getTyres({
+    width,
+    profile,
+    rim,
+    tier: filterTier,
+    season: filterSeason,
+  });
 
   const qs = new URLSearchParams({
     ...(sp.w && { w: sp.w }),
@@ -68,9 +56,7 @@ export default async function TyresPage({ searchParams }: Props) {
           <p className="text-ink-2 mt-2">
             {tyres.length === 0
               ? 'No tyres matching your current filter.'
-              : mockMode
-                ? `${tyres.length} sample ${tyres.length === 1 ? 'option' : 'options'} in this local preview.`
-                : `${tyres.length} ${tyres.length === 1 ? 'option' : 'options'} matching this tyre size.`}
+              : `${tyres.length} ${tyres.length === 1 ? 'option' : 'options'} matching this tyre size.`}
           </p>
         </div>
 
@@ -154,9 +140,7 @@ export default async function TyresPage({ searchParams }: Props) {
         <div className="card max-w-lg mx-auto text-center py-12">
           <h2 className="text-xl font-bold mb-3">No tyres found</h2>
           <p className="text-sm text-ink-2 mb-6">
-            {mockMode
-              ? 'No demo stock matches that exact combination.'
-              : "We couldn't load this right now. Please try again later."}
+            No tyres matching that exact combination. Please try a different size or contact us.
           </p>
           <div className="flex justify-center gap-3">
             <Link href="/tyres" className="btn btn-secondary">Clear filters</Link>
@@ -212,7 +196,7 @@ export default async function TyresPage({ searchParams }: Props) {
                   </div>
                   <div className="text-xs text-ok font-semibold flex items-center gap-1">
                     <span className="h-1.5 w-1.5 rounded-full bg-ok animate-pulse" />
-                    {mockMode ? 'Preview stock' : `${t.stock} available`}
+                    {`${t.stock} available`}
                   </div>
                 </div>
                 <p className="text-[11px] text-ink-3 mb-4">

@@ -10,13 +10,6 @@ const schema = z.object({
 });
 
 export async function POST(req: Request) {
-  if (!isMockDataEnabled()) {
-    return NextResponse.json(
-      { ok: false, error: 'not_implemented', message: 'Service-area search is reserved for Phase 2.' },
-      { status: 501 },
-    );
-  }
-
   try {
     const body = await req.json();
     const parsed = schema.safeParse(body);

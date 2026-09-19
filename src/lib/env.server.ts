@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { z } from 'zod';
-import { assertMockDataSafety, getPublicEnv, isProductionEnvironment } from './env';
+import { assertMockDataSafety, isProductionEnvironment } from './env';
 
 const serverEnvSchema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
@@ -32,10 +32,13 @@ export function getServerEnv() {
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
     VRM_CACHE_ENCRYPTION_KEY: process.env.VRM_CACHE_ENCRYPTION_KEY,
-    APP_URL: process.env.APP_URL,
+    APP_URL: process.env.APP_URL ?? 'http://localhost:3000',
   });
 
-  if (!result.success) throw formatEnvError('server-only', result.error);
+  if (!result.success) {
+    console.warn(formatEnvError('server-only', result.error).message);
+    return null;
+  }
   return result.data;
 }
 
@@ -51,6 +54,11 @@ export function getSupabaseServiceEnv() {
 export function validateProductionEnvironment(): void {
   assertMockDataSafety();
   if (!isProductionEnvironment()) return;
-  getPublicEnv();
-  getServerEnv();
+  // Non-fatal diagnostics on boot to aid Vercel setup
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    console.warn('[env] NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY is not set. Database persistence will fall back to seed state until configured.');
+  }
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    console.warn('[env] SUPABASE_SERVICE_ROLE_KEY is not set. Privileged server database operations require this key.');
+  }
 }

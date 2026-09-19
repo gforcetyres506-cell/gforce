@@ -28,52 +28,72 @@ export default function AdminInventoryPage() {
   const [sellPrice, setSellPrice] = useState(13500);
   const [stock, setStock] = useState(8);
 
-  useEffect(() => {
-    setTyres(mockMode ? localStore.getAllTyres() : []);
-  }, [mockMode]);
-
-  if (!mockMode) {
-    return <AdminDataPending title="INVENTORY DATA PENDING" />;
+  async function reloadInventory() {
+    try {
+      const res = await fetch('/api/admin/inventory');
+      const json = await res.json();
+      if (json.ok && json.data) {
+        setTyres(json.data);
+      } else {
+        setTyres(localStore.getAllTyres());
+      }
+    } catch {
+      setTyres(localStore.getAllTyres());
+    }
   }
 
-  function handleStockChange(id: string, delta: number) {
+  useEffect(() => {
+    reloadInventory();
+  }, []);
+
+  async function handleStockChange(id: string, delta: number) {
     const tyre = tyres.find((t) => t.id === id);
     if (!tyre) return;
     const newStock = Math.max(0, tyre.stock + delta);
-    localStore.updateTyreStock(id, newStock);
-    setTyres([...localStore.getAllTyres()]);
+    setTyres(tyres.map((t) => (t.id === id ? { ...t, stock: newStock } : t)));
+
+    try {
+      await fetch('/api/admin/inventory', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, stock: newStock }),
+      });
+    } catch {
+      localStore.updateTyreStock(id, newStock);
+    }
   }
 
-  function handleAddTyre(e: React.FormEvent) {
+  async function handleAddTyre(e: React.FormEvent) {
     e.preventDefault();
     if (!model.trim()) return;
 
-    const newTyre: Tyre = {
-      id: `tyre-custom-${Date.now()}`,
-      brand,
-      model,
-      sku: `${brand.slice(0, 4).toUpperCase()}-${model.slice(0, 3).toUpperCase()}-${width}${profile}${rim}`,
-      width,
-      profile,
-      rim,
-      load_index: '95',
-      speed_rating: 'Y',
-      is_run_flat: false,
-      is_xl: true,
-      season,
-      tier,
-      cost_price: costPrice,
-      sell_price: sellPrice,
-      stock,
-      wet_grip: 'A',
-      fuel_economy: 'B',
-      noise_db: 71,
-      active: true,
-      created_at: new Date().toISOString(),
-    };
+    try {
+      const res = await fetch('/api/admin/inventory', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          brand,
+          model,
+          width,
+          profile,
+          rim,
+          tier,
+          season,
+          cost_price: costPrice,
+          sell_price: sellPrice,
+          stock,
+        }),
+      });
+      const json = await res.json();
+      if (json.ok && json.data) {
+        setTyres([json.data, ...tyres]);
+      } else {
+        reloadInventory();
+      }
+    } catch {
+      reloadInventory();
+    }
 
-    localStore.addTyre(newTyre);
-    setTyres([...localStore.getAllTyres()]);
     setShowAddModal(false);
     setModel('');
   }

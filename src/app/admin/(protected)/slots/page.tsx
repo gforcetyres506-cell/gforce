@@ -57,21 +57,34 @@ export default function AdminSlotsPage() {
   // Block date reason
   const [blockReason, setBlockReason] = useState('Staff unavailable');
 
-  function reloadSlots() {
-    const all = mockMode ? localStore.getSlots() : [];
-    setSlots(all);
-    if (!selectedDate && all.length > 0) {
-      setSelectedDate(all[0].slot_date);
+  async function reloadSlots() {
+    try {
+      const res = await fetch('/api/slots');
+      const json = await res.json();
+      if (json.ok && json.data && json.data.length > 0) {
+        setSlots(json.data);
+        if (!selectedDate) {
+          setSelectedDate(json.data[0].slot_date);
+        }
+      } else {
+        const all = localStore.getSlots();
+        setSlots(all);
+        if (!selectedDate && all.length > 0) {
+          setSelectedDate(all[0].slot_date);
+        }
+      }
+    } catch {
+      const all = localStore.getSlots();
+      setSlots(all);
+      if (!selectedDate && all.length > 0) {
+        setSelectedDate(all[0].slot_date);
+      }
     }
   }
 
   useEffect(() => {
     reloadSlots();
-  }, [mockMode]);
-
-  if (!mockMode) {
-    return <AdminDataPending title="AVAILABILITY DATA PENDING" />;
-  }
+  }, []);
 
   const dates = Array.from(new Set(slots.map((s) => s.slot_date))).slice(0, 21);
   const slotsForDate = slots.filter((s) => s.slot_date === selectedDate);

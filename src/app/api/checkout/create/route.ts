@@ -1,13 +1,12 @@
 import { NextResponse } from 'next/server';
-import { createServiceClient, isSupabaseConfigured } from '@/lib/supabase';
+import { isSupabaseConfigured } from '@/lib/supabase';
 import { getStripe } from '@/lib/stripe';
 import { calculatePrice, PricingError } from '@/lib/pricing';
 import { checkCoverage } from '@/lib/postcodes';
 import { checkoutSchema } from '@/lib/validation';
 import { checkRateLimit, getClientIp } from '@/lib/rateLimit';
 import { normaliseReg } from '@/lib/utils';
-import { localStore } from '@/lib/mockData';
-import { isMockDataEnabled } from '@/lib/mock-mode';
+import { isHoldValid, getSlots, createBooking } from '@/lib/db';
 import type { BookingWithDetails } from '@/types';
 
 export const runtime = 'nodejs';
@@ -18,26 +17,15 @@ export const runtime = 'nodejs';
  * Creates a booking and returns a Stripe client_secret or dev demo payment token.
  */
 export async function POST(req: Request) {
-  if (!isMockDataEnabled()) {
-    return NextResponse.json(
-      {
-        ok: false,
-        error: 'not_implemented',
-        message: 'Production checkout is not available until Phase 3.',
-      },
-      { status: 501 },
-    );
-  }
-
   const ip = getClientIp(req);
 
   // 1 ── Rate limit
   if (isSupabaseConfigured()) {
-    const limit = await checkRateLimit(`checkout:${ip}`, 5, 60);
+    const limit = await checkRateLimit(`checkout:${ip}`, 10, 60);
     if (!limit.allowed) {
       return NextResponse.json(
         { ok: false, error: 'rate_limited', message: 'Too many attempts. Try again in an hour.' },
-        { status: 429 }
+        { status: 429 },
       );
     }
   }
@@ -49,7 +37,7 @@ export async function POST(req: Request) {
   } catch {
     return NextResponse.json(
       { ok: false, error: 'bad_request', message: 'Invalid request body.' },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -61,7 +49,7 @@ export async function POST(req: Request) {
         error: 'validation_failed',
         message: parsed.error.errors[0]?.message ?? 'Check the details you entered.',
       },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -73,43 +61,26 @@ export async function POST(req: Request) {
     if (!coverage.covered || !coverage.zone) {
       return NextResponse.json(
         { ok: false, error: 'outside_coverage', message: coverage.message },
-        { status: 400 }
+        { status: 400 },
       );
     }
     const calloutCharge = coverage.zone.callout_charge;
 
     // 4 ── Slot hold verification
-    let holdValid = false;
-    if (isSupabaseConfigured()) {
-      try {
-        const db = createServiceClient();
-        const { data: hold } = await db
-          .from('slot_holds')
-          .select('id, expires_at')
-          .eq('slot_id', slot_id)
-          .eq('session_token', session_token)
-          .gt('expires_at', new Date().toISOString())
-          .maybeSingle();
-        holdValid = !!hold;
-      } catch {
-        holdValid = localStore.isHoldValid(slot_id, session_token);
-      }
-    } else {
-      holdValid = localStore.isHoldValid(slot_id, session_token);
-    }
+    const holdValid = await isHoldValid(slot_id, session_token);
 
-    // Also accept newly selected slots if hold was just established
     if (!holdValid) {
       // Recheck if slot is available
-      const slot = localStore.getSlotById(slot_id);
-      if (!slot) {
+      const allSlots = await getSlots();
+      const slot = allSlots.find((s) => s.id === slot_id);
+      if (!slot || !slot.available) {
         return NextResponse.json(
           {
             ok: false,
             error: 'hold_expired',
             message: 'Your slot reservation expired. Please pick a time again.',
           },
-          { status: 409 }
+          { status: 409 },
         );
       }
     }
@@ -123,11 +94,15 @@ export async function POST(req: Request) {
       .filter(Boolean)
       .join(', ');
 
-    const slot = localStore.getSlotById(slot_id) ?? null;
+    const allSlots = await getSlots();
+    const slot = allSlots.find((s) => s.id === slot_id) ?? null;
+
+    const newBookingId = `booking-${Date.now()}`;
+    const paymentIntentId = `pi_${Date.now()}_${manageToken.slice(0, 8)}`;
 
     // Create the full booking object
     const newBooking: BookingWithDetails = {
-      id: `booking-${Date.now()}`,
+      id: newBookingId,
       booking_ref: bookingRef,
       manage_token: manageToken,
       customer_id: `cust-${Date.now()}`,
@@ -148,8 +123,8 @@ export async function POST(req: Request) {
       total_amount: price.total_amount,
       deposit_amount: price.deposit_amount,
       balance_due: price.balance_due,
-      stripe_payment_intent_id: `pi_test_${Date.now()}`,
-      stripe_charge_id: `ch_test_${Date.now()}`,
+      stripe_payment_intent_id: paymentIntentId,
+      stripe_charge_id: null,
       deposit_paid_at: null,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
@@ -166,8 +141,8 @@ export async function POST(req: Request) {
       },
       slot,
       items: price.lines.map((l, idx) => ({
-        id: `item-${idx + 1}`,
-        booking_id: `booking-${Date.now()}`,
+        id: `item-${idx + 1}-${Date.now()}`,
+        booking_id: newBookingId,
         tyre_id: l.tyre_id,
         tyre_label: l.label,
         quantity: l.quantity,
@@ -176,13 +151,10 @@ export async function POST(req: Request) {
       })),
     };
 
-    // Save to localStore
-    localStore.createBooking(newBooking);
-
     // If Stripe is configured, create real PaymentIntent
     let clientSecret = `demo_secret_${manageToken}`;
     const stripeKey = process.env.STRIPE_SECRET_KEY;
-    if (stripeKey && !stripeKey.includes('placeholder')) {
+    if (stripeKey && !stripeKey.includes('placeholder') && !stripeKey.startsWith('sk_test_placeholder')) {
       try {
         const stripe = getStripe();
         const intent = await stripe.paymentIntents.create({
@@ -204,6 +176,9 @@ export async function POST(req: Request) {
       }
     }
 
+    // Persist to database
+    await createBooking(newBooking);
+
     return NextResponse.json({
       ok: true,
       data: {
@@ -211,20 +186,20 @@ export async function POST(req: Request) {
         booking_ref: bookingRef,
         manage_token: manageToken,
         breakdown: price,
-        is_mock_payment: !stripeKey || stripeKey.includes('placeholder'),
+        is_mock_payment: !stripeKey || stripeKey.includes('placeholder') || stripeKey.startsWith('sk_test_placeholder'),
       },
     });
   } catch (err) {
     if (err instanceof PricingError) {
       return NextResponse.json(
         { ok: false, error: err.code.toLowerCase(), message: err.message },
-        { status: 409 }
+        { status: 409 },
       );
     }
     console.error('[checkout] unexpected error', err);
     return NextResponse.json(
       { ok: false, error: 'server_error', message: 'Something went wrong. Please try again.' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

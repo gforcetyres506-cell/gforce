@@ -1,10 +1,15 @@
 import { NextResponse } from 'next/server';
-import { localStore } from '@/lib/mockData';
+import { getBookingByRef, confirmBookingPaid } from '@/lib/db';
+import { sendBookingConfirmed } from '@/lib/email';
 import { isMockDataEnabled } from '@/lib/mock-mode';
 
 export const runtime = 'nodejs';
 
-/** POST /api/checkout/confirm-mock — confirm a booking in test/local dev mode */
+/**
+ * POST /api/checkout/confirm-mock
+ * Confirms a booking in sandbox / test mode without a live Stripe webhook.
+ * Decrements stock, releases hold, persists confirmed status, and triggers email.
+ */
 export async function POST(req: Request) {
   if (!isMockDataEnabled()) {
     return NextResponse.json({ ok: false, error: 'not_found' }, { status: 404 });
@@ -13,20 +18,36 @@ export async function POST(req: Request) {
   try {
     const { booking_ref } = await req.json();
     if (!booking_ref) {
-      return NextResponse.json({ ok: false, error: 'missing_ref' }, { status: 400 });
+      return NextResponse.json({ ok: false, error: 'missing_ref', message: 'Booking reference is required.' }, { status: 400 });
     }
 
-    const booking = localStore.getBookingByRef(booking_ref);
+    const booking = await getBookingByRef(booking_ref);
     if (!booking) {
-      return NextResponse.json({ ok: false, error: 'not_found' }, { status: 404 });
+      return NextResponse.json({ ok: false, error: 'not_found', message: 'Booking not found.' }, { status: 404 });
     }
 
-    booking.status = 'confirmed';
-    booking.deposit_paid_at = new Date().toISOString();
-    booking.updated_at = new Date().toISOString();
+    const piId = booking.stripe_payment_intent_id ?? `pi_mock_${booking.id}`;
+    await confirmBookingPaid(piId, `ch_mock_${Date.now()}`);
 
-    return NextResponse.json({ ok: true, data: { status: 'confirmed', booking_ref } });
+    // Fetch refreshed booking
+    const updated = await getBookingByRef(booking_ref);
+    if (updated) {
+      // Send confirmation email asynchronously if configured
+      void sendBookingConfirmed(updated).catch((err) => {
+        console.warn('[checkout/confirm-mock] Email dispatch failed (non-fatal):', err);
+      });
+    }
+
+    return NextResponse.json({
+      ok: true,
+      data: {
+        status: 'confirmed',
+        booking_ref,
+        deposit_paid_at: updated?.deposit_paid_at ?? new Date().toISOString(),
+      },
+    });
   } catch (err) {
-    return NextResponse.json({ ok: false, error: 'server_error' }, { status: 500 });
+    console.error('[checkout/confirm-mock] error:', err);
+    return NextResponse.json({ ok: false, error: 'server_error', message: 'Failed to confirm booking.' }, { status: 500 });
   }
 }

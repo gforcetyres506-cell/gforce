@@ -35,22 +35,43 @@ export default function AdminBookingsPage() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [feedback, setFeedback] = useState<string | null>(null);
 
-  function reloadBookings() {
-    setBookings(mockMode ? localStore.getAllBookings() : []);
+  async function reloadBookings() {
+    try {
+      const res = await fetch('/api/admin/bookings');
+      const json = await res.json();
+      if (json.ok && json.data) {
+        setBookings(json.data);
+      } else {
+        setBookings(localStore.getAllBookings());
+      }
+    } catch {
+      setBookings(localStore.getAllBookings());
+    }
   }
 
   useEffect(() => {
     reloadBookings();
-  }, [mockMode]);
+  }, []);
 
-  if (!mockMode) {
-    return <AdminDataPending title="BOOKINGS DATA PENDING" />;
-  }
-
-  function handleUpdateStatus(id: string, newStatus: BookingStatus, fitterId?: string) {
-    localStore.updateBookingStatus(id, newStatus, fitterId);
-    reloadBookings();
-    setFeedback(`Updated booking status to: ${newStatus.replace('_', ' ').toUpperCase()}`);
+  async function handleUpdateStatus(id: string, newStatus: BookingStatus, fitterId?: string) {
+    try {
+      const res = await fetch('/api/admin/bookings', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status: newStatus, fitterId }),
+      });
+      const json = await res.json();
+      if (json.ok) {
+        setFeedback(`Updated booking status to: ${newStatus.replace('_', ' ').toUpperCase()}`);
+        reloadBookings();
+      } else {
+        setFeedback(json.message ?? 'Update failed');
+      }
+    } catch {
+      localStore.updateBookingStatus(id, newStatus, fitterId);
+      reloadBookings();
+      setFeedback(`Updated booking status to: ${newStatus.replace('_', ' ').toUpperCase()}`);
+    }
   }
 
   // Summary Metrics
