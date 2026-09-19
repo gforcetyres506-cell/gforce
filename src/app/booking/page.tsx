@@ -133,6 +133,27 @@ function BookingWizard() {
       .finally(() => setIsLoadingSlots(false));
   }, []);
 
+  // Pre-populate customer details if logged in
+  useEffect(() => {
+    fetch('/api/account/me')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((res) => {
+        if (res?.ok && res?.data) {
+          const u = res.data.user;
+          const c = res.data.customer;
+          if (u?.name) setFullName((prev) => prev || u.name);
+          if (u?.email) setEmail((prev) => prev || u.email);
+          if (u?.phone) setPhone((prev) => prev || u.phone);
+          if (c?.address_line1) setAddressLine1((prev) => prev || c.address_line1);
+          if (c?.postcode && !paramPostcode) {
+            setPostcode(c.postcode);
+            validateLocation(c.postcode);
+          }
+        }
+      })
+      .catch(() => {});
+  }, [paramPostcode]);
+
   async function validateLocation(pc: string) {
     if (pc.trim().length < 3) return;
     setIsCheckingPostcode(true);

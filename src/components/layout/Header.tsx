@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState, type MouseEvent } from 'react';
-import { Menu, X, Wrench } from 'lucide-react';
+import { Menu, X, Wrench, User } from 'lucide-react';
 import BrandLogo from '@/components/layout/BrandLogo';
 
 const NAV = [
@@ -15,7 +15,21 @@ const NAV = [
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [customer, setCustomer] = useState<{ name: string; email: string } | null>(null);
   const pathname = usePathname();
+
+  useEffect(() => {
+    fetch('/api/account/me')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((res) => {
+        if (res?.ok && res?.data?.user) {
+          setCustomer(res.data.user);
+        } else {
+          setCustomer(null);
+        }
+      })
+      .catch(() => setCustomer(null));
+  }, [pathname]);
 
   function handleBrandClick(event: MouseEvent<HTMLAnchorElement>) {
     setOpen(false);
@@ -74,6 +88,22 @@ export default function Header() {
                 {l.label}
               </Link>
             ))}
+            {customer ? (
+              <Link
+                href="/account"
+                className="text-xs font-semibold px-2.5 py-1.5 rounded bg-surface-2 border border-line text-ink-1 hover:border-brand flex items-center gap-1.5 transition-colors"
+              >
+                <User size={13} className="text-brand" />
+                <span>{customer.name ? customer.name.split(' ')[0] : 'My Account'}</span>
+              </Link>
+            ) : (
+              <Link
+                href="/account/login"
+                className="text-xs text-ink-2 hover:text-ink-1 flex items-center gap-1.5 transition-colors"
+              >
+                <User size={13} /> Sign in
+              </Link>
+            )}
             <Link href="/admin/bookings" className="text-xs text-ink-3 hover:text-brand flex items-center gap-1">
               <Wrench size={13} /> Staff
             </Link>
@@ -129,6 +159,23 @@ export default function Header() {
                   {l.label}
                 </Link>
               ))}
+              {customer ? (
+                <Link
+                  href="/account"
+                  onClick={() => setOpen(false)}
+                  className="display-2 py-3 transition-colors hover:text-brand flex items-center gap-2"
+                >
+                  <User size={24} className="text-brand" /> My Account
+                </Link>
+              ) : (
+                <Link
+                  href="/account/login"
+                  onClick={() => setOpen(false)}
+                  className="display-2 py-3 transition-colors hover:text-brand flex items-center gap-2"
+                >
+                  <User size={24} /> Sign in
+                </Link>
+              )}
               <Link
                 href="/#tyre-finder"
                 onClick={() => setOpen(false)}
