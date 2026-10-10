@@ -1,10 +1,10 @@
 # G FORCE TYRES - Canonical architecture
 
-Date: 2026-10-10. Current branch: gate/2-booking-engine.
-Status: native PostgreSQL booking acceptance PASS; cloud acceptance BLOCKED.
+Date: 2026-10-11. Current branch: gate/3-bank-payments.
+Status: native PostgreSQL booking/payment acceptance locally verified; cloud acceptance BLOCKED.
 Foundation starting HEAD: 545bac195fcabdd71e722a4412baa6dbd0dc05cd.
 
-Use only ordered SQL in supabase/migrations/001-016. The original 001-012
+Use only ordered SQL in supabase/migrations/001-017. The original 001-012
 files are unchanged. Forward migrations 013 and 014 reconcile the foundation
 and enforce the access boundary. The conflicting schema.sql was moved to
 supabase/archive/legacy-schema.sql.disabled; its Git-normalized contents are
@@ -20,21 +20,21 @@ to future booking/payment work are superseded; those numbers cannot be reused.
 | customers | Guest first_name, last_name, email, phone. V1 has no customer Auth linkage or signup. |
 | service_zones | name, postcode_prefix, callout_fee_pence, active, priority. No invented coverage. |
 | tyre_products | Product specifications, unique SKU/slug, tier budget/standard/premium. |
-| inventory | Unique tyre_product_id, stock_qty, reserved_qty, cost_price_pence, selling_price_pence. Available stock is stock minus reserved. |
+| inventory | Unique tyre_product_id, stock_qty, reserved_qty, cost_price_pence, selling_price_pence. Available stock subtracts permanent allocation and live unpaid holds. |
 | availability_rules | Approved day, hours, duration, capacity. Public reads do not generate schedules. |
 | blocked_dates | Unique date, reason, attributable created_by. |
 | booking_slots | date, start_at, end_at, capacity; unique date/time triple. |
 | slot_holds | slot_id, unique token, expires_at. A browser token is not a confirmed hold. |
 | inventory_holds | slot_hold_id, tyre_product_id, quantity, expires_at; unique hold/product pair. |
-| bookings | reference, UUID manage_token, customer/slot/fitter/zone links, registration, address, status, amounts in pence. |
+| bookings | reference, UUID manage_token, customer/slot/fitter/zone links, registration, address, status, bank deadline, source, amounts in pence. Unknown historical source remains null. |
 | booking_items | Product link plus immutable SKU/brand/model/size/price snapshots. |
-| payments | Provider receipt records; unique Stripe session/intent references, status/type/amount, optional succeeded_at evidence. |
+| payments | One manual bank payment per new booking: full amount, reference, instruction snapshot, status, paid_at and verifying admin. Historical Stripe receipt fields are preserved. |
 | fitters | Real name/phone/van/active records; absent assignment remains unassigned. |
-| business_settings | Singleton configuration. pricing_configured=false prevents the historical default deposit from becoming an approved quote. Fitting fee, duration and policy must be deliberately configured. |
+| business_settings | Owner singleton configuration: approved pricing, bank account details and bank payment window. Missing configuration blocks booking; no invented bank values. |
 | audit_logs | Actor, action, resource and metadata. Authorized stock/access mutations and their audits share one transaction. |
 | rate_limits | Unique bucket_key, hits, window_start, expires_at. Atomic counter RPC serializes concurrent requests. |
-| email_outbox | Deduplicated pending delivery, recipient/template/payload, retries, provider receipt and sent_at. Delivery worker remains unavailable. |
-| webhook_events | Unique provider/event identity. Payment transitions remain unavailable. |
+| email_outbox | Deduplicated instruction requests, recipient/template/payload, retry lease, provider acknowledgement and sent_at. Staff-requested sending is implemented; no inbox-delivery claim. |
+| webhook_events | Historical provider/event identity. Stripe payment transitions remain unavailable in bank-transfer V1. |
 | vrm_cache | Hash and encrypted provider payload with expiry. No invented vehicle data. |
 | interest_registrations | Explicit stored interest records; automatic lookup-failure capture remains disabled. |
 
@@ -133,3 +133,25 @@ There are still 21 canonical tables: 19 unique constraints, 54 checks, 16 FKs,
 updated-at triggers and four new reservation/immutability guards. Privileged
 RPCs remain service-only with empty search_path; no browser write is granted.
 Native race, rollback and expiry evidence: [04_GATE2_BOOKING_ENGINE.md](04_GATE2_BOOKING_ENGINE.md).
+
+## Gate 3 forward extension (2026-10-11)
+
+Current canonical chain is 001-017. Migration 017 adds owner bank configuration,
+booking_source and manual payment receipt/snapshot fields. New bookings collect
+the full total by bank transfer. A pending manual payment is created inside the
+resource reservation transaction. Historical Stripe rows remain historical.
+
+Protected admin/owner verification locks booking/payment/slot/inventory, checks
+the live session and deadline, records received money, confirms the booking,
+deactivates temporary holds, converts stock to reserved_qty and audits atomically.
+Duplicate verification is idempotent. Explicit extensions lock/recheck the same
+resources and audit; an expired booking cannot recover resources already taken.
+Phone booking is a protected wrapper around the same authoritative transaction.
+Bank instruction emails use the existing durable outbox and real provider
+acknowledgement; acceptance never implies inbox delivery or receipt of money.
+
+Current catalogue: 21 tables, 19 unique constraints, 60 checks, 17 FKs, 24 required
+named indexes, 24 SELECT-only policies, nine updated-at triggers and five
+reservation/payment guards. No browser write grants or new business seed rows.
+See [05_GATE3_BANK_PAYMENTS.md](05_GATE3_BANK_PAYMENTS.md) for exact behavior and
+the boundary between local proof and unverified hosted/provider operations.

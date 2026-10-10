@@ -38,7 +38,7 @@ test.beforeEach(async ({ page }) => {
         line_total: item.quantity * (item.tyre_id === rear.id ? rear.sell_price : tyre.sell_price) }));
       const tyres_total = lines.reduce((sum, line) => sum + line.line_total, 0);
       body = { ok: true, data: { lines, tyres_total, fitting_fee: 1700, callout_charge: 0,
-        total_amount: tyres_total + 1700, deposit_amount: 3000, balance_due: tyres_total + 1700 - 3000 } };
+        total_amount: tyres_total + 1700, deposit_amount: tyres_total + 1700, balance_due: 0 } };
     }
     await route.fulfill({ contentType: 'application/json', body: JSON.stringify(body) });
   });
@@ -199,7 +199,8 @@ test('all four booking steps fit, have named controls and autofill', async ({ pa
   await noOverflow(page);
   await customerAccessibility(page);
   await expect(page.locator('main')).toContainText('£17.00');
-  await expect(page.locator('main')).toContainText('£30.00');
+  await expect(page.locator('main')).toContainText('£237.00');
+  await expect(page.locator('main')).toContainText('Full amount due by bank transfer');
 });
 
 test('error and empty states offer only configured contact actions', async ({ page }) => {
@@ -308,7 +309,7 @@ test('confirmed atomic reservation shows bank deadline and rechecks expiry witho
     deadline = new Date(Date.now() + 3500).toISOString();
     return route.fulfill({ contentType: 'application/json', body: JSON.stringify({ ok: true, data: {
       booking_id: '00000000-0000-4000-8000-000000000005', reference: 'UI-BANK-ONLY', manage_token: token,
-      status: 'AWAITING_BANK_PAYMENT', expires_at: deadline, total_pence: 11700, deposit_pence: 3000, balance_pence: 8700,
+      status: 'AWAITING_BANK_PAYMENT', expires_at: deadline, total_pence: 11700, deposit_pence: 11700, balance_pence: 0,
     } }) });
   });
   await page.route('**/api/manage/' + token, route => {
@@ -316,14 +317,15 @@ test('confirmed atomic reservation shows bank deadline and rechecks expiry witho
     return route.fulfill({ contentType: 'application/json', body: JSON.stringify({ ok: true, data: {
       id: 'ui-bank-only', booking_ref: 'UI-BANK-ONLY', status: reads > 1 ? 'EXPIRED' : 'AWAITING_BANK_PAYMENT',
       bank_payment_expires_at: deadline, fitter_id: null, customer: null, slot: null, items: [],
-      total_amount: 11700, deposit_amount: 3000, balance_due: 8700, deposit_paid_at: null,
+      total_amount: 11700, deposit_amount: 11700, balance_due: 0, deposit_paid_at: null,
+      bank_payment: { provider: 'manual', payment_method: 'bank_transfer', status: 'pending', amount_pence: 11700, currency: 'gbp', reference: 'UI-BANK-ONLY', paid_at: null, verified: false, bank_details: { bank_name: 'UI test bank', bank_account_name: 'UI Test Only', sort_code: '000000', account_number: '00000000' } },
     } }) });
   });
   await reachCheckout(page);
   await page.getByRole('button', { name: 'Reserve for Bank Payment' }).click();
   await expect(page).toHaveURL('/manage/' + token);
   await expect(page.getByText('Awaiting bank payment', { exact: true })).toBeVisible();
-  await expect(page.locator('main')).toContainText('Bank payment has not been recorded');
+  await expect(page.locator('main')).toContainText('Your booking is confirmed after G Force verifies receipt.');
   await expect(page.locator('main .ring-brand')).toHaveCount(0);
   await expect(page.getByText('Booking expired', { exact: true })).toBeVisible({ timeout: 10000 });
   await expect(page.locator('main')).toContainText('fitting time and tyres have been released');
@@ -357,7 +359,7 @@ test('pending bookings have no paid step or fictional fitter', async ({ page }) 
 test('payment screen ignores browser state and never offers fake payment', async ({ page }) => {
   await page.addInitScript(() => sessionStorage.setItem('gf_checkout_data', JSON.stringify({ is_mock_payment: true, breakdown: { deposit_amount: 5000 } })));
   await page.goto('/booking/pay?ref=not-a-booking');
-  await expect(page.getByRole('heading', { name: 'Online payments unavailable' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Pay by bank transfer' })).toBeVisible();
   await expect(page.locator('main input, main form')).toHaveCount(0);
   await expect(page.getByRole('button', { name: /confirm|pay|test/i })).toHaveCount(0);
   await noOverflow(page);
@@ -371,6 +373,9 @@ test('credential-free production APIs fail closed', async ({ request }) => {
   }
   const hold = { slot_id: '00000000-0000-4000-8000-000000000001', session_token: 'isolated-ui-test-session' };
   const cases: Array<[string, object, number]> = [
+    ['/api/admin/payments', { action: 'verify', booking_id: '00000000-0000-4000-8000-000000000005', expected_amount_pence: 11700, bank_receipt_confirmed: true }, 503],
+    ['/api/admin/payments/instructions', { booking_id: '00000000-0000-4000-8000-000000000005' }, 503],
+    ['/api/admin/bookings/phone', {}, 503],
     ['/api/checkout/create', {}, 400],
     ['/api/checkout/confirm-mock', {}, 404],
     ['/api/holds/create', hold, 503], ['/api/holds/release', hold, 503],

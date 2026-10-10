@@ -36,9 +36,7 @@ export async function calculatePrice(lines: CartLine[], calloutCharge: number): 
   const tyres_total = priced.reduce((sum, line) => sum + line.line_total, 0);
   const total_amount = tyres_total + settings.fitting_fee + calloutCharge;
   if (!Number.isSafeInteger(total_amount) || total_amount <= 0) throw new ServiceUnavailableError('Pricing unavailable. Cannot continue.');
-  const deposit_amount = settings.deposit_mode === 'fixed'
-    ? Math.min(settings.deposit_fixed, total_amount)
-    : Math.round(total_amount * settings.deposit_percent / 100);
+  const deposit_amount = total_amount; // V1 collects the full total by bank transfer.
   return { lines: priced, tyres_total, fitting_fee: settings.fitting_fee, callout_charge: calloutCharge,
     total_amount, deposit_amount, balance_due: total_amount - deposit_amount };
 }

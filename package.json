@@ -17,7 +17,8 @@
     "pages:deploy": "opennextjs-cloudflare deploy",
     "test:database": "node --test tests/database/*.test.mjs",
     "test:gate0:reset": "node scripts/gate0-cloud-reset.mjs",
-    "test:concurrency": "node scripts/gate2-local-postgres.mjs"
+    "test:concurrency": "node scripts/gate2-local-postgres.mjs",
+    "test:bank-payments": "node scripts/gate2-local-postgres.mjs gate3"
   },
   "dependencies": {
     "@react-three/drei": "^10.0.0",

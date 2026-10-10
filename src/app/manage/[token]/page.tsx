@@ -14,12 +14,13 @@ import {
 } from 'lucide-react';
 import { ContactActions } from '@/components/layout/BusinessContact';
 import { formatPrice, formatSlotTime, formatReg } from '@/lib/utils';
+import BankInstructions from '@/components/booking/BankInstructions';
 import MStripe from '@/components/ui/MStripe';
 import type { BookingWithDetails, BookingStatus } from '@/types';
 import { hasRecordedDeposit, bookingHeading } from '@/lib/booking-state';
 
 const STATUS_STEPS: Array<{ key: BookingStatus; label: string; description: string }> = [
-  { key: 'confirmed',        label: 'Deposit Recorded', description: 'Payment recorded on this booking.' },
+  { key: 'confirmed',        label: 'Payment Received', description: 'Payment recorded on this booking.' },
   { key: 'tyres_reserved',   label: 'Tyres Reserved',    description: 'Tyre reservation recorded.' },
   { key: 'fitter_assigned',  label: 'Fitter Assigned',   description: 'Mobile technician assigned.' },
   { key: 'en_route',         label: 'Van En Route',      description: 'Technician driving to your location.' },
@@ -100,7 +101,7 @@ export default function ManageBookingPage({
       })}, ${formatSlotTime(b.slot.start_time)}–${formatSlotTime(b.slot.end_time)}`
     : 'To be confirmed';
 
-  const currentStepIndex = STATUS_STEPS.findIndex((s) => s.key === b.status);
+  const currentStepIndex = STATUS_STEPS.findIndex((s) => s.key === (b.status === 'CONFIRMED' ? 'confirmed' : b.status));
   const paid = hasRecordedDeposit(b);
   const activeIndex = paid ? currentStepIndex : -1;
 
@@ -113,7 +114,7 @@ export default function ManageBookingPage({
         <div>
           <p className="label mb-1 text-brand">Customer Portal</p>
           <h1 className="display-1">MANAGE BOOKING</h1>
-          <p className="mono text-sm text-ink-3">Reference: <span className="text-brand font-bold">{b.booking_ref}</span></p>
+          <p className="mono text-sm text-ink-3">Reference: <span className="text-brand font-bold break-all">{b.booking_ref}</span></p>
         </div>
 
         <div className="flex items-center gap-2">
@@ -138,12 +139,7 @@ export default function ManageBookingPage({
         </div>
 
         <p className="text-sm font-semibold" role="status">{bookingHeading(b)}</p>
-        {b.status === 'AWAITING_BANK_PAYMENT' && b.bank_payment_expires_at && (
-          <p className="text-sm text-ink-2">
-            Your time and tyres are reserved until {new Date(b.bank_payment_expires_at).toLocaleString('en-GB')}.
-            Bank payment has not been recorded. Contact us with your reference for payment instructions.
-          </p>
-        )}
+        {b.status === 'AWAITING_BANK_PAYMENT' && <BankInstructions booking={b} />}
         {b.status === 'EXPIRED' && <p className="text-sm text-ink-2">The unpaid reservation has expired. Its fitting time and tyres have been released. Please start a new search.</p>}
         <div className="grid sm:grid-cols-5 gap-3 pt-2">
           {STATUS_STEPS.map((s, idx) => {
@@ -242,11 +238,11 @@ export default function ManageBookingPage({
               <span className="mono">{formatPrice(b.total_amount)}</span>
             </div>
             <div className="flex justify-between text-ok font-semibold">
-              <span>{paid ? 'Deposit recorded' : 'Deposit required'}</span>
-              <span className="mono">{formatPrice(b.deposit_amount)}</span>
+              <span>{b.bank_payment ? (paid ? 'Payment received' : 'Amount due by bank transfer') : (paid ? 'Deposit recorded' : 'Deposit required')}</span>
+              <span className="mono">{formatPrice(b.bank_payment?.amount_pence ?? b.deposit_amount)}</span>
             </div>
             <div className="flex justify-between text-sm font-bold text-ink-1 pt-2 border-t border-line/40">
-              <span>{paid ? 'Balance Due on Arrival' : 'Balance after deposit'}</span>
+              <span>{b.bank_payment ? 'Remaining balance' : (paid ? 'Balance Due on Arrival' : 'Balance after deposit')}</span>
               <span className="mono text-brand">{formatPrice(b.balance_due)}</span>
             </div>
           </div>

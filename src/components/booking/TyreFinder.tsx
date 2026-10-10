@@ -15,7 +15,7 @@ const WIDTHS   = [155, 165, 175, 185, 195, 205, 215, 225, 235, 245, 255, 265, 27
 const PROFILES = [30, 35, 40, 45, 50, 55, 60, 65, 70, 75];
 const RIMS     = [14, 15, 16, 17, 18, 19, 20, 21, 22];
 
-export default function TyreFinder() {
+export default function TyreFinder({ cataloguePath = '/tyres' }: { cataloguePath?: string }) {
   const router = useRouter();
 
   const [stage, setStage] = useState<Stage>('postcode');
@@ -121,7 +121,7 @@ export default function TyreFinder() {
         rw: String(vehicle.rear.width), rp: String(vehicle.rear.profile), rr: String(vehicle.rear.rim),
       }),
     });
-    router.push(`/tyres?${params}`);
+    router.push(`${cataloguePath}?${params}`);
   }
 
   const spec = vehicle ? (axle === 'rear' && vehicle.rear ? vehicle.rear : vehicle.front) : null;

@@ -1,0 +1,37 @@
+{
+  "scope": "LOCAL_ONLY_NO_HOSTED_OR_BANK_OR_EMAIL_DELIVERY_CLAIM",
+  "date": "2026-10-11",
+  "branch": "gate/3-bank-payments",
+  "source_baseline": "a6a9a3f43974f5374b2db5550c4b2a676c20a208",
+  "payment_policy": "FULL_BOOKING_TOTAL_OWNER_SELECTED",
+  "checks": {
+    "native_bank_payments": { "command": "npm run test:bank-payments", "passed": 17, "failed": 0, "skipped": 0 },
+    "native_booking_regression": { "command": "npm run test:concurrency", "passed": 12, "failed": 0, "skipped": 0 },
+    "sql_catalogue": { "command": "npm run test:database", "passed": 16, "failed": 0, "skipped": 0 },
+    "reliability": { "command": "npm run test:reliability", "passed": 118, "failed": 0, "skipped": 0 },
+    "browser": {
+      "command": "npm run test:ui",
+      "passed": 203,
+      "failed": 0,
+      "skipped": 0,
+      "widths_px": [360, 375, 390, 430, 768, 1366, 1440],
+      "public_flow": "compiled Next.js application; external data and provider responses doubled",
+      "staff_components": "actual components in isolated test-only harness; hosted login not asserted"
+    },
+    "typecheck": "PASS",
+    "lint": { "result": "PASS", "errors": 0, "pre_existing_warnings": 4, "new_warnings": 0 },
+    "production_build": "PASS",
+    "security_structure": "PASS",
+    "diff_whitespace": "PASS",
+    "browser_secret_scan": { "assets_scanned": 76, "service_role_identifier_occurrences": 0 }
+  },
+  "migration_chain": "001-017; 001-016 unchanged",
+  "live_acceptance": {
+    "supabase_auth_rls": "BLOCKED: authorized disposable project not supplied",
+    "owner_catalogue_coverage_and_oneauto": "BLOCKED: real owner data and account-specific sandbox evidence not supplied",
+    "bank_configuration": "BLOCKED: real account values must be configured by owner",
+    "email_delivery": "UNVERIFIED: no actual email was sent"
+  },
+  "cloud_writes": 0,
+  "push_or_deployment": false
+}

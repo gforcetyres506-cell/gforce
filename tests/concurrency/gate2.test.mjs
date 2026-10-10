@@ -57,7 +57,7 @@ before(async () => {
     const sql = readFileSync('supabase/migrations/'+file,'utf8');
     await db.query(sql); evidence.migrations.push({ file, sha256: createHash('sha256').update(sql).digest('hex') });
   }
-  await db.query("update public.business_settings set pricing_configured=true,fitting_fee_pence=1700,job_duration_minutes=10,cancellation_policy='Test only',deposit_mode='percent',deposit_value=25,bank_payment_window_minutes=1");
+  await db.query("update public.business_settings set bank_name='Test fixture bank',bank_account_name='Test only',sort_code='000000',account_number='00000000',pricing_configured=true,fitting_fee_pence=1700,job_duration_minutes=10,cancellation_policy='Test only',deposit_mode='percent',deposit_value=25,bank_payment_window_minutes=1");
   zone = (await db.query("insert into public.service_zones(name,postcode_prefix,callout_fee_pence) values ('Test only','E14',731) returning id")).rows[0].id;
   await db.query('update public.business_settings set bank_payment_window_minutes=120');
 });
@@ -107,7 +107,7 @@ async function race(name, slots, carts, blockQuery, blockArgs, expectedCode, suc
     return outcomes;
   } finally { await blocker.query('rollback').catch(()=>{}); await Promise.all(clients.map(c=>c.end())); await blocker.end(); }
 }
-test('all 16 ordered migrations and exact security catalogue replay on native PostgreSQL',async()=>{
+test('all 17 ordered migrations and exact security catalogue replay on native PostgreSQL',async()=>{
   const result = await db.query(readFileSync('supabase/verification/phase1_catalog_checks.sql','utf8'));
   const rows=result.flatMap(r=>r.rows??[]).filter(r=>'result' in r);
   assert(rows.length>=8); assert(rows.every(r=>r.result==='PASS')); evidence.schema='PASS';
@@ -138,13 +138,13 @@ test('concurrent retries create exactly one booking, customer and pair of holds'
 });
 test('prices and rounded integer-pence totals come from locked database rows; items/terms are immutable',async()=>{
   const p=await product(4,12345,1),s=await slot(); const booked=(await call(db,s,[item(p,2)])).rows[0];
-  assert.equal(booked.status,'AWAITING_BANK_PAYMENT');assert.equal(booked.total_pence,27121);assert.equal(booked.deposit_pence,6780);assert.equal(booked.balance_pence,20341);
+  assert.equal(booked.status,'AWAITING_BANK_PAYMENT');assert.equal(booked.total_pence,27121);assert.equal(booked.deposit_pence,27121);assert.equal(booked.balance_pence,0);
   await assert.rejects(db.query('update public.booking_items set unit_price_pence=1 where booking_id=$1',[booked.booking_id]),{code:'55000'});
   await assert.rejects(db.query('delete from public.booking_items where booking_id=$1',[booked.booking_id]),{code:'55000'});
   await assert.rejects(db.query('update public.bookings set total_pence=1 where id=$1',[booked.booking_id]),{code:'55000'});
   await assert.rejects(db.query("update public.bookings set status='confirmed' where id=$1",[booked.booking_id]),{code:'55000'});
   await assert.rejects(db.query('update public.inventory set stock_qty=2 where tyre_product_id=$1',[p]),{code:'23514'});
-  assert.equal((await counts()).payments,0); evidence.authoritative_pricing_and_immutability='PASS';
+  assert.equal((await db.query("select count(*)::int n from public.payments where provider<>'manual' or status<>'pending'")).rows[0].n,0); evidence.authoritative_pricing_and_immutability='PASS';
 });
 test('failure after customer/booking/hold inserts rolls back every write',async()=>{
   const p=await product(),s=await slot(),before=await counts();

@@ -23,6 +23,7 @@ const expectedMigrations = [
   '014_gate0_access_boundary.sql',
   '015_gate1_owner_business_data.sql',
   '016_gate2_atomic_booking.sql',
+  '017_gate3_manual_bank_payments.sql',
 ];
 
 assert.deepEqual(

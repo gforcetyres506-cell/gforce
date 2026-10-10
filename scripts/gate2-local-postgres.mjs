@@ -7,6 +7,8 @@ import { randomUUID } from 'node:crypto';
 
 // No external connection string is accepted. Start a fresh, loopback-only
 // PostgreSQL cluster; retain its ignored directory for forensic inspection.
+const suite = process.argv[2] ?? 'gate2';
+assert(['gate2','gate3'].includes(suite), 'Only the reviewed local suites are allowed');
 const root = resolve('.local-postgres');
 const bin = resolve(process.env.GATE2_POSTGRES_BIN ?? join(root, 'engine/pgsql/bin'));
 const exe = (name) => join(bin, name + (process.platform === 'win32' ? '.exe' : ''));
@@ -29,7 +31,7 @@ try {
   // (the database logs to server.log) so spawnSync can observe pg_ctl exiting.
   run(exe('pg_ctl'), ['-D', data, '-l', join(data, 'server.log'), '-o', `-h 127.0.0.1 -p ${port} -c max_connections=60`, '-w', 'start'], { stdio: 'ignore' });
   started = true;
-  const result = spawnSync(process.execPath, ['--test', '--test-concurrency=1', 'tests/concurrency/gate2.test.mjs'], {
+  const result = spawnSync(process.execPath, ['--test', '--test-concurrency=1', 'tests/concurrency/'+suite+'.test.mjs'], {
     stdio: 'inherit', windowsHide: true, env: { ...process.env,
       GATE2_LOCAL_DATA_DIR: data, GATE2_TEST_DATABASE_URL: `postgresql://postgres@127.0.0.1:${port}/postgres` },
   });

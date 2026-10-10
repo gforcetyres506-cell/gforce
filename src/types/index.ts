@@ -123,6 +123,7 @@ export interface SlotHold {
 }
 
 export type BookingStatus =
+  | 'CONFIRMED'
   | 'AWAITING_BANK_PAYMENT'
   | 'EXPIRED'
   | 'pending_payment'
@@ -197,6 +198,8 @@ export interface Booking {
   stripe_charge_id: string | null;
   deposit_paid_at: string | null;
   bank_payment_expires_at?: string | null;
+  booking_source?: 'online' | 'phone' | null;
+  bank_payment?: import('@/lib/bank-payments').BankPayment | null;
 
   created_at: string;
   updated_at: string;

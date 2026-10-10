@@ -2,6 +2,9 @@ import type { Booking } from '@/types';
 
 /** Display only what the persisted record supports; a status alone is insufficient. */
 export function hasRecordedDeposit(booking: Booking): boolean {
+  const p = booking.bank_payment;
+  if (p) return p.provider === 'manual' && p.payment_method === 'bank_transfer' && p.status === 'received'
+    && p.verified && !!p.paid_at && Number.isFinite(Date.parse(p.paid_at)) && p.amount_pence === booking.total_amount;
   return !!booking.deposit_paid_at && Number.isFinite(Date.parse(booking.deposit_paid_at))
     && /^pi_[a-zA-Z0-9]+$/.test(booking.stripe_payment_intent_id ?? '')
     && /^ch_[a-zA-Z0-9]+$/.test(booking.stripe_charge_id ?? '');

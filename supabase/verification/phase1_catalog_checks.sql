@@ -1,5 +1,5 @@
 -- Phase 1 live catalogue verification.
--- Run only after migrations 001-016 have been applied from zero to the
+-- Run only after migrations 001-017 have been applied from zero to the
 -- authorized disposable project. This transaction changes no persistent data
 -- and fails closed when an expected catalogue/security property is absent.
 
@@ -169,7 +169,7 @@ begin
     ('booking_slots', 'capacity>0'),
     ('booking_slots', 'end_at>start_at'),
     ('inventory_holds', 'quantity>0'),
-    ('bookings', 'status=anyarray[''pending_payment'',''confirmed'',''tyres_reserved'',''fitter_assigned'',''en_route'',''completed'',''cancelled'',''refunded'',''payment_failed'',''awaiting_bank_payment'',''expired'']'),
+    ('bookings', 'status=anyarray[''pending_payment'',''confirmed'',''tyres_reserved'',''fitter_assigned'',''en_route'',''completed'',''cancelled'',''refunded'',''payment_failed'',''awaiting_bank_payment'',''expired'',''confirmed'']'),
     ('bookings', 'subtotal_pence>=0'),
     ('bookings', 'fitting_fee_pence>=0'),
     ('bookings', 'callout_fee_pence>=0'),
@@ -180,8 +180,13 @@ begin
     ('booking_items', 'unit_price_pence>=0'),
     ('booking_items', 'line_total_pence>=0'),
     ('payments', 'type=anyarray[''deposit'',''balance'',''refund'']'),
-    ('payments', 'status=anyarray[''pending'',''succeeded'',''failed'',''cancelled'',''refunded'']'),
+    ('payments', 'status=anyarray[''pending'',''succeeded'',''failed'',''cancelled'',''refunded'',''received'']'),
     ('payments', 'amount_pence>=0'),
+    ('business_settings', 'bank_account_nameisnullorlengthbtrimbank_account_name>=1andlengthbtrimbank_account_name<=120'),
+    ('business_settings', 'bank_nameisnullorlengthbtrimbank_name>=1andlengthbtrimbank_name<=120'),
+    ('business_settings', 'sort_codeisnullorsort_code~''^[0-9]{6}$'''),
+    ('business_settings', 'account_numberisnulloraccount_number~''^[0-9]{8}$'''),
+    ('bookings', 'booking_source=anyarray[''online'',''phone'']'),
     ('business_settings', 'bank_payment_window_minutes>=1andbank_payment_window_minutes<=10080'),
     ('bookings', 'status<>''awaiting_bank_payment''orcheckout_keyisnotnull'),
     ('bookings', 'checkout_keyisnullandcheckout_fingerprintisnullandbank_payment_expires_atisnullorcheckout_keyisnotnullandcheckout_fingerprintisnotnullandbank_payment_expires_atisnotnullandsubtotal_pence+fitting_fee_pence+callout_fee_pence=total_penceanddeposit_pence+balance_pence=total_pence'),
@@ -225,8 +230,8 @@ begin
     and r.relname = any(required_tables)
     and c.contype = 'c';
 
-  if actual_count <> 54 then
-    raise exception 'Expected exactly 54 canonical check constraints, found %', actual_count;
+  if actual_count <> 60 then
+    raise exception 'Expected exactly 60 canonical check constraints, found %', actual_count;
   end if;
 
   -- Exact source/target columns and ON DELETE actions for all 14 FKs.
@@ -250,6 +255,7 @@ begin
     ('bookings', array['service_zone_id']::name[], 'public', 'service_zones', array['id']::name[], 'n'),
     ('booking_items', array['booking_id']::name[], 'public', 'bookings', array['id']::name[], 'c'),
     ('booking_items', array['tyre_product_id']::name[], 'public', 'tyre_products', array['id']::name[], 'n'),
+    ('payments', array['verified_by_admin_id']::name[], 'public', 'admin_profiles', array['id']::name[], 'r'),
     ('payments', array['booking_id']::name[], 'public', 'bookings', array['id']::name[], 'r'),
     ('audit_logs', array['admin_user_id']::name[], 'auth', 'users', array['id']::name[], 'n'),
     ('email_outbox', array['booking_id']::name[], 'public', 'bookings', array['id']::name[], 'r')
@@ -296,8 +302,8 @@ begin
     and r.relname = any(required_tables)
     and c.contype = 'f';
 
-  if actual_count <> 16 then
-    raise exception 'Expected exactly 16 canonical foreign keys, found %', actual_count;
+  if actual_count <> 17 then
+    raise exception 'Expected exactly 17 canonical foreign keys, found %', actual_count;
   end if;
 
   -- The expected relation must be a valid, ready index on the expected table.
@@ -320,6 +326,7 @@ begin
     ('idx_bookings_created_at', 'bookings'),
     ('idx_booking_items_booking_id', 'booking_items'),
     ('idx_payments_booking_id', 'payments'),
+    ('idx_payments_manual_booking', 'payments'),
     ('idx_audit_logs_created_at', 'audit_logs'),
     ('idx_vrm_cache_lookup_expires', 'vrm_cache'),
     ('idx_rate_limits_expires_at', 'rate_limits'),
@@ -511,7 +518,12 @@ begin
     'public.consume_rate_limit(text,integer,integer)',
     'public.owner_import_business_data(uuid,uuid,text,jsonb)',
     'public.reserve_booking_checkout(uuid,uuid,jsonb,jsonb,text,jsonb,text)',
-    'public.expire_unpaid_bookings()', 'public.live_inventory_held(uuid)', 'public.slot_consumption(uuid)'
+    'public.expire_unpaid_bookings()', 'public.live_inventory_held(uuid)', 'public.slot_consumption(uuid)',
+    'public.owner_set_bank_settings(uuid,uuid,text,text,text,text,integer)',
+    'public.admin_verify_bank_payment(uuid,uuid,uuid,integer)',
+    'public.admin_extend_bank_window(uuid,uuid,uuid,integer,text,timestamptz)',
+    'public.admin_reserve_phone_booking(uuid,uuid,uuid,uuid,jsonb,jsonb,text,jsonb,text)',
+    'public.admin_claim_bank_email(uuid,uuid,uuid)', 'public.finish_bank_email(uuid,integer,text)'
   ] loop
     if has_function_privilege('anon', table_name, 'EXECUTE')
       or has_function_privilege('authenticated', table_name, 'EXECUTE')
@@ -535,7 +547,7 @@ begin
 
   select string_agg(name, ', ') into missing from unnest(array[
     'admin_profiles', 'customers', 'tyre_products', 'inventory',
-    'bookings', 'fitters', 'business_settings', 'email_outbox'
+    'bookings', 'fitters', 'business_settings', 'email_outbox', 'payments'
   ]) name where not exists (
     select 1 from pg_trigger t join pg_class r on r.oid = t.tgrelid
     join pg_namespace n on n.oid = r.relnamespace
@@ -547,6 +559,7 @@ begin
   if missing is not null then raise exception 'Missing/incorrect update triggers: %', missing; end if;
 
   select string_agg(expected.name, ', ') into missing from (values
+    ('payments_manual_immutable','payments','public.guard_manual_payment()',27),
     ('booking_items_immutable','booking_items','public.guard_booking_items()',27),
     ('bookings_bank_terms_immutable','bookings','public.guard_bank_booking()',19),
     ('inventory_live_reservations','inventory','public.guard_inventory_holds_stock()',19),
@@ -556,6 +569,16 @@ begin
     where n.nspname='public' and r.relname=expected.table_name and t.tgname=expected.name
       and t.tgfoid=expected.fn::regprocedure and t.tgtype=expected.kind and t.tgenabled='O' and not t.tgisinternal);
   if missing is not null then raise exception 'Missing Gate 2 guards: %',missing; end if;
+
+  if not exists (select 1 from pg_constraint where conrelid='public.payments'::regclass
+    and conname='payments_manual_check' and contype='c' and convalidated) then
+    raise exception 'Manual payment integrity check missing'; end if;
+  if not exists (select 1 from pg_index i where i.indexrelid='public.idx_payments_manual_booking'::regclass
+    and i.indisunique and i.indisvalid and i.indisready
+    and pg_get_expr(i.indpred,i.indrelid)='(provider = ''manual''::text)'
+    and (select array_agg(a.attname) from unnest(i.indkey) k join pg_attribute a
+      on a.attrelid=i.indrelid and a.attnum=k)=array['booking_id']::name[]) then
+    raise exception 'Manual payment uniqueness predicate/columns incorrect'; end if;
 
   if exists (select 1 from pg_class r join pg_namespace n on n.oid=r.relnamespace
     where n.nspname='public' and r.relname in ('tyre_inventory','app_settings','audit_log')) then
@@ -615,7 +638,7 @@ with counts(check_name, actual, expected) as (
       'interest_registrations', 'rate_limits', 'email_outbox'
     ])
   union all
-  select 'check_constraints', count(*)::integer, 54
+  select 'check_constraints', count(*)::integer, 60
   from pg_constraint c
   join pg_class r on r.oid = c.conrelid
   join pg_namespace n on n.oid = r.relnamespace
@@ -628,7 +651,7 @@ with counts(check_name, actual, expected) as (
       'interest_registrations', 'rate_limits', 'email_outbox'
     ])
   union all
-  select 'foreign_keys', count(*)::integer, 16
+  select 'foreign_keys', count(*)::integer, 17
   from pg_constraint c
   join pg_class r on r.oid = c.conrelid
   join pg_namespace n on n.oid = r.relnamespace
@@ -641,7 +664,7 @@ with counts(check_name, actual, expected) as (
       'interest_registrations', 'rate_limits', 'email_outbox'
     ])
   union all
-  select 'required_named_indexes', count(*)::integer, 23
+  select 'required_named_indexes', count(*)::integer, 24
   from pg_class c
   join pg_namespace n on n.oid = c.relnamespace
   join pg_index i on i.indexrelid = c.oid
@@ -654,7 +677,7 @@ with counts(check_name, actual, expected) as (
       'idx_inventory_holds_product', 'idx_inventory_holds_expires_at',
       'idx_bookings_reference', 'idx_bookings_slot_id', 'idx_bookings_status',
       'idx_bookings_created_at', 'idx_booking_items_booking_id',
-      'idx_payments_booking_id', 'idx_audit_logs_created_at',
+      'idx_payments_booking_id', 'idx_payments_manual_booking', 'idx_audit_logs_created_at',
       'idx_vrm_cache_lookup_expires', 'idx_rate_limits_expires_at',
       'idx_email_outbox_dispatch', 'idx_email_outbox_booking',
       'idx_bookings_bank_expiry', 'idx_inventory_holds_live_product'

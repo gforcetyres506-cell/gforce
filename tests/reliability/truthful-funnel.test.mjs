@@ -31,14 +31,14 @@ for (const invalid of [{ inventory: { stock_qty: 4, reserved_qty: 0, selling_pri
     await assert.rejects(source('db', databaseDouble(() => dbResult([{ ...tyre, ...invalid }]))).getTyres());
   });
 }
-test('price and deposit use actual supplied settings', async () => {
+test('price uses supplied settings; full bank total is due', async () => {
   const db = databaseDouble(({ table }) => dbResult(table === 'business_settings' ? settings : [tyre]));
   const price = await source('pricing', db).calculatePrice([{ tyre_id: tyre.id, quantity: 2 }], 900);
   assert.equal(price.tyres_total, 24600);
   assert.equal(price.fitting_fee, 1700);
   assert.equal(price.total_amount, 27200);
-  assert.equal(price.deposit_amount, 3536);
-  assert.equal(price.balance_due, 23664);
+  assert.equal(price.deposit_amount, 27200);
+  assert.equal(price.balance_due, 0);
 });
 test('missing pricing settings cannot quote', async () => {
   const db = databaseDouble(({ table }) => dbResult(table === 'business_settings' ? null : [tyre]));

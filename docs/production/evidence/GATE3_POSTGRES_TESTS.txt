@@ -1,0 +1,28 @@
+> gforce-tyres@1.0.0 test:bank-payments
+> node scripts/gate2-local-postgres.mjs gate3
+
+✔ 17 migrations replay and catalogue security checks pass (293.0642ms)
+✔ forward upgrade preserves unknown historical source and invents no legacy payment (5.2485ms)
+✔ bank details absent block reservation with zero writes; only a live owner can configure (16.6743ms)
+✔ online and phone reserve full total as pending, with snapshots and no Stripe identifiers (24.8942ms)
+✔ customer/browser/viewer/inactive/revoked actors cannot verify, extend, phone book or email (15.0662ms)
+✔ direct payment and booking updates cannot manufacture receipt; wrong amount rejected (7.2161ms)
+✔ admin and owner receipt transaction confirms, converts stock once and writes one audit (24.971ms)
+✔ 20 simultaneous verification retries allocate once and produce exactly one receipt audit (467.0406ms)
+✔ late audit failure rolls back receipt, booking, stock conversion and hold expiry (10.0864ms)
+✔ explicit extension updates both deadlines and audits reason; stale retry does not extend twice (11.2237ms)
+✔ email outbox snapshots instructions, rejects duplicate active send and records only real provider acknowledgement (13.3278ms)
+✔ bank settings changes do not alter existing payment instructions (5.2249ms)
+✔ multi-item bank verification converts every item exactly once (9.2542ms)
+✔ existing session loses bank verification immediately on role change or deactivation (7.7748ms)
+✔ manual payment integrity rejects unsupported states and missing bank snapshot fields (21.4255ms)
+✔ real unpaid expiry releases resources without cron, blocks receipt, and can extend only if resources remain free (60071.8727ms)
+✔ verification waiting across expiry rejects; a competing real checkout acquires the released resources (60124.696ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 121258.3878

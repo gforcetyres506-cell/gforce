@@ -1,5 +1,31 @@
 # G FORCE TYRES - Production recovery progress
 
+## Gate 3 - manual bank transfers (2026-10-11)
+
+Branch: gate/3-bank-payments. Starting HEAD: a6a9a3f43974f5374b2db5550c4b2a676c20a208.
+Status: **PASS - native PostgreSQL and compiled UI verified locally**.
+Contract and evidence: [05_GATE3_BANK_PAYMENTS.md](05_GATE3_BANK_PAYMENTS.md).
+
+- Owner chose full booking total. Blank bank settings block reservations.
+- Migration 017 creates pending manual payments atomically with reservations;
+  bank details are owner configured and snapshotted. Migrations 001-016 unchanged.
+- Online/phone share finder, catalogue, prices and resource transaction. Phone
+  source and actor are server controlled. Copy/email/manage controls are present.
+- Admin/owner receipt verification confirms booking and converts temporary stock
+  into permanent allocation in one audited transaction. No automated bank claim.
+- Expired resources release without cron. Audited extensions recheck all resources;
+  taken slot/stock and stale retries reject. Duplicate verification allocates once.
+- Native PostgreSQL: Gate 3 17/17, current-chain Gate 2 12/12. SQL security 16/16;
+  reliability 118/118; responsive UI 203/203 across all seven widths.
+- A verifier blocked across the real expiry deadline rejects receipt; a competing
+  checkout acquires the released resources. Historical unknown source stays null.
+- Typecheck, lint, production build, security structure and git diff --check PASS
+  (four existing lint warnings). Browser assets scanned: 76; service-role key
+  identifier occurrences: 0. Evidence: [GATE3_QUALITY.json](evidence/GATE3_QUALITY.json).
+
+No cloud writes, real business/bank data import, external email, push or deployment.
+Gate 0 hosted Auth/RLS and Gate 1 owner/provider acceptance remain BLOCKED.
+
 ## Gate 2 - atomic booking engine (2026-10-10)
 
 Branch: gate/2-booking-engine. Starting HEAD: 3f52936bb2a78babd7aa491f7ceea8fdfe2afa1f.

@@ -74,6 +74,16 @@ data/success paths, not framework vocabulary.
 
 PRODUCTION FAKE SUCCESS PATHS = 0
 
+Gate 3 update (2026-10-11): new manual bank pending/verification/extension/phone
+flows use the canonical transaction and live server RBAC. No Stripe IDs, bank
+details, account numbers, vehicle data or paid claims are generated. Full transfer
+amount comes from locked DB prices. Missing configuration blocks payment.
+Email requires actual provider acknowledgement and persisted completion; UI copy
+does not assert inbox delivery. New tests/concurrency, tests/reliability and
+tests/ui/gate3-* fixtures are TEST_ONLY_SAFE, isolated from production imports.
+Gate 0-2 implementation supersedes the historical unavailability notes below;
+current scope is documented in 05_GATE3_BANK_PAYMENTS.md.
+
 This means no identified executable application/script path supplies fictional
 business records or reports a successful booking/payment/hold/admin mutation
 after persistence failure. It is not a claim that commerce is launch-ready.

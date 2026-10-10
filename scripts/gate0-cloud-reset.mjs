@@ -34,7 +34,7 @@ try {
   console.log(`TARGET ATTESTATION PASS: ${target.projectRef}; app, service credentials and TLS database target matched. Reset begins now.`);
 
   const migrations = readdirSync('supabase/migrations').filter((f) => /^\d+_.+\.sql$/.test(f)).sort();
-  assert.equal(migrations.length, 16, 'Unexpected migration chain; review before reset');
+  assert.equal(migrations.length, 17, 'Unexpected migration chain; review before reset');
   evidence.migrations = migrations.map((file) => ({ file, sha256: createHash('sha256').update(readFileSync('supabase/migrations/' + file)).digest('hex') }));
   await db.query('begin');
   try {
