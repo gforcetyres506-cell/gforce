@@ -1,832 +1,179 @@
-import { createServiceClient, isSupabaseConfigured } from '@/lib/supabase';
-import { localStore, MOCK_FITTERS, MOCK_SETTINGS } from '@/lib/mockData';
-import type {
-  Tyre,
-  SlotWithAvailability,
-  SlotHold,
-  BookingWithDetails,
-  BookingStatus,
-  AppSettings,
-} from '@/types';
+import 'server-only';
+import { z } from 'zod';
+import { createServiceClient } from './supabase';
+import { ServiceUnavailableError } from './service-error';
+import type { AppSettings, BookingWithDetails, SlotHold, SlotWithAvailability, Tyre } from '@/types';
 
-/**
- * Central Database Service for G Force Tyres.
- * When Supabase is configured, persists all reads and writes to PostgreSQL.
- * If Supabase is not configured yet or tables are fresh, seamlessly falls back
- * to localStore / seed state to ensure zero downtime on Vercel.
- */
+// Existing runtime contracts only. Missing tables/RPCs are outages;
+// reconciling the database architecture belongs to the next recovery gate.
+const tyreSchema = z.object({
+  id: z.string().min(1), brand: z.string().min(1), model: z.string().min(1),
+  width: z.number().int().min(115).max(355), profile: z.number().int().min(20).max(85),
+  rim: z.number().int().min(12).max(24), sell_price: z.number().int().positive().safe(),
+  stock: z.number().int().nonnegative().safe(), active: z.boolean(),
+}).passthrough();
 
-// ── Catalogue / Tyres ──────────────────────────────────────────
+export function validateTyres(data: unknown): Tyre[] {
+  const parsed = z.array(tyreSchema).safeParse(data);
+  if (!parsed.success) throw new ServiceUnavailableError('Inventory unavailable. Please try again later.');
+  return parsed.data as unknown as Tyre[];
+}
 
-export async function getTyres(filters?: {
-  width?: number;
-  profile?: number;
-  rim?: number;
-  tier?: string;
-  season?: string;
-}): Promise<Tyre[]> {
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      let query = db.from('tyre_inventory').select('*').eq('active', true);
-
-      if (filters?.width) query = query.eq('width', filters.width);
-      if (filters?.profile) query = query.eq('profile', filters.profile);
-      if (filters?.rim) query = query.eq('rim', filters.rim);
-      if (filters?.tier && filters.tier !== 'all') query = query.eq('tier', filters.tier);
-      if (filters?.season && filters.season !== 'all') query = query.eq('season', filters.season);
-
-      query = query.order('tier', { ascending: false }).order('sell_price', { ascending: true });
-
-      const { data, error } = await query;
-      if (!error && data && data.length > 0) {
-        return data as Tyre[];
-      }
-    } catch (err) {
-      console.warn('[db.getTyres] Supabase query failed, using local catalogue:', err);
-    }
-  }
-
-  // Local fallback
-  let list = localStore.getAllTyres().filter((t) => t.active);
-  if (filters?.width && filters?.profile && filters?.rim) {
-    list = localStore.getTyres(filters.width, filters.profile, filters.rim);
-  }
-  if (filters?.tier && filters.tier !== 'all') {
-    list = list.filter((t) => t.tier === filters.tier);
-  }
-  if (filters?.season && filters.season !== 'all') {
-    list = list.filter((t) => t.season === filters.season);
-  }
-  return list;
+export async function getTyres(filters: {
+  width?: number; profile?: number; rim?: number; tier?: string; season?: string;
+} = {}): Promise<Tyre[]> {
+  const db = createServiceClient();
+  let query = db.from('tyre_inventory').select('*').eq('active', true);
+  if (filters.width !== undefined) query = query.eq('width', filters.width);
+  if (filters.profile !== undefined) query = query.eq('profile', filters.profile);
+  if (filters.rim !== undefined) query = query.eq('rim', filters.rim);
+  if (filters.tier) query = query.eq('tier', filters.tier);
+  if (filters.season) query = query.eq('season', filters.season);
+  const { data, error } = await query.order('tier').order('sell_price');
+  if (error) throw new ServiceUnavailableError('Inventory unavailable. Please try again later.');
+  return validateTyres(data);
 }
 
 export async function getTyreById(id: string): Promise<Tyre | null> {
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      const { data, error } = await db
-        .from('tyre_inventory')
-        .select('*')
-        .eq('id', id)
-        .maybeSingle();
-      if (!error && data) return data as Tyre;
-    } catch (err) {
-      console.warn('[db.getTyreById] Supabase query failed:', err);
-    }
-  }
-  return localStore.getTyreById(id) ?? null;
+  const { data, error } = await createServiceClient().from('tyre_inventory').select('*').eq('id', id).maybeSingle();
+  if (error) throw new ServiceUnavailableError();
+  return data ? validateTyres([data])[0] : null;
 }
 
 export async function getAllTyresAdmin(): Promise<Tyre[]> {
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      const { data, error } = await db
-        .from('tyre_inventory')
-        .select('*')
-        .order('brand', { ascending: true })
-        .order('model', { ascending: true });
-      if (!error && data && data.length > 0) {
-        return data as Tyre[];
-      }
-    } catch (err) {
-      console.warn('[db.getAllTyresAdmin] Supabase query failed:', err);
-    }
-  }
-  return localStore.getAllTyres();
+  const { data, error } = await createServiceClient().from('tyre_inventory').select('*').order('brand');
+  if (error) throw new ServiceUnavailableError();
+  return validateTyres(data);
 }
 
-export async function updateTyreStock(id: string, newStock: number): Promise<boolean> {
-  localStore.updateTyreStock(id, newStock);
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      const { error } = await db
-        .from('tyre_inventory')
-        .update({ stock: newStock })
-        .eq('id', id);
-      return !error;
-    } catch (err) {
-      console.warn('[db.updateTyreStock] Supabase update failed:', err);
-    }
-  }
+export async function updateTyreStock(id: string, stock: number): Promise<boolean> {
+  if (!Number.isSafeInteger(stock) || stock < 0) throw new Error('Invalid stock.');
+  const { data, error } = await createServiceClient().from('tyre_inventory').update({ stock }).eq('id', id).select('id').single();
+  if (error || !data) throw new ServiceUnavailableError('Stock change could not be confirmed.');
   return true;
 }
 
-export async function updateTyrePrice(id: string, sellPricePence: number): Promise<boolean> {
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      const { error } = await db
-        .from('tyre_inventory')
-        .update({ sell_price: sellPricePence })
-        .eq('id', id);
-      return !error;
-    } catch (err) {
-      console.warn('[db.updateTyrePrice] Supabase update failed:', err);
-    }
-  }
+export async function updateTyrePrice(id: string, sellPrice: number): Promise<boolean> {
+  if (!Number.isSafeInteger(sellPrice) || sellPrice <= 0) throw new Error('Invalid price.');
+  const { data, error } = await createServiceClient().from('tyre_inventory').update({ sell_price: sellPrice }).eq('id', id).select('id').single();
+  if (error || !data) throw new ServiceUnavailableError('Price change could not be confirmed.');
   return true;
 }
 
-export async function createTyre(tyre: Omit<Tyre, 'id' | 'created_at'>): Promise<Tyre | null> {
-  const newId = `tyre-${Date.now()}`;
-  const now = new Date().toISOString();
-  const created: Tyre = { ...tyre, id: newId, created_at: now };
-
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      const { data, error } = await db
-        .from('tyre_inventory')
-        .insert([{ ...tyre }])
-        .select('*')
-        .single();
-      if (!error && data) {
-        return data as Tyre;
-      }
-    } catch (err) {
-      console.warn('[db.createTyre] Supabase insert failed:', err);
-    }
-  }
-
-  // Local fallback
-  return created;
+export async function createTyre(input: Omit<Tyre, 'id' | 'created_at'>): Promise<Tyre> {
+  const { data, error } = await createServiceClient().from('tyre_inventory').insert(input).select('*').single();
+  if (error || !data) throw new ServiceUnavailableError('Tyre creation could not be confirmed.');
+  return validateTyres([data])[0];
 }
 
-// ── Slots & Availability ───────────────────────────────────────
+const slotSchema = z.object({
+  id: z.string().min(1), slot_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  start_time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?$/),
+  end_time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?$/),
+  max_bookings: z.number().int().positive().safe(), active: z.literal(true),
+}).passthrough();
 
-export async function getSlots(date?: string): Promise<SlotWithAvailability[]> {
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      let query = db
-        .from('booking_slots')
-        .select('*')
-        .eq('active', true)
-        .order('slot_date', { ascending: true })
-        .order('start_time', { ascending: true });
-
-      const todayStr = new Date().toISOString().split('T')[0];
-      if (date) {
-        query = query.eq('slot_date', date);
-      } else {
-        query = query.gte('slot_date', todayStr);
-      }
-
-      const { data: rawSlots, error: slotsErr } = await query;
-      if (!slotsErr && rawSlots && rawSlots.length > 0) {
-        const slotIds = rawSlots.map((s) => s.id);
-
-        // Fetch active bookings occupying these slots
-        const { data: bookings } = await db
-          .from('bookings')
-          .select('slot_id')
-          .in('slot_id', slotIds)
-          .not('status', 'in', '("cancelled","refunded","payment_failed")');
-
-        // Fetch active unexpired holds
-        const { data: holds } = await db
-          .from('slot_holds')
-          .select('slot_id')
-          .in('slot_id', slotIds)
-          .gt('expires_at', new Date().toISOString());
-
-        const bookingCountMap = new Map<string, number>();
-        (bookings ?? []).forEach((b) => {
-          if (b.slot_id) {
-            bookingCountMap.set(b.slot_id, (bookingCountMap.get(b.slot_id) ?? 0) + 1);
-          }
-        });
-
-        const holdCountMap = new Map<string, number>();
-        (holds ?? []).forEach((h) => {
-          if (h.slot_id) {
-            holdCountMap.set(h.slot_id, (holdCountMap.get(h.slot_id) ?? 0) + 1);
-          }
-        });
-
-        const computed: SlotWithAvailability[] = rawSlots.map((s) => {
-          const booked = bookingCountMap.get(s.id) ?? 0;
-          const held = holdCountMap.get(s.id) ?? 0;
-          const remaining = Math.max(0, s.max_bookings - booked - held);
-          return {
-            ...s,
-            remaining,
-            available: remaining > 0,
-          };
-        });
-
-        return computed;
-      }
-    } catch (err) {
-      console.warn('[db.getSlots] Supabase query failed, using local slots:', err);
-    }
-  }
-
-  // Local fallback
-  return localStore.getSlots(date);
+export async function getSlots(fromDate?: string, toDate?: string): Promise<SlotWithAvailability[]> {
+  const db = createServiceClient();
+  let query = db.from('booking_slots').select('*').eq('active', true)
+    .gte('slot_date', fromDate ?? new Date().toISOString().slice(0, 10));
+  if (toDate) query = query.lte('slot_date', toDate);
+  const { data, error } = await query.order('slot_date').order('start_time');
+  const parsed = z.array(slotSchema).safeParse(data);
+  if (error || !parsed.success) throw new ServiceUnavailableError('Fitting availability unavailable.');
+  const slots = parsed.data;
+  if (!slots.length) return [];
+  const ids = slots.map((s) => s.id);
+  const [bookings, holds] = await Promise.all([
+    db.from('bookings').select('slot_id').in('slot_id', ids)
+      .not('status', 'in', '(cancelled,refunded,payment_failed,pending_payment)'),
+    db.from('slot_holds').select('slot_id').in('slot_id', ids).gt('expires_at', new Date().toISOString()),
+  ]);
+  if (bookings.error || holds.error || !bookings.data || !holds.data) throw new ServiceUnavailableError('Fitting availability unavailable.');
+  return slots.map((slot) => {
+    if (!Number.isSafeInteger(slot.max_bookings) || slot.max_bookings < 1) throw new ServiceUnavailableError();
+    const occupied = bookings.data.filter((b) => b.slot_id === slot.id).length;
+    const reserved = holds.data.filter((h) => h.slot_id === slot.id).length;
+    const remaining = Math.max(0, slot.max_bookings - occupied - reserved);
+    return { ...slot, remaining, available: remaining > 0 } as SlotWithAvailability;
+  });
 }
 
-export async function createSlotHold(
-  slotId: string,
-  sessionToken: string,
-  minutes = 15,
-): Promise<SlotHold | null> {
-  const expiresAt = new Date(Date.now() + minutes * 60 * 1000).toISOString();
-
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      // Try database RPC first if exists
-      const { data, error } = await db.rpc('create_slot_hold', {
-        p_slot_id: slotId,
-        p_session_token: sessionToken,
-        p_minutes: minutes,
-      });
-
-      if (!error && data) {
-        const row = Array.isArray(data) ? data[0] : data;
-        return {
-          hold_id: row.hold_id,
-          slot_id: slotId,
-          expires_at: row.expires_at,
-        };
-      }
-
-      // If RPC is not defined or failed, perform atomic check and insert
-      const { data: slot } = await db
-        .from('booking_slots')
-        .select('id, max_bookings')
-        .eq('id', slotId)
-        .single();
-
-      if (slot) {
-        const { count: bookedCount } = await db
-          .from('bookings')
-          .select('*', { count: 'exact', head: true })
-          .eq('slot_id', slotId)
-          .not('status', 'in', '("cancelled","refunded","payment_failed")');
-
-        const { count: holdCount } = await db
-          .from('slot_holds')
-          .select('*', { count: 'exact', head: true })
-          .eq('slot_id', slotId)
-          .gt('expires_at', new Date().toISOString());
-
-        const remaining = slot.max_bookings - (bookedCount ?? 0) - (holdCount ?? 0);
-        if (remaining <= 0) return null;
-
-        // Delete any previous hold for this session
-        await db
-          .from('slot_holds')
-          .delete()
-          .eq('slot_id', slotId)
-          .eq('session_token', sessionToken);
-
-        const { data: newHold, error: insertErr } = await db
-          .from('slot_holds')
-          .insert({
-            slot_id: slotId,
-            session_token: sessionToken,
-            expires_at: expiresAt,
-          })
-          .select('id, expires_at')
-          .single();
-
-        if (!insertErr && newHold) {
-          return {
-            hold_id: newHold.id,
-            slot_id: slotId,
-            expires_at: newHold.expires_at,
-          };
-        }
-      }
-    } catch (err) {
-      console.warn('[db.createSlotHold] Supabase hold failed, using local store:', err);
-    }
-  }
-
-  // Local fallback
-  const h = localStore.createHold(slotId, sessionToken, minutes);
-  return h ? { hold_id: h.hold_id, slot_id: slotId, expires_at: h.expires_at } : null;
+export async function createSlotHold(slotId: string, sessionToken: string, minutes = 15): Promise<SlotHold> {
+  const db = createServiceClient();
+  const { data, error } = await db.rpc('create_slot_hold', {
+    p_slot_id: slotId, p_session_token: sessionToken, p_minutes: minutes,
+  });
+  const result = Array.isArray(data) && data.length === 1 ? data[0] : data;
+  if (error || !result?.hold_id) throw new ServiceUnavailableError('That fitting time could not be reserved. Please choose another.');
+  // Require a persisted row owned by this session, not only an RPC envelope.
+  const hold = await db.from('slot_holds').select('id,slot_id,expires_at')
+    .eq('id', result.hold_id).eq('slot_id', slotId).eq('session_token', sessionToken)
+    .gt('expires_at', new Date().toISOString()).single();
+  if (hold.error || !hold.data || hold.data.id !== result.hold_id || hold.data.slot_id !== slotId
+    || !Number.isFinite(Date.parse(hold.data.expires_at)) || Date.parse(hold.data.expires_at) <= Date.now()) throw new ServiceUnavailableError('That fitting time could not be reserved. Please choose another.');
+  return { hold_id: hold.data.id, slot_id: hold.data.slot_id, expires_at: hold.data.expires_at };
 }
 
-export async function releaseSlotHold(slotId: string, sessionToken: string): Promise<boolean> {
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      await db
-        .from('slot_holds')
-        .delete()
-        .eq('slot_id', slotId)
-        .eq('session_token', sessionToken);
-    } catch (err) {
-      console.warn('[db.releaseSlotHold] Supabase release failed:', err);
-    }
-  }
-  localStore.releaseHold(slotId, sessionToken);
+export async function releaseSlotHold(sessionToken: string, slotId?: string): Promise<boolean> {
+  let query = createServiceClient().from('slot_holds').delete().eq('session_token', sessionToken);
+  if (slotId) query = query.eq('slot_id', slotId);
+  const { error } = await query;
+  if (error) throw new ServiceUnavailableError('Hold release could not be confirmed.');
   return true;
 }
 
-export async function isHoldValid(slotId: string, sessionToken: string): Promise<boolean> {
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      const { data } = await db
-        .from('slot_holds')
-        .select('id')
-        .eq('slot_id', slotId)
-        .eq('session_token', sessionToken)
-        .gt('expires_at', new Date().toISOString())
-        .maybeSingle();
-      if (data) return true;
-    } catch {
-      // fallback
-    }
-  }
-  return localStore.isHoldValid(slotId, sessionToken);
+export async function isHoldValid(sessionToken: string, slotId: string): Promise<boolean> {
+  const { data, error } = await createServiceClient().from('slot_holds').select('id').eq('slot_id', slotId)
+    .eq('session_token', sessionToken).gt('expires_at', new Date().toISOString()).limit(1);
+  if (error || !data) throw new ServiceUnavailableError();
+  return data.length > 0;
 }
 
-export async function generateSlots(
-  startDate: string,
-  daysAhead = 14,
-  times = [
-    { start: '08:30:00', end: '11:00:00' },
-    { start: '11:30:00', end: '14:00:00' },
-    { start: '14:30:00', end: '17:00:00' },
-  ],
-  maxBookings = 2,
-): Promise<number> {
-  const generated: Array<{ slot_date: string; start_time: string; end_time: string; max_bookings: number }> = [];
-  const baseDate = new Date(startDate);
+const bookingSelect = '*, customer:customers(*), slot:booking_slots(*), items:booking_items(*)';
+async function findBooking(column: string, value: string): Promise<BookingWithDetails | null> {
+  const { data, error } = await createServiceClient().from('bookings').select(bookingSelect).eq(column, value).maybeSingle();
+  if (error) throw new ServiceUnavailableError('Booking service unavailable. Please try again later.');
+  return data as unknown as BookingWithDetails | null;
+}
+export const getBookingByRef = (ref: string) => findBooking('booking_ref', ref);
+export const getBookingByToken = (token: string) => findBooking('manage_token', token);
+export const getBookingById = (id: string) => findBooking('id', id);
 
-  for (let d = 0; d < daysAhead; d++) {
-    const cur = new Date(baseDate);
-    cur.setDate(baseDate.getDate() + d);
-    // Skip Sundays
-    if (cur.getDay() === 0) continue;
-    const dateStr = cur.toISOString().split('T')[0];
-
-    for (const t of times) {
-      generated.push({
-        slot_date: dateStr,
-        start_time: t.start,
-        end_time: t.end,
-        max_bookings: maxBookings,
-      });
-    }
-  }
-
-  let count = 0;
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      const { data, error } = await db
-        .from('booking_slots')
-        .upsert(generated, { onConflict: 'slot_date,start_time' })
-        .select('id');
-      if (!error && data) count = data.length;
-    } catch (err) {
-      console.warn('[db.generateSlots] Supabase generation failed:', err);
-    }
-  }
-
-  const weeks = Math.max(1, Math.ceil(daysAhead / 7));
-  localStore.generateRecurringSlots(startDate, weeks, [1, 2, 3, 4, 5, 6], times, maxBookings);
-  return count > 0 ? count : generated.length;
+export async function getAllBookings(filters: { status?: string; query?: string } = {}): Promise<BookingWithDetails[]> {
+  let query = createServiceClient().from('bookings').select(bookingSelect).order('created_at', { ascending: false });
+  if (filters.status) query = query.eq('status', filters.status);
+  const { data, error } = await query;
+  if (error || !data) throw new ServiceUnavailableError();
+  const bookings = data as unknown as BookingWithDetails[];
+  if (!filters.query) return bookings;
+  const needle = filters.query.toLowerCase();
+  return bookings.filter((b) => [b.booking_ref, b.vehicle_reg, b.customer?.name, b.customer?.email]
+    .some((value) => value?.toLowerCase().includes(needle)));
 }
 
-export async function updateSlotCapacity(slotId: string, maxBookings: number): Promise<boolean> {
-  localStore.setSlotCapacity(slotId, maxBookings);
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      await db.from('booking_slots').update({ max_bookings: maxBookings }).eq('id', slotId);
-    } catch (err) {
-      console.warn('[db.updateSlotCapacity] Supabase update failed:', err);
-    }
-  }
-  return true;
-}
-
-// ── Bookings & Customers ───────────────────────────────────────
-
-export async function createBooking(booking: BookingWithDetails): Promise<BookingWithDetails> {
-  // Always update in-memory mirror
-  localStore.createBooking(booking);
-
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-
-      // 1. Upsert Customer
-      let customerId = booking.customer_id;
-      if (booking.customer && booking.customer.email) {
-        const { data: custData, error: custErr } = await db
-          .from('customers')
-          .upsert(
-            {
-              email: booking.customer.email.toLowerCase(),
-              name: booking.customer.name,
-              phone: booking.customer.phone,
-              address_line1: booking.customer.address_line1,
-              address_line2: booking.customer.address_line2,
-              city: booking.customer.city,
-              postcode: booking.customer.postcode,
-            },
-            { onConflict: 'email' },
-          )
-          .select('id')
-          .single();
-
-        if (!custErr && custData) {
-          customerId = custData.id;
-          booking.customer_id = custData.id;
-        }
-      }
-
-      // 2. Insert Booking row
-      const { data: bRow, error: bErr } = await db
-        .from('bookings')
-        .insert({
-          booking_ref: booking.booking_ref,
-          manage_token: booking.manage_token,
-          customer_id: customerId,
-          slot_id: booking.slot_id,
-          fitter_id: booking.fitter_id,
-          vehicle_reg: booking.vehicle_reg,
-          vehicle_make: booking.vehicle_make,
-          vehicle_model: booking.vehicle_model,
-          vehicle_derivative: booking.vehicle_derivative,
-          fitting_address: booking.fitting_address,
-          fitting_postcode: booking.fitting_postcode,
-          customer_notes: booking.customer_notes,
-          admin_notes: booking.admin_notes,
-          status: booking.status,
-          tyres_total: booking.tyres_total,
-          fitting_fee: booking.fitting_fee,
-          callout_charge: booking.callout_charge,
-          total_amount: booking.total_amount,
-          deposit_amount: booking.deposit_amount,
-          balance_due: booking.balance_due,
-          stripe_payment_intent_id: booking.stripe_payment_intent_id,
-          stripe_charge_id: booking.stripe_charge_id,
-          deposit_paid_at: booking.deposit_paid_at,
-        })
-        .select('id')
-        .single();
-
-      if (!bErr && bRow) {
-        booking.id = bRow.id;
-
-        // 3. Insert Line Items
-        if (booking.items && booking.items.length > 0) {
-          const itemsPayload = booking.items.map((item) => ({
-            booking_id: bRow.id,
-            tyre_id: item.tyre_id,
-            tyre_label: item.tyre_label,
-            quantity: item.quantity,
-            unit_price: item.unit_price,
-            line_total: item.line_total,
-          }));
-
-          await db.from('booking_items').insert(itemsPayload);
-        }
-      }
-    } catch (err) {
-      console.warn('[db.createBooking] Supabase insert failed, persisted locally:', err);
-    }
-  }
-
-  return booking;
-}
-
-export async function getBookingByRef(ref: string): Promise<BookingWithDetails | null> {
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      const { data, error } = await db
-        .from('bookings')
-        .select('*, customer:customers(*), slot:booking_slots(*), items:booking_items(*)')
-        .eq('booking_ref', ref)
-        .maybeSingle();
-
-      if (!error && data) {
-        return data as unknown as BookingWithDetails;
-      }
-    } catch (err) {
-      console.warn('[db.getBookingByRef] Supabase query failed:', err);
-    }
-  }
-
-  return localStore.getBookingByRef(ref) ?? null;
-}
-
-export async function getBookingByToken(token: string): Promise<BookingWithDetails | null> {
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      const { data, error } = await db
-        .from('bookings')
-        .select('*, customer:customers(*), slot:booking_slots(*), items:booking_items(*)')
-        .eq('manage_token', token)
-        .maybeSingle();
-
-      if (!error && data) {
-        return data as unknown as BookingWithDetails;
-      }
-    } catch (err) {
-      console.warn('[db.getBookingByToken] Supabase query failed:', err);
-    }
-  }
-
-  return localStore.getBookingByToken(token) ?? null;
-}
-
-export async function getBookingById(id: string): Promise<BookingWithDetails | null> {
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      const { data, error } = await db
-        .from('bookings')
-        .select('*, customer:customers(*), slot:booking_slots(*), items:booking_items(*)')
-        .eq('id', id)
-        .maybeSingle();
-
-      if (!error && data) {
-        return data as unknown as BookingWithDetails;
-      }
-    } catch (err) {
-      console.warn('[db.getBookingById] Supabase query failed:', err);
-    }
-  }
-
-  return localStore.getAllBookings().find((b) => b.id === id) ?? null;
-}
-
-export async function getAllBookings(filters?: {
-  status?: string;
-  query?: string;
-}): Promise<BookingWithDetails[]> {
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      let query = db
-        .from('bookings')
-        .select('*, customer:customers(*), slot:booking_slots(*), items:booking_items(*)')
-        .order('created_at', { ascending: false });
-
-      if (filters?.status && filters.status !== 'all') {
-        query = query.eq('status', filters.status);
-      }
-
-      const { data, error } = await query;
-      if (!error && data) {
-        let list = data as unknown as BookingWithDetails[];
-        if (filters?.query) {
-          const q = filters.query.toLowerCase().trim();
-          list = list.filter(
-            (b) =>
-              b.booking_ref.toLowerCase().includes(q) ||
-              (b.vehicle_reg && b.vehicle_reg.toLowerCase().includes(q)) ||
-              (b.customer && b.customer.name && b.customer.name.toLowerCase().includes(q)) ||
-              (b.customer && b.customer.email && b.customer.email.toLowerCase().includes(q)) ||
-              (b.customer && b.customer.phone && b.customer.phone.toLowerCase().includes(q)),
-          );
-        }
-        return list;
-      }
-    } catch (err) {
-      console.warn('[db.getAllBookings] Supabase query failed, using local store:', err);
-    }
-  }
-
-  let list = localStore.getAllBookings();
-  if (filters?.status && filters.status !== 'all') {
-    list = list.filter((b) => b.status === filters.status);
-  }
-  if (filters?.query) {
-    const q = filters.query.toLowerCase().trim();
-    list = list.filter(
-      (b) =>
-        b.booking_ref.toLowerCase().includes(q) ||
-        (b.vehicle_reg && b.vehicle_reg.toLowerCase().includes(q)) ||
-        (b.customer && b.customer.name && b.customer.name.toLowerCase().includes(q)) ||
-        (b.customer && b.customer.email && b.customer.email.toLowerCase().includes(q)),
-    );
-  }
-  return list;
-}
-
-export async function updateBookingStatus(
-  id: string,
-  status: BookingStatus,
-  fitterId?: string | null,
-  adminNotes?: string | null,
-): Promise<boolean> {
-  localStore.updateBookingStatus(id, status, fitterId ?? undefined);
-
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      const payload: Record<string, unknown> = { status, updated_at: new Date().toISOString() };
-      if (fitterId !== undefined) payload.fitter_id = fitterId;
-      if (adminNotes !== undefined) payload.admin_notes = adminNotes;
-
-      const { error } = await db.from('bookings').update(payload).eq('id', id);
-      if (!error) {
-        await recordAudit('admin', `booking_${status}`, 'booking', id, { status, fitter_id: fitterId });
-        return true;
-      }
-    } catch (err) {
-      console.warn('[db.updateBookingStatus] Supabase update failed:', err);
-    }
-  }
-
-  return true;
-}
-
-export async function confirmBookingPaid(
-  paymentIntentId: string,
-  chargeId?: string,
-): Promise<string | null> {
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-
-      // Try RPC first
-      const { data: rpcBookingId, error: rpcErr } = await db.rpc('confirm_booking_paid', {
-        p_payment_intent_id: paymentIntentId,
-        p_charge_id: chargeId ?? '',
-      });
-
-      if (!rpcErr && rpcBookingId) {
-        return rpcBookingId as string;
-      }
-
-      // Manual fallback in PostgreSQL
-      const { data: b } = await db
-        .from('bookings')
-        .select('*, items:booking_items(*)')
-        .eq('stripe_payment_intent_id', paymentIntentId)
-        .maybeSingle();
-
-      if (b) {
-        // Decrement stock
-        if (b.items && Array.isArray(b.items)) {
-          for (const item of b.items) {
-            if (item.tyre_id) {
-              const { data: tyre } = await db
-                .from('tyre_inventory')
-                .select('stock')
-                .eq('id', item.tyre_id)
-                .single();
-              if (tyre) {
-                const newStock = Math.max(0, tyre.stock - item.quantity);
-                await db.from('tyre_inventory').update({ stock: newStock }).eq('id', item.tyre_id);
-              }
-            }
-          }
-        }
-
-        // Update booking status
-        await db
-          .from('bookings')
-          .update({
-            status: 'confirmed',
-            stripe_charge_id: chargeId ?? `ch_${Date.now()}`,
-            deposit_paid_at: new Date().toISOString(),
-          })
-          .eq('id', b.id);
-
-        // Delete slot hold
-        if (b.slot_id) {
-          await db.from('slot_holds').delete().eq('slot_id', b.slot_id);
-        }
-
-        await recordAudit('system', 'booking_confirmed', 'booking', b.id, { payment_intent: paymentIntentId });
-        return b.id;
-      }
-    } catch (err) {
-      console.warn('[db.confirmBookingPaid] Supabase confirmation failed:', err);
-    }
-  }
-
-  // Local fallback
-  const booking = localStore.getAllBookings().find((b) => b.stripe_payment_intent_id === paymentIntentId);
-  if (booking) {
-    localStore.updateBookingStatus(booking.id, 'confirmed');
-    booking.deposit_paid_at = new Date().toISOString();
-    return booking.id;
-  }
-
-  return null;
-}
-
-export async function cancelBooking(id: string, reason?: string): Promise<boolean> {
-  const booking = await getBookingById(id);
-  if (!booking) return false;
-
-  localStore.updateBookingStatus(id, 'cancelled');
-
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      // Restore stock
-      if (booking.items && Array.isArray(booking.items)) {
-        for (const item of booking.items) {
-          if (item.tyre_id) {
-            const { data: tyre } = await db
-              .from('tyre_inventory')
-              .select('stock')
-              .eq('id', item.tyre_id)
-              .single();
-            if (tyre) {
-              await db.from('tyre_inventory').update({ stock: tyre.stock + item.quantity }).eq('id', item.tyre_id);
-            }
-          }
-        }
-      }
-
-      await db
-        .from('bookings')
-        .update({ status: 'cancelled', admin_notes: reason ? `Cancelled: ${reason}` : 'Cancelled by customer/admin' })
-        .eq('id', id);
-
-      await recordAudit('system', 'booking_cancelled', 'booking', id, { reason });
-      return true;
-    } catch (err) {
-      console.warn('[db.cancelBooking] Supabase cancel failed:', err);
-    }
-  }
-
-  return true;
-}
-
-// ── Fitters & Settings ─────────────────────────────────────────
-
-export async function getFitters(): Promise<Array<{ id: string; name: string; phone?: string | null; active: boolean }>> {
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      const { data, error } = await db.from('fitters').select('*').eq('active', true);
-      if (!error && data && data.length > 0) return data;
-    } catch {
-      // fallback
-    }
-  }
-  return MOCK_FITTERS;
-}
-
+const settingsSchema = z.object({
+  deposit_mode: z.enum(['fixed', 'percent']), deposit_fixed: z.number().int().nonnegative().safe(),
+  deposit_percent: z.number().min(0).max(100), fitting_fee: z.number().int().nonnegative().safe(),
+  job_duration_mins: z.number().int().positive(), cancellation_policy: z.string(),
+  business_phone: z.string().nullable(),
+});
 export async function getSettings(): Promise<AppSettings> {
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      const { data, error } = await db.from('app_settings').select('*').eq('id', 1).maybeSingle();
-      if (!error && data) return data as AppSettings;
-    } catch {
-      // fallback
-    }
-  }
-  return MOCK_SETTINGS;
+  const { data, error } = await createServiceClient().from('app_settings').select('*').eq('id', 1).single();
+  const parsed = settingsSchema.safeParse(data);
+  if (error || !parsed.success) throw new ServiceUnavailableError('Pricing unavailable. Cannot continue.');
+  return parsed.data;
 }
 
-export async function updateSettings(settings: Partial<AppSettings>): Promise<boolean> {
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      const { error } = await db.from('app_settings').update(settings).eq('id', 1);
-      return !error;
-    } catch {
-      // fallback
-    }
-  }
-  return true;
+export async function getFitters(): Promise<Array<{ id: string; name: string; phone: string | null; active: boolean }>> {
+  const { data, error } = await createServiceClient().from('fitters').select('id,name,phone,active').eq('active', true);
+  if (error || !data) throw new ServiceUnavailableError();
+  return data;
 }
 
-// ── Audit Log ──────────────────────────────────────────────────
-
-export async function recordAudit(
-  actor: string,
-  action: string,
-  entity: string,
-  entityId?: string,
-  metadata?: Record<string, unknown>,
-): Promise<void> {
-  if (isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      await db.from('audit_log').insert({
-        actor,
-        action,
-        entity,
-        entity_id: entityId ?? null,
-        metadata: metadata ?? {},
-      });
-    } catch {
-      // Best effort
-    }
-  }
+export async function recordAudit(actor: string, action: string, entity: string, entityId?: string, metadata?: Record<string, unknown>): Promise<void> {
+  const { error } = await createServiceClient().from('audit_log').insert({
+    actor, action, entity, entity_id: entityId ?? null, metadata: metadata ?? {},
+  });
+  if (error) throw new ServiceUnavailableError('Audit persistence could not be confirmed.');
 }

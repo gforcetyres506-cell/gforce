@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test:security": "node scripts/security-check.mjs",
     "test:ui": "playwright test",
+    "test:reliability": "node --test tests/reliability/*.test.mjs",
     "test:phase1:live": "node scripts/phase1-live-acceptance.mjs",
     "pages:build": "opennextjs-cloudflare build",
     "pages:dev": "npx wrangler pages dev .vercel/output/static --compatibility-flag=nodejs_compat",

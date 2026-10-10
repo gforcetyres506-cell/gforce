@@ -56,7 +56,7 @@ export function validateProductionEnvironment(): void {
   if (!isProductionEnvironment()) return;
   // Non-fatal diagnostics on boot to aid Vercel setup
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    console.warn('[env] NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY is not set. Database persistence will fall back to seed state until configured.');
+    console.warn('[env] NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY is not set. Database-backed services are unavailable.');
   }
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
     console.warn('[env] SUPABASE_SERVICE_ROLE_KEY is not set. Privileged server database operations require this key.');

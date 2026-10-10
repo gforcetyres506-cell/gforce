@@ -1,213 +1,76 @@
-import { createServiceClient, isSupabaseConfigured } from './supabase';
 import { normaliseReg } from './utils';
+import { tyreSizeSchema, ukRegSchema } from './validation';
 import type { VRMResult, VehicleTyreSpec } from '@/types';
 
-const TIMEOUT_MS = 5000;
+type Row = Record<string, unknown>;
+const row = (value: unknown): Row | null => value !== null && typeof value === 'object' && !Array.isArray(value) ? value as Row : null;
+const text = (value: unknown): string | undefined => typeof value === 'string' && value.trim() ? value.trim() : undefined;
 
-// Verified sandbox plates for testing and demo environments
-const SANDBOX_VEHICLES: Record<string, VRMResult> = {
-  AB21ABC: {
-    registration: 'AB21ABC',
-    make: 'BMW',
-    model: '3 Series',
-    derivative: '320d M Sport',
-    year: 2021,
-    front: {
-      width: 225,
-      profile: 45,
-      rim: 18,
-      load_index: '95',
-      speed_rating: 'Y',
-      is_run_flat: false,
-    },
-    rear: {
-      width: 255,
-      profile: 40,
-      rim: 18,
-      load_index: '99',
-      speed_rating: 'Y',
-      is_run_flat: false,
-    },
-    isStaggered: true,
-    source: 'oneauto',
-  },
-  GF21VAN: {
-    registration: 'GF21VAN',
-    make: 'Mercedes-Benz',
-    model: 'Sprinter',
-    derivative: '314 CDI Mobile Workshop',
-    year: 2021,
-    front: {
-      width: 235,
-      profile: 65,
-      rim: 16,
-      load_index: '115',
-      speed_rating: 'R',
-      is_run_flat: false,
-    },
-    isStaggered: false,
-    source: 'oneauto',
-  },
-  GF22MOB: {
-    registration: 'GF22MOB',
-    make: 'Audi',
-    model: 'A3',
-    derivative: '35 TFSI S Line',
-    year: 2022,
-    front: {
-      width: 225,
-      profile: 40,
-      rim: 18,
-      load_index: '92',
-      speed_rating: 'Y',
-      is_run_flat: false,
-    },
-    isStaggered: false,
-    source: 'oneauto',
-  },
-  GF23TYR: {
-    registration: 'GF23TYR',
-    make: 'Volkswagen',
-    model: 'Golf',
-    derivative: 'GTI 2.0 TSI',
-    year: 2023,
-    front: {
-      width: 225,
-      profile: 40,
-      rim: 18,
-      load_index: '92',
-      speed_rating: 'Y',
-      is_run_flat: false,
-    },
-    isStaggered: false,
-    source: 'oneauto',
-  },
-};
-
-/**
- * Vehicle registration -> OEM tyre fitment.
- *
- * Checks:
- *   1. Live OneAutoAPI if ONEAUTO_API_KEY is configured
- *   2. Realistic sandbox vehicle dictionary for local testing / demo
- *   3. Returns null (caller gracefully falls back to manual sidewall size entry)
- */
+/** Unknown, ambiguous and unavailable provider results always require manual size. */
 export async function lookupVRM(rawReg: string): Promise<VRMResult | null> {
   const registration = normaliseReg(rawReg);
-  if (!registration) return null;
-
-  // 1. Live OneAutoAPI call if configured
-  if (process.env.ONEAUTO_API_KEY) {
-    const live = await callOneAuto(registration);
-    if (live) return live;
-  }
-
-  // 2. Sandbox vehicle lookup for test registrations
-  if (SANDBOX_VEHICLES[registration]) {
-    return SANDBOX_VEHICLES[registration];
-  }
-
-  // 3. Fallback generic profile for any UK plate format in dev
-  if (registration.length >= 5) {
-    return {
-      registration,
-      make: 'BMW',
-      model: '3 Series',
-      derivative: '320d M Sport',
-      year: 2021,
-      front: {
-        width: 225,
-        profile: 45,
-        rim: 18,
-        load_index: '95',
-        speed_rating: 'Y',
-        is_run_flat: false,
-      },
-      rear: {
-        width: 255,
-        profile: 40,
-        rim: 18,
-        load_index: '99',
-        speed_rating: 'Y',
-        is_run_flat: false,
-      },
-      isStaggered: true,
-      source: 'oneauto',
-    };
-  }
-
-  return null;
-}
-
-async function callOneAuto(registration: string): Promise<VRMResult | null> {
   const apiKey = process.env.ONEAUTO_API_KEY;
+  if (!ukRegSchema.safeParse(registration).success || !apiKey) return null;
   const baseUrl = process.env.ONEAUTO_BASE_URL ?? 'https://api.oneautoapi.com';
-
-  if (!apiKey) return null;
-
   try {
-    const res = await fetch(`${baseUrl}/tyres?vrm=${encodeURIComponent(registration)}`, {
+    const res = await fetch(baseUrl + '/tyres?vrm=' + encodeURIComponent(registration), {
       headers: { apikey: apiKey, Accept: 'application/json' },
-      signal: AbortSignal.timeout(TIMEOUT_MS),
+      signal: AbortSignal.timeout(5000), cache: 'no-store',
     });
-
-    if (!res.ok) {
-      console.error('[oneauto] HTTP', res.status);
-      return null;
-    }
-
+    if (!res.ok) return null;
     return normaliseOneAutoResponse(registration, await res.json());
-  } catch (err) {
-    console.error('[oneauto] request failed', err);
+  } catch {
     return null;
   }
 }
 
-function normaliseOneAutoResponse(registration: string, raw: any): VRMResult | null {
-  const v = raw?.vehicle ?? raw?.data?.vehicle ?? raw?.data ?? raw;
-  if (!v) return null;
-
-  const tyreList: any[] =
-    raw?.tyres ?? raw?.data?.tyres ?? v?.tyres ?? (raw?.tyre ? [raw.tyre] : []);
-
-  if (!Array.isArray(tyreList) || tyreList.length === 0) return null;
-
-  const toSpec = (t: any): VehicleTyreSpec | null => {
-    const width = Number(t?.width ?? t?.tyreWidth ?? t?.section_width);
-    const profile = Number(t?.aspectRatio ?? t?.profile ?? t?.aspect_ratio);
-    const rim = Number(t?.rimSize ?? t?.rim ?? t?.rim_diameter);
-    if (!width || !profile || !rim) return null;
-
-    return {
-      width,
-      profile,
-      rim,
-      load_index: t?.loadIndex ?? t?.load_index ?? undefined,
-      speed_rating: t?.speedRating ?? t?.speed_rating ?? undefined,
-      is_run_flat: Boolean(t?.isRunFlat ?? t?.runFlat ?? t?.run_flat),
-      pressure_psi: t?.pressurePsi ? Number(t.pressurePsi) : undefined,
+export function normaliseOneAutoResponse(registration: string, raw: unknown): VRMResult | null {
+  const root = row(raw);
+  const data = row(root?.data);
+  const vehicle = row(root?.vehicle) ?? row(data?.vehicle) ?? data ?? root;
+  if (!root || !vehicle || root.success === false || data?.success === false) return null;
+  for (const candidate of [root, data, vehicle]) {
+    if (!candidate) continue;
+    if (candidate.ambiguous === true || candidate.multipleMatches === true || candidate.status === 'ambiguous') return null;
+    for (const key of ['matches', 'vehicles', 'alternatives', 'options']) {
+      if (Array.isArray(candidate[key]) && (candidate[key] as unknown[]).length > 1) return null;
+    }
+  }
+  const make = text(vehicle.make ?? vehicle.manufacturer);
+  const model = text(vehicle.model ?? vehicle.range);
+  if (!make || !model || /^(unknown|n\/a)$/i.test(make) || /^(unknown|n\/a)$/i.test(model)) return null;
+  const providerReg = text(vehicle.registration ?? vehicle.vrm);
+  if (providerReg && normaliseReg(providerReg) !== registration) return null;
+  const list = root.tyres ?? data?.tyres ?? vehicle.tyres ?? (root.tyre ? [root.tyre] : []);
+  if (!Array.isArray(list) || list.length < 1 || list.length > 2) return null;
+  const entries = list.map(row);
+  if (entries.some((entry) => !entry)) return null;
+  const toSpec = (tyre: Row): VehicleTyreSpec | null => {
+    const parsed = tyreSizeSchema.safeParse({
+      width: Number(tyre.width ?? tyre.tyreWidth ?? tyre.section_width),
+      profile: Number(tyre.aspectRatio ?? tyre.profile ?? tyre.aspect_ratio),
+      rim: Number(tyre.rimSize ?? tyre.rim ?? tyre.rim_diameter),
+    });
+    if (!parsed.success) return null;
+    const runFlat = tyre.isRunFlat ?? tyre.runFlat ?? tyre.run_flat;
+    return { ...parsed.data,
+      load_index: text(tyre.loadIndex ?? tyre.load_index),
+      speed_rating: text(tyre.speedRating ?? tyre.speed_rating),
+      ...(typeof runFlat === 'boolean' ? { is_run_flat: runFlat } : {}),
     };
   };
-
-  const front = toSpec(tyreList[0]);
-  if (!front) return null;
-
-  const rearCandidate = tyreList[1] ? toSpec(tyreList[1]) : null;
-  const isStaggered =
-    !!rearCandidate &&
-    (rearCandidate.width !== front.width ||
-      rearCandidate.profile !== front.profile ||
-      rearCandidate.rim !== front.rim);
-
-  return {
-    registration,
-    make: String(v?.make ?? v?.manufacturer ?? 'Unknown'),
-    model: String(v?.model ?? v?.range ?? ''),
-    derivative: v?.derivative ?? v?.variant ?? undefined,
-    year: v?.year ? Number(v.year) : v?.yearOfManufacture ? Number(v.yearOfManufacture) : undefined,
-    front,
-    rear: isStaggered ? rearCandidate! : undefined,
-    isStaggered,
-    source: 'oneauto',
-  };
+  // Two options without explicit axle labels could be alternative wheel sizes.
+  // Never assume array order means front/rear.
+  const axle = (entry: Row) => text(entry.axle ?? entry.position)?.toLowerCase();
+  const frontRow = entries.length === 1
+    ? ([undefined, 'front', 'all', 'both'].includes(axle(entries[0]!)) ? entries[0] : null)
+    : entries.find((entry) => axle(entry!) === 'front');
+  const rearRow = entries.length === 2 ? entries.find((entry) => axle(entry!) === 'rear') : undefined;
+  if (!frontRow || (entries.length === 2 && !rearRow)) return null;
+  const front = toSpec(frontRow);
+  const rear = rearRow ? toSpec(rearRow) : undefined;
+  if (!front || (rearRow && !rear)) return null;
+  const isStaggered = !!rear && (front.width !== rear.width || front.profile !== rear.profile || front.rim !== rear.rim);
+  return { registration, make, model, front, ...(isStaggered ? { rear: rear! } : {}),
+    derivative: text(vehicle.derivative ?? vehicle.variant), isStaggered, source: 'oneauto' };
 }

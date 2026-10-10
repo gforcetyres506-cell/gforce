@@ -74,7 +74,7 @@ export default function Header() {
               </Link>
             ))}
             <ContactActions className="header-contact-actions" />
-            <Link href="/booking" className="btn btn-primary btn-sm" data-critical-action>Start booking</Link>
+            <Link href="/#tyre-finder" className="btn btn-primary btn-sm" data-critical-action>Start booking</Link>
           </nav>
           <div className="flex items-center gap-2 lg:hidden">
             <Link href="/#tyre-finder" className="mobile-header-cta" data-critical-action>Find tyres</Link>

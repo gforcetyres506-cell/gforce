@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -9,11 +9,9 @@ import {
   Calendar,
   Clock,
   MapPin,
-  Car,
   CheckCircle2,
   AlertCircle,
   Loader2,
-  ShieldCheck,
   Plus,
   Minus,
   Check,
@@ -22,283 +20,220 @@ import MStripe from '@/components/ui/MStripe';
 import TierBadge from '@/components/ui/TierBadge';
 import { ContactActions } from '@/components/layout/BusinessContact';
 import { formatPrice, formatTyreSize, formatSlotTime, makeSessionToken } from '@/lib/utils';
-import { MOCK_TYRES, MOCK_SERVICE_ZONES } from '@/lib/mockData';
-import { isMockDataEnabled } from '@/lib/mock-mode';
-import type { Tyre, SlotWithAvailability, ServiceZone } from '@/types';
+import { validBookingEntry, quoteSchema } from '@/lib/journey';
+import type { Tyre, SlotWithAvailability, ServiceZone, PriceBreakdown } from '@/types';
 
 function BookingWizard() {
-  const mockMode = isMockDataEnabled();
   const router = useRouter();
   const searchParams = useSearchParams();
-
-  // URL parameters pre-population
   const paramTyreId = searchParams.get('tyre');
-  const paramQty = Number(searchParams.get('qty')) || 2;
-  const paramPostcode = searchParams.get('pc') || '';
-  const paramReg = searchParams.get('reg') || '';
-  const paramWidth = searchParams.get('w') ? Number(searchParams.get('w')) : 225;
-  const paramProfile = searchParams.get('p') ? Number(searchParams.get('p')) : 45;
-  const paramRim = searchParams.get('r') ? Number(searchParams.get('r')) : 18;
-
-  // Step management
+  const paramWidth = Number(searchParams.get('w'));
+  const paramProfile = Number(searchParams.get('p'));
+  const paramRim = Number(searchParams.get('r'));
+  const paramQty = searchParams.has('qty') ? Number(searchParams.get('qty')) : 1;
+  const paramPostcode = searchParams.get('pc') ?? '';
+  const validEntry = validBookingEntry(paramTyreId, searchParams.get('w'), searchParams.get('p'), searchParams.get('r'))
+    && Number.isInteger(paramQty) && paramQty >= 1 && paramQty <= 8;
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [sessionToken] = useState(() => makeSessionToken());
-
-  // Data state
-  const [allTyres, setAllTyres] = useState<Tyre[]>(() => (mockMode ? MOCK_TYRES : []));
+  const [allTyres, setAllTyres] = useState<Tyre[]>([]);
   const [selectedTyre, setSelectedTyre] = useState<Tyre | null>(null);
-  const [quantity, setQuantity] = useState<number>(paramQty);
-
-  // Staggered rear setup
+  const [journeyError, setJourneyError] = useState<string | null>(null);
+  const [quantity, setQuantity] = useState(paramQty);
   const [hasRearTyre, setHasRearTyre] = useState(false);
   const [rearTyre, setRearTyre] = useState<Tyre | null>(null);
-  const [rearQuantity, setRearQuantity] = useState(2);
-
-  // Location & Vehicle state
+  const [rearQuantity, setRearQuantity] = useState(1);
   const [postcode, setPostcode] = useState(paramPostcode);
   const [zone, setZone] = useState<ServiceZone | null>(null);
+  const [validatedPostcode, setValidatedPostcode] = useState('');
   const [isCheckingPostcode, setIsCheckingPostcode] = useState(false);
   const [postcodeError, setPostcodeError] = useState<string | null>(null);
-
-  const [registration, setRegistration] = useState(paramReg);
-  const [vehicleMake, setVehicleMake] = useState('');
-  const [vehicleModel, setVehicleModel] = useState('');
-
-  // Slots state
+  const [registration, setRegistration] = useState(searchParams.get('reg') ?? '');
+  const [vehicleMake, setVehicleMake] = useState(searchParams.get('make') ?? '');
+  const [vehicleModel, setVehicleModel] = useState(searchParams.get('model') ?? '');
   const [slots, setSlots] = useState<SlotWithAvailability[]>([]);
   const [isLoadingSlots, setIsLoadingSlots] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [slotsError, setSlotsError] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState('');
   const [selectedSlot, setSelectedSlot] = useState<SlotWithAvailability | null>(null);
   const [holdId, setHoldId] = useState<string | null>(null);
+  const [holdExpiresAt, setHoldExpiresAt] = useState<string | null>(null);
   const [holdError, setHoldError] = useState<string | null>(null);
   const [isHolding, setIsHolding] = useState(false);
-
-  // Customer state
+  const holdRequest = useRef(0);
+  const postcodeRequest = useRef(0);
+  const [quote, setQuote] = useState<PriceBreakdown | null>(null);
+  const [quoteError, setQuoteError] = useState<string | null>(null);
+  const [quoteLoading, setQuoteLoading] = useState(false);
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [addressLine1, setAddressLine1] = useState('');
   const [addressLine2, setAddressLine2] = useState('');
-  const [city, setCity] = useState('London');
+  const [city, setCity] = useState('');
   const [fittingNotes, setFittingNotes] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const tyresReady = !!selectedTyre && quantity <= selectedTyre.stock
+    && (!hasRearTyre || (!!rearTyre && rearQuantity <= rearTyre.stock));
+  const locationReady = !!zone && validatedPostcode === postcode.trim().toUpperCase();
+  const holdReady = !!selectedSlot && !!holdId && !!holdExpiresAt && Date.parse(holdExpiresAt) > Date.now();
+  const holdFailure = 'That fitting time could not be reserved. Please choose another.';
 
-  // Load tyre on mount
   useEffect(() => {
-    fetch(`/api/tyres?w=${paramWidth}&p=${paramProfile}&r=${paramRim}`)
-      .then((r) => r.json())
-      .then((res) => {
-        if (res.ok && res.data && res.data.length > 0) {
-          setAllTyres(res.data);
-          let match = res.data.find((t: Tyre) => t.id === paramTyreId);
-          if (!match) match = res.data[0];
-          setSelectedTyre(match ?? null);
-        } else {
-          let match = allTyres.find((t) => t.id === paramTyreId);
-          if (!match) {
-            match = allTyres.find((t) => t.width === paramWidth && t.profile === paramProfile && t.rim === paramRim) || allTyres[0];
-          }
-          setSelectedTyre(match ?? null);
+    if (!validEntry) { router.replace('/#tyre-finder'); return; }
+    const controller = new AbortController();
+    setSelectedTyre(null); setJourneyError(null);
+    fetch('/api/tyres?w=' + paramWidth + '&p=' + paramProfile + '&r=' + paramRim, { signal: controller.signal })
+      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok || !Array.isArray(response.data)) throw new Error('Inventory unavailable. Please return to search.');
+        const match: Tyre | undefined = response.data.find((tyre: Tyre) => tyre.id === paramTyreId
+          && tyre.width === paramWidth && tyre.profile === paramProfile && tyre.rim === paramRim);
+        if (!match || !match.active || !Number.isSafeInteger(match.stock) || match.stock < paramQty
+          || !Number.isSafeInteger(match.sell_price) || match.sell_price <= 0) {
+          throw new Error('That tyre is unavailable. Please return to search.');
         }
+        setSelectedTyre(match); setQuantity(paramQty);
       })
-      .catch(() => {
-        let match = allTyres.find((t) => t.id === paramTyreId);
-        if (!match) {
-          match = allTyres.find((t) => t.width === paramWidth && t.profile === paramProfile && t.rim === paramRim) || allTyres[0];
-        }
-        setSelectedTyre(match ?? null);
-      });
+      .catch((error) => { if (!controller.signal.aborted) setJourneyError(error instanceof Error ? error.message : 'Inventory unavailable.'); });
+    return () => controller.abort();
+  }, [validEntry, paramTyreId, paramWidth, paramProfile, paramRim, paramQty, router]);
 
-    // If postcode provided, validate it
-    if (paramPostcode) {
-      validateLocation(paramPostcode);
-    }
-  }, [paramTyreId, paramWidth, paramProfile, paramRim, paramPostcode]);
-
-  // Load available slots
   useEffect(() => {
+    if (validEntry && paramPostcode) void validateLocation(paramPostcode);
+  }, [validEntry, paramPostcode]);
+
+  useEffect(() => {
+    if (!validEntry) return;
+    const controller = new AbortController();
     setIsLoadingSlots(true);
-    fetch('/api/slots')
-      .then((r) => r.json())
-      .then((res) => {
-        if (res.ok && res.data) {
-          setSlots(res.data);
-          // Default to first date with available slots
-          const firstDate = res.data[0]?.slot_date;
-          if (firstDate) setSelectedDate(firstDate);
-        }
+    fetch('/api/slots', { signal: controller.signal })
+      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok || !Array.isArray(response.data)) throw new Error();
+        setSlots(response.data);
+        setSelectedDate(response.data.find((slot: SlotWithAvailability) => slot.available)?.slot_date ?? '');
       })
-      .catch(() => {
-        // Handled gracefully
-      })
-      .finally(() => setIsLoadingSlots(false));
-  }, []);
+      .catch(() => { if (!controller.signal.aborted) { setSlots([]); setSlotsError('Fitting availability unavailable. Please try again later.'); } })
+      .finally(() => { if (!controller.signal.aborted) setIsLoadingSlots(false); });
+    return () => controller.abort();
+  }, [validEntry]);
 
-  // Pre-populate customer details if logged in
   useEffect(() => {
-    fetch('/api/account/me')
-      .then((r) => (r.ok ? r.json() : null))
-      .then((res) => {
-        if (res?.ok && res?.data) {
-          const u = res.data.user;
-          const c = res.data.customer;
-          if (u?.name) setFullName((prev) => prev || u.name);
-          if (u?.email) setEmail((prev) => prev || u.email);
-          if (u?.phone) setPhone((prev) => prev || u.phone);
-          if (c?.address_line1) setAddressLine1((prev) => prev || c.address_line1);
-          if (c?.postcode && !paramPostcode) {
-            setPostcode(c.postcode);
-            validateLocation(c.postcode);
-          }
-        }
+    setRearTyre(null);
+    if (!hasRearTyre) return;
+    const controller = new AbortController();
+    setAllTyres([]);
+    fetch('/api/tyres', { signal: controller.signal })
+      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok || !Array.isArray(response.data)) throw new Error();
+        setAllTyres(response.data.filter((tyre: Tyre) => tyre.active && tyre.stock > 0 && tyre.sell_price > 0
+          && (tyre.width !== paramWidth || tyre.profile !== paramProfile || tyre.rim !== paramRim)));
       })
-      .catch(() => {});
-  }, [paramPostcode]);
+      .catch(() => { if (!controller.signal.aborted) setAllTyres([]); });
+    return () => controller.abort();
+  }, [hasRearTyre, paramWidth, paramProfile, paramRim]);
+
+  useEffect(() => {
+    setQuote(null); setQuoteError(null);
+    if (!tyresReady || !locationReady || !selectedTyre) { setQuoteLoading(false); return; }
+    const controller = new AbortController();
+    const items = [{ tyre_id: selectedTyre.id, quantity }];
+    if (hasRearTyre && rearTyre) items.push({ tyre_id: rearTyre.id, quantity: rearQuantity });
+    setQuoteLoading(true);
+    fetch('/api/checkout/quote', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items, postcode: validatedPostcode }), signal: controller.signal })
+      .then((response) => response.json())
+      .then((response) => {
+        const parsed = quoteSchema.safeParse(response.data);
+        if (!response.ok || !parsed.success || parsed.data.lines.length !== items.length
+          || !items.every((item) => parsed.data.lines.some((line) => line.tyre_id === item.tyre_id && line.quantity === item.quantity))) throw new Error();
+        setQuote(parsed.data);
+      })
+      .catch(() => { if (!controller.signal.aborted) setQuoteError('Pricing unavailable. Cannot continue. Please try again later.'); })
+      .finally(() => { if (!controller.signal.aborted) setQuoteLoading(false); });
+    return () => controller.abort();
+  }, [selectedTyre, quantity, hasRearTyre, rearTyre, rearQuantity, tyresReady, locationReady, validatedPostcode]);
+
+  useEffect(() => {
+    if (!holdExpiresAt) return;
+    const timer = setTimeout(() => {
+      setHoldId(null); setHoldExpiresAt(null); setSelectedSlot(null);
+      setHoldError(holdFailure); setStep(3);
+    }, Math.max(0, Date.parse(holdExpiresAt) - Date.now()));
+    return () => clearTimeout(timer);
+  }, [holdExpiresAt]);
 
   async function validateLocation(pc: string) {
-    if (pc.trim().length < 3) return;
+    const request = ++postcodeRequest.current;
+    setZone(null); setValidatedPostcode(''); setPostcodeError(null);
+    if (pc.trim().length < 4) return;
     setIsCheckingPostcode(true);
-    setPostcodeError(null);
     try {
-      const res = await fetch('/api/postcode/check', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ postcode: pc }),
-      });
-      const data = await res.json();
-      if (!data.ok || !data.covered) {
-        setPostcodeError(data.message || "Sorry, we don't currently cover this postcode.");
-        setZone(null);
-      } else {
-        setZone(data.data.zone);
-        setPostcodeError(null);
-      }
-    } catch {
-      const clean = pc.toUpperCase().replace(/\s+/g, '');
-      const matched = MOCK_SERVICE_ZONES.find((z) => clean.startsWith(z.postcode_prefix));
-      if (matched) {
-        setZone(matched);
-      } else {
-        setPostcodeError("Sorry, we don't currently cover this postcode.");
-      }
+      const response = await fetch('/api/postcode/check', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ postcode: pc }) });
+      const data = await response.json();
+      if (request !== postcodeRequest.current) return;
+      if (!response.ok || !data.ok || !data.covered || !data.data?.zone) throw new Error(data.message || 'We could not verify this fitting area.');
+      setZone(data.data.zone); setValidatedPostcode(pc.trim().toUpperCase());
+    } catch (error) {
+      if (request === postcodeRequest.current) setPostcodeError(error instanceof Error ? error.message : 'Fitting area verification unavailable. Please try again.');
     } finally {
-      setIsCheckingPostcode(false);
+      if (request === postcodeRequest.current) setIsCheckingPostcode(false);
     }
   }
 
-  // Handle slot reservation hold
   async function handleSelectSlot(slot: SlotWithAvailability) {
-    setSelectedSlot(slot);
-    setHoldError(null);
-    setIsHolding(true);
+    const request = ++holdRequest.current;
+    setSelectedSlot(null); setHoldId(null); setHoldExpiresAt(null); setHoldError(null); setIsHolding(true);
     try {
-      const res = await fetch('/api/holds/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ slot_id: slot.id, session_token: sessionToken }),
-      });
-      const data = await res.json();
-      if (data.ok) {
-        setHoldId(data.data.hold_id);
-      } else {
-        setHoldError(data.message || 'Slot taken, please choose another.');
-      }
+      const response = await fetch('/api/holds/create', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slot_id: slot.id, session_token: sessionToken }) });
+      const data = await response.json();
+      if (request !== holdRequest.current) return;
+      if (!response.ok || !data.ok || !data.data?.hold_id || data.data.slot_id !== slot.id
+        || !Number.isFinite(Date.parse(data.data.expires_at)) || Date.parse(data.data.expires_at) <= Date.now()) throw new Error();
+      setHoldId(data.data.hold_id); setHoldExpiresAt(data.data.expires_at); setSelectedSlot(slot);
     } catch {
-      // Local fallback hold
-      setHoldId(`hold-${Date.now()}`);
+      if (request === holdRequest.current) setHoldError(holdFailure);
     } finally {
-      setIsHolding(false);
+      if (request === holdRequest.current) setIsHolding(false);
     }
   }
 
-  // Calculations
-  const fittingFee = 2000; // £20.00
-  const calloutCharge = zone?.callout_charge ?? 0;
-  const frontTotal = (selectedTyre?.sell_price ?? 0) * quantity;
-  const rearTotal = hasRearTyre && rearTyre ? rearTyre.sell_price * rearQuantity : 0;
-  const tyresTotal = frontTotal + rearTotal;
-  const totalAmount = tyresTotal + fittingFee + calloutCharge;
-  const depositAmount = Math.min(5000, totalAmount); // £50.00
-  const balanceDue = totalAmount - depositAmount;
+  const availableDates = Array.from(new Set(slots.map((slot) => slot.slot_date))).slice(0, 10);
+  const slotsForSelectedDate = slots.filter((slot) => slot.slot_date === selectedDate);
+  const frontTotal = selectedTyre ? selectedTyre.sell_price * quantity : undefined;
+  const rearTotal = rearTyre ? rearTyre.sell_price * rearQuantity : undefined;
+  const price = (value: number | undefined) => value === undefined ? 'Unavailable' : formatPrice(value);
 
-  // Group slots by date
-  const availableDates = Array.from(new Set(slots.map((s) => s.slot_date))).slice(0, 10);
-  const slotsForSelectedDate = slots.filter((s) => s.slot_date === selectedDate);
-
-  // Submit checkout
   async function handleProceedToPayment(e: React.FormEvent) {
     e.preventDefault();
-    if (!selectedTyre || !selectedSlot) {
-      setFormError('Please select your tyres and booking slot.');
-      return;
+    if (!tyresReady || !locationReady || !holdReady || !quote) {
+      setFormError('Confirm the tyres, price, fitting area and reserved time before continuing.'); return;
     }
-    if (!fullName || !email || !phone || !addressLine1 || !postcode) {
-      setFormError('Please fill in all required contact and fitting address fields.');
-      return;
+    if (!fullName || !email || !phone || !addressLine1) {
+      setFormError('Please fill in all required contact and fitting address fields.'); return;
     }
-
-    setFormError(null);
-    setIsSubmitting(true);
-
-    const items = [{ tyre_id: selectedTyre.id, quantity }];
-    if (hasRearTyre && rearTyre) {
-      items.push({ tyre_id: rearTyre.id, quantity: rearQuantity });
-    }
-
+    setIsSubmitting(true); setFormError(null);
     try {
-      const res = await fetch('/api/checkout/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          slot_id: selectedSlot.id,
-          session_token: sessionToken,
-          customer: {
-            name: fullName,
-            email,
-            phone,
-            address_line1: addressLine1,
-            address_line2: addressLine2 || '',
-            city: city || 'London',
-            postcode: postcode.toUpperCase(),
-          },
-          vehicle: {
-            reg: registration.toUpperCase() || 'AB21ABC',
-            make: vehicleMake || 'Vehicle',
-            model: vehicleModel || '',
-          },
-          items,
-          notes: fittingNotes || '',
-        }),
+      const response = await fetch('/api/checkout/create', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slot_id: selectedSlot!.id, session_token: sessionToken,
+          customer: { name: fullName, email, phone, address_line1: addressLine1,
+            address_line2: addressLine2, city, postcode: validatedPostcode },
+          vehicle: { reg: registration.trim().toUpperCase() || undefined, make: vehicleMake.trim() || undefined, model: vehicleModel.trim() || undefined },
+          items: [{ tyre_id: selectedTyre!.id, quantity }, ...(hasRearTyre && rearTyre ? [{ tyre_id: rearTyre.id, quantity: rearQuantity }] : [])],
+          notes: fittingNotes }),
       });
-
-      const json = await res.json();
-      if (!json.ok) {
-        setFormError(json.message || 'Could not initiate checkout. Please retry.');
-        setIsSubmitting(false);
-        return;
-      }
-
-      // Store in session storage for the payment page
-      if (typeof window !== 'undefined') {
-        sessionStorage.setItem('gf_checkout_data', JSON.stringify({
-          booking_ref: json.data.booking_ref,
-          manage_token: json.data.manage_token,
-          client_secret: json.data.client_secret,
-          breakdown: json.data.breakdown,
-          slot: selectedSlot,
-          customer: { name: fullName, email, phone, addressLine1, city, postcode },
-          vehicle: { reg: registration, make: vehicleMake, model: vehicleModel },
-          is_mock_payment: json.data.is_mock_payment,
-        }));
-      }
-
-      router.push(`/booking/pay?ref=${json.data.booking_ref}`);
+      const data = await response.json();
+      setFormError(data.message || 'Online booking payments are unavailable. No booking has been created.');
     } catch {
-      setFormError('Connection error. Please try again.');
-      setIsSubmitting(false);
-    }
+      setFormError('Booking service unavailable. Please try again later.');
+    } finally { setIsSubmitting(false); }
   }
+  if (!validEntry) return <div className="container-g section" role="status">Returning to tyre finder…</div>;
 
   return (
     <div className="container-g section">
@@ -327,8 +262,8 @@ function BookingWizard() {
               aria-label={"Step " + s.num + ": " + s.title}
               aria-current={isActive ? 'step' : undefined}
               onClick={() => {
-                if (isDone || (s.num === 1) || (s.num === 2 && selectedTyre) || (s.num === 3 && zone) || (s.num === 4 && selectedSlot)) {
-                  setStep(s.num as any);
+                if (s.num === 1 || (s.num === 2 && tyresReady) || (s.num === 3 && tyresReady && locationReady && quote) || (s.num === 4 && tyresReady && locationReady && quote && holdReady)) {
+                  setStep(s.num as 1 | 2 | 3 | 4);
                 }
               }}
               className="min-w-0 min-h-11 flex flex-col sm:flex-row items-center sm:items-start gap-2 text-center sm:text-left"
@@ -413,7 +348,7 @@ function BookingWizard() {
                 </div>
               ) : (
                 <div className="text-center py-6">
-                  <p className="text-ink-2 mb-4">No tyre currently selected.</p>
+                  <p className="text-ink-2 mb-4" role="alert">{journeyError ?? 'Checking selected tyre…'}</p>
                   <ContactActions className="justify-center mb-4" />
                   <Link href="/tyres" className="btn btn-primary">Select Tyre from Catalogue</Link>
                 </div>
@@ -427,15 +362,12 @@ function BookingWizard() {
                     checked={hasRearTyre}
                     onChange={(e) => {
                       setHasRearTyre(e.target.checked);
-                      if (e.target.checked && !rearTyre) {
-                        const staggeredRear = allTyres.find((t) => t.width === 255 && t.rim === selectedTyre?.rim) || allTyres[1];
-                        setRearTyre(staggeredRear);
-                      }
+                      setRearTyre(null);
                     }}
                     className="mt-1 h-4 w-4 accent-brand"
                   />
                   <div>
-                    <span className="text-sm font-bold block">My vehicle uses staggered rear tyres (e.g. BMW M-Sport / AMG / Porsche)</span>
+                    <span className="text-sm font-bold block">My vehicle uses a different rear tyre size</span>
                     <span className="text-xs text-ink-3">Check this if your rear tyres are wider than the fronts.</span>
                   </div>
                 </label>
@@ -449,9 +381,10 @@ function BookingWizard() {
                       value={rearTyre?.id ?? ''}
                       onChange={(e) => {
                         const found = allTyres.find((t) => t.id === e.target.value);
-                        if (found) setRearTyre(found);
+                        setRearTyre(found ?? null);
                       }}
                     >
+                      <option value="">Choose a rear tyre matching your sidewall</option>
                       {allTyres.map((t) => (
                         <option key={t.id} value={t.id}>
                           {t.brand} {t.model} ({formatTyreSize(t)}) — {formatPrice(t.sell_price)} each
@@ -488,7 +421,7 @@ function BookingWizard() {
               <button
                 type="button"
                 onClick={() => setStep(2)}
-                disabled={!selectedTyre}
+                disabled={!tyresReady}
                 className="btn btn-primary w-full"
               >
                 Continue to Location &amp; Vehicle <ArrowRight size={16} />
@@ -514,7 +447,7 @@ function BookingWizard() {
                       className="input uppercase min-w-0 flex-1"
                       placeholder="e.g. E14 5AB"
                       value={postcode}
-                      onChange={(e) => setPostcode(e.target.value)}
+                      onChange={(e) => { ++postcodeRequest.current; setPostcode(e.target.value); setZone(null); setValidatedPostcode(''); setIsCheckingPostcode(false); }}
                     />
                     <button
                       type="button"
@@ -543,7 +476,7 @@ function BookingWizard() {
                   <input
                     id="vrm"
                     className="input-vrm uppercase mb-3 max-w-sm"
-                    placeholder="AB21 ABC"
+                    placeholder="Vehicle registration (optional)"
                     maxLength={10}
                     value={registration}
                     onChange={(e) => setRegistration(e.target.value.toUpperCase())}
@@ -554,7 +487,7 @@ function BookingWizard() {
                       <input
                         id="make"
                         className="input"
-                        placeholder="e.g. BMW"
+                        placeholder="Vehicle make (optional)"
                         value={vehicleMake}
                         onChange={(e) => setVehicleMake(e.target.value)}
                       />
@@ -564,7 +497,7 @@ function BookingWizard() {
                       <input
                         id="model"
                         className="input"
-                        placeholder="e.g. 3 Series M Sport"
+                        placeholder="Vehicle model (optional)"
                         value={vehicleModel}
                         onChange={(e) => setVehicleModel(e.target.value)}
                       />
@@ -579,16 +512,11 @@ function BookingWizard() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    if (!zone) {
-                      validateLocation(postcode);
-                    }
-                    setStep(3);
-                  }}
-                  disabled={!postcode || postcode.length < 4}
+                  onClick={() => setStep(3)}
+                  disabled={!locationReady || !quote || quoteLoading}
                   className="btn btn-primary flex-1"
                 >
-                  Choose Fitting Slot <ArrowRight size={16} />
+                  {quoteLoading ? 'Checking price…' : 'Choose Fitting Slot'} <ArrowRight size={16} />
                 </button>
               </div>
             </div>
@@ -599,7 +527,7 @@ function BookingWizard() {
             <div className="card space-y-6">
               <div className="border-b border-line pb-4">
                 <h2 className="text-xl font-bold">3. Select Appointment Slot</h2>
-                <p className="text-sm text-ink-2">Choose a date and 2-hour arrival window for our mobile fitting van.</p>
+                <p className="text-sm text-ink-2">Choose an available date and fitting window.</p>
               </div>
 
               {/* Date Tabs */}
@@ -619,7 +547,7 @@ function BookingWizard() {
                         type="button"
                         onClick={() => {
                           setSelectedDate(d);
-                          setSelectedSlot(null);
+                          ++holdRequest.current; setSelectedSlot(null); setHoldId(null); setHoldExpiresAt(null); setIsHolding(false);
                         }}
                         className={`p-2.5 rounded border text-center transition-all ${
                           isSelected
@@ -638,7 +566,7 @@ function BookingWizard() {
               {/* Time Slots */}
               <div>
                 <label className="label mb-3 block flex items-center gap-2">
-                  <Clock size={14} className="text-brand" /> 2-Hour Fitting Window for {new Date(selectedDate || Date.now()).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}
+                  <Clock size={14} className="text-brand" /> Fitting Window {selectedDate ? 'for ' + new Date(selectedDate).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }) : ''}
                 </label>
 
                 {isLoadingSlots ? (
@@ -646,7 +574,7 @@ function BookingWizard() {
                     <Loader2 size={18} className="animate-spin text-brand" /> Loading available van slots...
                   </div>
                 ) : slotsForSelectedDate.length === 0 ? (
-                  <div><p className="text-sm text-ink-3 py-4">No remaining slots for this date. Please choose another day.</p><ContactActions /></div>
+                  <div><p className="text-sm text-ink-3 py-4">{slotsError ?? 'No fitting times are available. Please choose another day.'}</p><ContactActions /></div>
                 ) : (
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {slotsForSelectedDate.map((s) => {
@@ -663,7 +591,7 @@ function BookingWizard() {
                             {formatSlotTime(s.start_time)} – {formatSlotTime(s.end_time)}
                           </span>
                           <span className={`text-xs mt-1 ${isSelected ? 'text-ink-inverse font-semibold' : 'text-ok'}`}>
-                            {isSelected ? 'Held for 15 mins' : `${s.remaining} van slot left`}
+                            {isSelected && holdReady ? 'Reserved until ' + new Date(holdExpiresAt!).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : `${s.remaining} fitting time available`}
                           </span>
                         </button>
                       );
@@ -678,10 +606,10 @@ function BookingWizard() {
                 )}
                 {holdError && <ContactActions className="mt-3" />}
 
-                {selectedSlot && (
+                {holdReady && (
                   <div className="mt-4 p-3 bg-brand/10 border border-brand/30 rounded flex items-center gap-2 text-xs text-brand">
                     <CheckCircle2 size={16} />
-                    <span>Slot held exclusively for you for 15 minutes.</span>
+                    <span>Time reserved until {new Date(holdExpiresAt!).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}. Complete your details before it expires.</span>
                   </div>
                 )}
               </div>
@@ -693,7 +621,7 @@ function BookingWizard() {
                 <button
                   type="button"
                   onClick={() => setStep(4)}
-                  disabled={!selectedSlot}
+                  disabled={!holdReady || isHolding}
                   className="btn btn-primary flex-1"
                 >
                   Enter Contact Details <ArrowRight size={16} />
@@ -747,7 +675,7 @@ function BookingWizard() {
                       autoComplete="tel"
                       type="tel"
                       className="input"
-                      placeholder="07700 900123"
+                      placeholder="Your UK mobile number"
                       required
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
@@ -813,7 +741,7 @@ function BookingWizard() {
                 </button>
                 <button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !quote || !holdReady || !locationReady || !tyresReady}
                   className="btn btn-primary flex-1"
                 >
                   {isSubmitting ? (
@@ -848,7 +776,7 @@ function BookingWizard() {
                   </div>
                   <div className="text-xs text-ink-3">{formatTyreSize(selectedTyre)}</div>
                 </div>
-                <span className="mono font-semibold">{formatPrice(frontTotal)}</span>
+                <span className="mono font-semibold">{price(frontTotal)}</span>
               </div>
             )}
 
@@ -860,21 +788,21 @@ function BookingWizard() {
                   </div>
                   <div className="text-xs text-ink-3">{formatTyreSize(rearTyre)}</div>
                 </div>
-                <span className="mono font-semibold">{formatPrice(rearTotal)}</span>
+                <span className="mono font-semibold">{price(rearTotal)}</span>
               </div>
             )}
 
             {/* Mobile fitting fee */}
             <div className="flex items-center justify-between text-xs text-ink-2 pt-2 border-t border-line/40">
               <span>Mobile van fitting &amp; balance</span>
-              <span className="mono font-semibold text-ink-1">{formatPrice(fittingFee)}</span>
+              <span className="mono font-semibold text-ink-1">{price(quote?.fitting_fee)}</span>
             </div>
 
             {/* Callout fee */}
             <div className="flex items-center justify-between text-xs text-ink-2">
               <span>London area call-out</span>
               <span className="mono font-semibold text-ink-1">
-                {calloutCharge === 0 ? 'FREE' : formatPrice(calloutCharge)}
+                {price(quote?.callout_charge)}
               </span>
             </div>
           </div>
@@ -883,15 +811,15 @@ function BookingWizard() {
           <div className="border-t border-line pt-4 space-y-2">
             <div className="flex items-baseline justify-between">
               <span className="text-sm font-bold text-ink-1">Total Fitted Amount</span>
-              <span className="price-display text-xl">{formatPrice(totalAmount)}</span>
+              <span className="price-display text-xl">{price(quote?.total_amount)}</span>
             </div>
             <div className="flex items-baseline justify-between text-ok font-semibold text-sm">
-              <span>Deposit Due Now (Holds Slot)</span>
-              <span className="mono">{formatPrice(depositAmount)}</span>
+              <span>Deposit required at payment</span>
+              <span className="mono">{price(quote?.deposit_amount)}</span>
             </div>
             <div className="flex items-baseline justify-between text-xs text-ink-2 pt-1 border-t border-line/40">
               <span>Remaining Balance (Due on Fitting Day)</span>
-              <span className="mono font-semibold text-ink-1">{formatPrice(balanceDue)}</span>
+              <span className="mono font-semibold text-ink-1">{price(quote?.balance_due)}</span>
             </div>
           </div>
 
@@ -905,18 +833,15 @@ function BookingWizard() {
               {postcode && (
                 <div className="flex items-center gap-1.5 text-ink-2">
                   <MapPin size={14} className="text-brand" />
-                  {postcode.toUpperCase()} ({zone?.zone_name ?? 'London'})
+                  {postcode.toUpperCase()}{zone ? ' (' + zone.zone_name + ')' : ''}
                 </div>
               )}
             </div>
           )}
 
-          <div className="pt-2 text-xs text-ink-3 space-y-1">
-            <p className="flex items-center gap-1">
-              <ShieldCheck size={14} className="text-brand" /> 100% Free cancellation up to 48 hours before.
-            </p>
-            <p>Technician balances and checks torque to OEM factory specification.</p>
-          </div>
+          {quoteError && <p role="alert" className="text-sm text-danger">{quoteError}</p>}
+          {!quote && !quoteError && <p className="text-xs text-ink-2" role="status">{quoteLoading ? 'Checking price…' : 'Confirm your tyres and fitting area to check the complete price.'}</p>}
+          <p className="text-xs text-ink-2">Online payments are currently unavailable. A quote or temporary time reservation does not confirm a booking.</p>
         </div>
       </div>
     </div>

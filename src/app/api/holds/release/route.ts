@@ -1,38 +1,16 @@
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
 import { releaseSlotHold } from '@/lib/db';
-import { releaseHoldSchema } from '@/lib/validation';
 
 export const runtime = 'nodejs';
-
-/**
- * POST /api/holds/release — free the slot when the user backs out.
- */
+const schema = z.object({ session_token: z.string().min(8).max(200), slot_id: z.string().uuid().optional() });
 export async function POST(req: Request) {
-  let body: unknown;
+  const parsed = schema.safeParse(await req.json().catch(() => null));
+  if (!parsed.success) return NextResponse.json({ ok: false, error: 'invalid_hold' }, { status: 400 });
   try {
-    body = await req.json();
+    await releaseSlotHold(parsed.data.session_token, parsed.data.slot_id);
+    return NextResponse.json({ ok: true, data: { released: true } });
   } catch {
-    return NextResponse.json(
-      { ok: false, error: 'bad_request', message: 'Invalid request.' },
-      { status: 400 },
-    );
-  }
-
-  const parsed = releaseHoldSchema.safeParse(body);
-  if (!parsed.success) {
-    return NextResponse.json(
-      { ok: false, error: 'validation_failed', message: 'Invalid slot.' },
-      { status: 400 },
-    );
-  }
-
-  const { slot_id, session_token } = parsed.data;
-
-  try {
-    await releaseSlotHold(slot_id, session_token);
-    return NextResponse.json({ ok: true, data: { released: true } });
-  } catch (err) {
-    console.warn('[holds/release] release failed:', err);
-    return NextResponse.json({ ok: true, data: { released: true } });
+    return NextResponse.json({ ok: false, error: 'service_unavailable', message: 'Hold release could not be confirmed.' }, { status: 503 });
   }
 }

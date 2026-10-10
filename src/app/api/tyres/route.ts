@@ -23,8 +23,8 @@ export async function GET(req: Request) {
   } catch (err) {
     console.error('[api/tyres] failed to load catalogue:', err);
     return NextResponse.json(
-      { ok: false, error: 'server_error', message: 'Could not load tyre catalogue.' },
-      { status: 500 },
+      { ok: false, error: 'service_unavailable', message: 'Inventory unavailable. Please try again later.' },
+      { status: 503 },
     );
   }
 }

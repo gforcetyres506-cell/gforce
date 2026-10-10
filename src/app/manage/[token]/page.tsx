@@ -16,13 +16,14 @@ import { ContactActions } from '@/components/layout/BusinessContact';
 import { formatPrice, formatSlotTime, formatReg } from '@/lib/utils';
 import MStripe from '@/components/ui/MStripe';
 import type { BookingWithDetails, BookingStatus } from '@/types';
+import { hasRecordedDeposit } from '@/lib/booking-state';
 
 const STATUS_STEPS: Array<{ key: BookingStatus; label: string; description: string }> = [
-  { key: 'confirmed',        label: 'Deposit Confirmed', description: 'Your slot and tyres are locked in.' },
-  { key: 'tyres_reserved',   label: 'Tyres Reserved',    description: 'Stock loaded onto the van.' },
+  { key: 'confirmed',        label: 'Deposit Recorded', description: 'Payment recorded on this booking.' },
+  { key: 'tyres_reserved',   label: 'Tyres Reserved',    description: 'Tyre reservation recorded.' },
   { key: 'fitter_assigned',  label: 'Fitter Assigned',   description: 'Mobile technician assigned.' },
   { key: 'en_route',         label: 'Van En Route',      description: 'Technician driving to your location.' },
-  { key: 'completed',        label: 'Fitting Complete',  description: 'Balanced, torqued & signed off.' },
+  { key: 'completed',        label: 'Fitting Complete',  description: 'Completion recorded.' },
 ];
 
 export default function ManageBookingPage({
@@ -35,6 +36,7 @@ export default function ManageBookingPage({
 
   const [booking, setBooking] = useState<BookingWithDetails | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -44,10 +46,11 @@ export default function ManageBookingPage({
         if (res.ok && res.data) {
           setBooking(res.data);
         } else {
+          if (res.error !== 'not_found') setLoadError('Booking service unavailable. Please try again later.');
           setBooking(null);
         }
       })
-      .catch(() => setBooking(null))
+      .catch(() => { setBooking(null); setLoadError('Booking service unavailable. Please try again later.'); })
       .finally(() => setLoading(false));
   }, [token]);
 
@@ -63,9 +66,9 @@ export default function ManageBookingPage({
     return (
       <div className="container-g section max-w-lg text-center">
         <MStripe className="mb-6 mx-auto" />
-        <h1 className="display-2 mb-4">Booking Not Found</h1>
+        <h1 className="display-2 mb-4">{loadError ? 'Booking service unavailable' : 'Booking Not Found'}</h1>
         <p className="text-sm text-ink-2 mb-8">
-          We couldn&apos;t locate a booking associated with that link. Please check the link in your booking confirmation.
+          {loadError ?? 'We could not locate a booking associated with that link. Please check your confirmation link.'}
         </p>
         <Link href="/" className="btn btn-primary">Return to Homepage</Link>
         <ContactActions className="justify-center mt-4" />
@@ -82,7 +85,8 @@ export default function ManageBookingPage({
     : 'To be confirmed';
 
   const currentStepIndex = STATUS_STEPS.findIndex((s) => s.key === b.status);
-  const activeIndex = currentStepIndex >= 0 ? currentStepIndex : 0;
+  const paid = hasRecordedDeposit(b);
+  const activeIndex = paid ? currentStepIndex : -1;
 
   return (
     <div className="container-g section max-w-4xl">
@@ -147,6 +151,7 @@ export default function ManageBookingPage({
           })}
         </div>
 
+        <p className="text-sm text-ink-2">{b.fitter_id ? 'Fitter assignment recorded' : 'Fitter not assigned yet'}</p>
         <ContactActions />
       </div>
 
@@ -213,11 +218,11 @@ export default function ManageBookingPage({
               <span className="mono">{formatPrice(b.total_amount)}</span>
             </div>
             <div className="flex justify-between text-ok font-semibold">
-              <span>Deposit Paid</span>
+              <span>{paid ? 'Deposit recorded' : 'Deposit required'}</span>
               <span className="mono">{formatPrice(b.deposit_amount)}</span>
             </div>
             <div className="flex justify-between text-sm font-bold text-ink-1 pt-2 border-t border-line/40">
-              <span>Balance Due on Arrival</span>
+              <span>{paid ? 'Balance Due on Arrival' : 'Balance after deposit'}</span>
               <span className="mono text-brand">{formatPrice(b.balance_due)}</span>
             </div>
           </div>
@@ -231,7 +236,7 @@ export default function ManageBookingPage({
             </h3>
 
             <p className="text-xs text-ink-2">
-              This local preview demonstrates booking-management states only. Production rescheduling, cancellation and refund rules are not active yet.
+              Online booking changes are currently unavailable. Contact us with your booking reference to discuss a change.
             </p>
 
             <div className="space-y-2.5">
@@ -257,7 +262,7 @@ export default function ManageBookingPage({
                       const json = await res.json();
                       if (json.ok && json.data) {
                         setBooking(json.data);
-                        setActionMessage('Your booking has been cancelled and tyres returned to inventory.');
+                        setActionMessage(json.data.status === 'cancelled' ? 'Cancellation recorded. Contact us about any refund.' : 'Cancellation could not be confirmed.');
                       } else {
                         setActionMessage(json.message ?? 'Could not cancel booking.');
                       }

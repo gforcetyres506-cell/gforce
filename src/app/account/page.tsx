@@ -52,6 +52,7 @@ export default function CustomerAccountDashboard() {
   const [data, setData] = useState<CustomerAccountData | null>(null);
   const [loading, setLoading] = useState(true);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [accountError, setAccountError] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/api/account/me')
@@ -65,10 +66,12 @@ export default function CustomerAccountDashboard() {
       .then((res) => {
         if (res && res.ok && res.data) {
           setData(res.data);
+        } else if (res) {
+          setAccountError('Account service unavailable. Please try again later.');
         }
       })
       .catch(() => {
-        router.replace('/account/login');
+        setAccountError('Account service unavailable. Please try again later.');
       })
       .finally(() => setLoading(false));
   }, [router]);
@@ -76,11 +79,15 @@ export default function CustomerAccountDashboard() {
   async function handleLogout() {
     setIsLoggingOut(true);
     try {
-      await fetch('/api/account/logout', { method: 'POST' });
+      const response = await fetch('/api/account/logout', { method: 'POST' });
+      const result = await response.json();
+      if (!response.ok || !result.ok) throw new Error();
       router.push('/');
       router.refresh();
     } catch {
-      router.push('/');
+      setAccountError('Sign out could not be confirmed. Please try again.');
+    } finally {
+      setIsLoggingOut(false);
     }
   }
 
@@ -93,7 +100,7 @@ export default function CustomerAccountDashboard() {
     );
   }
 
-  if (!data) return null;
+  if (!data) return <div className="container-g section"><p role="alert">{accountError ?? 'Account service unavailable.'}</p></div>;
 
   const activeBookings = data.bookings.filter(
     (b) => !['completed', 'cancelled', 'refunded'].includes(b.status),
@@ -105,6 +112,7 @@ export default function CustomerAccountDashboard() {
   return (
     <div className="container-g section py-10 space-y-10">
       <MStripe className="mb-2" />
+      {accountError && <p role="alert" className="text-sm text-danger">{accountError}</p>}
 
       {/* Header bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-line">
@@ -202,7 +210,7 @@ export default function CustomerAccountDashboard() {
                 <div className="text-xs text-ink-2 space-y-1.5 pt-2 border-t border-line/60">
                   <div className="flex items-center gap-2">
                     <Calendar size={14} className="text-ink-3" />
-                    <span>Date: {b.slot?.slot_date ?? 'Confirmed'}</span>
+                    <span>Date: {b.slot?.slot_date ?? 'Not confirmed'}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Clock size={14} className="text-ink-3" />
@@ -275,7 +283,7 @@ export default function CustomerAccountDashboard() {
                     <th className="p-3.5">Vehicle</th>
                     <th className="p-3.5">Date</th>
                     <th className="p-3.5">Tyres</th>
-                    <th className="p-3.5">Total Paid</th>
+                    <th className="p-3.5">Order total</th>
                     <th className="p-3.5">Status</th>
                     <th className="p-3.5 text-right">Action</th>
                   </tr>

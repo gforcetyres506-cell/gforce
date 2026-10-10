@@ -1,13 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowRight, AlertCircle, Loader2, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { ArrowRight, AlertCircle, Loader2 } from 'lucide-react';
 import MStripe from '@/components/ui/MStripe';
 
 export default function CustomerSignupPage() {
-  const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -16,6 +14,7 @@ export default function CustomerSignupPage() {
   const [address, setAddress] = useState('');
   const [postcode, setPostcode] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [registrationMessage, setRegistrationMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function handleSignup(e: React.FormEvent) {
@@ -58,19 +57,7 @@ export default function CustomerSignupPage() {
         return;
       }
 
-      // 2. Automatically log in to establish session cookie
-      const loginRes = await fetch('/api/account/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (loginRes.ok) {
-        router.push('/account');
-        router.refresh();
-      } else {
-        router.push('/account/login');
-      }
+      setRegistrationMessage(data.message);
     } catch {
       setError('Connection issue during registration. Please try again.');
     } finally {
@@ -89,6 +76,7 @@ export default function CustomerSignupPage() {
       </div>
 
       <div className="card space-y-6 border-line bg-surface/80 backdrop-blur shadow-2xl">
+        {registrationMessage && <div role="status" className="text-sm text-ink-2">{registrationMessage} <Link href="/account/login" className="text-brand underline">Go to sign in</Link></div>}
         <form onSubmit={handleSignup} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -110,7 +98,7 @@ export default function CustomerSignupPage() {
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="07700 900222"
+                placeholder="Your UK mobile number"
                 required
                 className="input w-full"
               />

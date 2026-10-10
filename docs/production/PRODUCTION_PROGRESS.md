@@ -1,5 +1,84 @@
 # G FORCE TYRES - Production recovery progress
 
+## Gate B - truthful funnel / zero fake production state (2026-10-10)
+
+Branch: `fix/b-truthful-funnel`. Starting HEAD:
+`d67b99d7ca1d00da6055d47ed48cb73313abe5c4` (completed Gate A).
+This entry supersedes the historical mock-path findings below for this branch.
+The full path classification is in [MOCK_PURGE_REGISTER.md](MOCK_PURGE_REGISTER.md).
+
+PRODUCTION FAKE SUCCESS PATHS = 0
+
+### Implemented
+
+- Deleted runtime fictional business records and every local-state database
+  substitution. Inventory, settings, coverage, bookings and fitters now require
+  successful persistent reads; genuine empty results remain empty.
+- Manual Width/Profile/Rim start empty and require three deliberate selections.
+  Booking without product/size context returns to the finder. Unknown product
+  IDs, unavailable stock and missing prices cannot select another tyre.
+  Rear tyres require explicit selection from actual differently sized inventory.
+  Optional vehicle/city data stays empty; no plate, Vehicle or BMW is invented.
+- OneAuto failure, timeout, unknown data, explicit ambiguity and unlabeled
+  alternative fitments return manual entry. Missing load/speed ratings remain
+  unspecified.
+- Slot GET is read-only; no implicit opening hours/capacity/schedule generation.
+  Occupancy read failure cannot become free capacity. Holds require the atomic
+  RPC plus a persisted session-owned row and future expiry. Failed/malformed/
+  expired holds show the required message and block both Continue and progress
+  navigation. No synthetic hold or manual check-then-insert path remains.
+- Booking totals use a read-only server quote from validated database stock,
+  prices, settings and coverage. Missing/invalid pricing blocks continuation.
+  Removed hardcoded fitting/deposit amounts and free location-charge defaults.
+- Retired fake checkout/payment confirmation, phone payment receipts, local
+  admin changes and synthetic payment UI. Checkout and admin/cancellation
+  mutations fail closed without writes; signed relevant Stripe events return
+  retryable failure while the verified payment/refund engine is absent.
+  Admin now renders the existing unavailable-state component; real auth guards remain.
+- Signup uses the actual Supabase verification request; it cannot invent a user,
+  mark an unverified address verified, or claim delivery/new account creation
+  from an obfuscated auth response. Account/history/sign-out failures remain
+  errors. Unpaid bookings have no paid progress; absent fitters are explicit.
+- Retired legacy seed/provisioning CLIs before credential loading or network.
+  The fictional business seed SQL is empty. All ordered migrations and legacy
+  schema.sql are unchanged. No cloud database was accessed or modified.
+
+### Local verification
+
+| Check | Result |
+| --- | --- |
+| `npm run typecheck` | PASS, including final generated Next route types |
+| `npm run lint` | PASS, zero errors; 8 remaining pre-existing warnings |
+| `npm run build` | PASS, invoked by Playwright webServer before starting the compiled production application |
+| `npm run test:reliability` | PASS, 39/39 isolated tests; real TypeScript helpers, database/provider doubles confined to tests |
+| `npm run test:ui` | PASS, 119/119 against compiled production UI at 360, 375, 390, 430, 768, 1366 and 1440px |
+| `npm run test:security` | PASS, structural checks; live disposable-project acceptance deliberately not run |
+| `git diff --check` | PASS, including the final documentation and staged diff |
+| Migrations / schema diff | Empty; only the retired fictional seed file changes under supabase |
+
+UI fixtures are test-only. The compiled server has empty database/provider
+credentials; browser API fixtures exercise layout and failures, while direct
+API checks exercise actual server 503/404 responses. No hosted booking, payment,
+hold, account or inventory mutation is exercised.
+
+### Release boundary
+
+This gate removes false success. It does **not** make commerce launch-ready.
+Runtime schema conflicts and absent booking/payment/admin migrations remain
+unresolved. Checkout, refunds, online cancellation and admin mutations must stay
+unavailable until their canonical persistent workflows are implemented and
+verified. A quote or temporary time hold never confirms a booking.
+
+Hosted data/ledger accuracy, approved business prices/contact details,
+provider delivery, outstanding Stripe events and physical-device acceptance
+remain unverified. Do not infer live production state from these local checks.
+
+Commit message: `fix(production): remove silent fake and default states`.
+Local commit only; no push, merge, deployment or production service change.
+Stop after commit and clean-tree verification.
+
+---
+
 ## Gate A - customer-facing UI safety (2026-10-10)
 
 Scope: the UI safety work explicitly authorized after the documentation-only recovery checkpoint. Branch: `fix/a-ui-safety`. Starting commit: `2d2178bbdaa1b54407a8b3902a104bfd4e1d0ed5`; application source baseline: `61346440dd64e5dacff31d6e6409236d08d3e6c8`. Audit input: workspace `GFORCE_UIUX_AUDIT.md`, which identifies the same repository and application SHA.

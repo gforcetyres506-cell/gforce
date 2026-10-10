@@ -1,73 +1,38 @@
-import { createServiceClient, isSupabaseConfigured } from './supabase';
+import { createServiceClient } from './supabase';
 import { normalisePostcode } from './utils';
-import { MOCK_SERVICE_ZONES } from './mockData';
-import { isMockDataEnabled } from './mock-mode';
-import type { CoverageResult, ServiceZone } from '@/types';
+import { ServiceUnavailableError } from './service-error';
+import { z } from 'zod';
+import type { CoverageResult } from '@/types';
 
-/** Postcodes.io — free, no key, no rate limit for our volume. */
 export async function validatePostcode(postcode: string): Promise<boolean> {
   try {
     const res = await fetch(
-      `https://api.postcodes.io/postcodes/${encodeURIComponent(postcode)}/validate`,
-      { signal: AbortSignal.timeout(4000) }
+      'https://api.postcodes.io/postcodes/' + encodeURIComponent(postcode) + '/validate',
+      { signal: AbortSignal.timeout(4000), cache: 'no-store' },
     );
-    if (!res.ok) return false;
-    const json = (await res.json()) as { result: boolean };
-    return json.result === true;
+    if (!res.ok) throw new ServiceUnavailableError();
+    const json = await res.json();
+    if (typeof json.result !== 'boolean') throw new ServiceUnavailableError();
+    return json.result;
   } catch {
-    // Postcodes.io down / offline — fall back to our own regex check upstream.
-    return true;
+    throw new ServiceUnavailableError('Postcode verification unavailable. Please try again.');
   }
 }
 
-/**
- * Does G Force cover this postcode?
- * Matches the longest zone prefix first so 'EC1' beats 'E1'.
- */
+const zoneSchema = z.object({
+  id: z.string().min(1), postcode_prefix: z.string().trim().min(1),
+  zone_name: z.string().min(1), callout_charge: z.number().int().nonnegative().safe(), active: z.literal(true),
+});
 export async function checkCoverage(postcode: string): Promise<CoverageResult> {
   const clean = normalisePostcode(postcode);
-
-  if (clean.length < 4) {
-    return { covered: false, message: 'Enter a full UK postcode.' };
-  }
-
-  let data: ServiceZone[] = MOCK_SERVICE_ZONES;
-
-  if (!isMockDataEnabled() && isSupabaseConfigured()) {
-    try {
-      const db = createServiceClient();
-      const res = await db
-        .from('service_zones')
-        .select('*')
-        .eq('active', true)
-        .returns<ServiceZone[]>();
-      if (res.data && res.data.length > 0) {
-        data = res.data;
-      }
-    } catch {
-      data = MOCK_SERVICE_ZONES;
-    }
-  }
-
-  const matches = data
+  if (clean.length < 4) return { covered: false, message: 'Enter a full UK postcode.' };
+  const { data, error } = await createServiceClient().from('service_zones').select('*').eq('active', true);
+  const parsed = z.array(zoneSchema).safeParse(data);
+  if (error || !parsed.success) throw new ServiceUnavailableError('Fitting area verification unavailable.');
+  const zone = parsed.data
     .filter((z) => clean.startsWith(normalisePostcode(z.postcode_prefix)))
-    .sort((a, b) => b.postcode_prefix.length - a.postcode_prefix.length);
-
-  const zone = matches[0];
-
-  if (!zone) {
-    return {
-      covered: false,
-      message: 'We do not cover this postcode yet. Leave your email and we will tell you when we do.',
-    };
-  }
-
-  return {
-    covered: true,
-    zone,
-    message:
-      zone.callout_charge > 0
-        ? `We cover ${zone.zone_name}. A call-out charge applies to this area.`
-        : `We cover ${zone.zone_name}. No call-out charge.`,
-  };
+    .sort((a, b) => b.postcode_prefix.length - a.postcode_prefix.length)[0];
+  if (!zone) return { covered: false, message: 'This postcode is outside our current fitting area.' };
+  return { covered: true, zone, message: zone.callout_charge > 0
+    ? 'This postcode is covered. A location charge applies.' : 'This postcode is covered. No location charge.' };
 }

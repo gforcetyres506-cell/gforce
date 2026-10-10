@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   description: 'Compare budget, standard and premium tyres by size, season and specification.',
 };
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 interface Props {
   // Next 15: searchParams is a Promise
@@ -28,13 +28,15 @@ export default async function TyresPage({ searchParams }: Props) {
   const filterTier = sp.tier === 'mid' ? 'standard' : sp.tier;
   const filterSeason = sp.season;
 
-  const tyres = await getTyres({
+  let tyres: Tyre[] = [];
+  let inventoryUnavailable = false;
+  try { tyres = await getTyres({
     width,
     profile,
     rim,
     tier: filterTier === 'standard' ? 'mid' : filterTier,
     season: filterSeason,
-  });
+  }); } catch { inventoryUnavailable = true; }
 
   const qs = new URLSearchParams({
     ...(sp.w && { w: sp.w }),
@@ -63,7 +65,7 @@ export default async function TyresPage({ searchParams }: Props) {
           </h1>
           <p className="text-ink-2 mt-2">
             {tyres.length === 0
-              ? 'No tyres matching your current filter.'
+              ? inventoryUnavailable ? 'Inventory unavailable. Please try again later.' : 'No tyres matching your current filter.'
               : `${tyres.length} ${tyres.length === 1 ? 'option' : 'options'} matching this tyre size.`}
           </p>
         </div>
@@ -146,9 +148,9 @@ export default async function TyresPage({ searchParams }: Props) {
       {/* Grid */}
       {tyres.length === 0 ? (
         <div className="card max-w-lg mx-auto text-center py-12">
-          <h2 className="text-xl font-bold mb-3">No tyres found</h2>
+          <h2 className="text-xl font-bold mb-3">{inventoryUnavailable ? 'Inventory unavailable' : 'No tyres found'}</h2>
           <p className="text-sm text-ink-2 mb-6">
-            No tyres matching that exact combination. Please try a different size or contact us.
+            {inventoryUnavailable ? 'We cannot check availability right now. Please try again later or contact us.' : 'No tyres match that exact combination. Please check your sidewall size or contact us.'}
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-3">
             <Link href="/tyres" className="btn btn-secondary">Clear filters</Link>
@@ -212,7 +214,7 @@ export default async function TyresPage({ searchParams }: Props) {
                   Fitting and any location charge are shown in the booking summary.
                 </p>
                 <Link
-                  href={`/booking?tyre=${t.id}&qty=2&${qs.toString()}`}
+                  href={'/booking?' + new URLSearchParams({ ...Object.fromEntries(qs), tyre: t.id, qty: '1', w: String(t.width), p: String(t.profile), r: String(t.rim) })}
                   className="btn btn-primary w-full btn-sm"
                 >
                   Select &amp; Choose Slot

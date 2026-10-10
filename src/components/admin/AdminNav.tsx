@@ -9,13 +9,20 @@ export default function AdminNav() {
   const pathname = usePathname();
   const router = useRouter();
   const [isSigningOut, setIsSigningOut] = useState(false);
+  const [signOutError, setSignOutError] = useState<string | null>(null);
 
   async function signOut() {
     if (isSigningOut) return;
     setIsSigningOut(true);
-    await fetch('/api/admin/logout', { method: 'POST' }).catch(() => null);
-    router.replace('/admin/login');
-    router.refresh();
+    try {
+      const response = await fetch('/api/admin/logout', { method: 'POST' });
+      const result = await response.json();
+      if (!response.ok || !result.ok) throw new Error();
+      router.replace('/admin/login');
+      router.refresh();
+    } catch {
+      setSignOutError('Sign out could not be confirmed. Please try again.');
+    } finally { setIsSigningOut(false); }
   }
 
   const links = [
@@ -36,6 +43,7 @@ export default function AdminNav() {
         </div>
       </div>
 
+      {signOutError && <p role="alert" className="text-sm text-danger">{signOutError}</p>}
       <nav className="flex items-center gap-2">
         {links.map(({ href, label, icon: Icon }) => {
           const isActive = pathname === href;

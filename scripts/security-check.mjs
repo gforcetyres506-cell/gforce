@@ -55,7 +55,8 @@ assert.doesNotMatch(login, /1-Click Demo Login|admin@gforcetyres|automatic redir
 assert.match(login, /\/api\/admin\/login/);
 
 const mockConfirmation = read('src/app/api/checkout/confirm-mock/route.ts');
-assert.match(mockConfirmation, /if \(!isMockDataEnabled\(\)\)/);
+assert.match(mockConfirmation, /status: 404/);
+assert.doesNotMatch(mockConfirmation, /confirmBookingPaid|createServiceClient|ok: true/);
 
 const unsafeConfig = spawnSync(
   process.execPath,

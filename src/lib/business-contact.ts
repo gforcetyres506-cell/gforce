@@ -4,7 +4,7 @@ export interface BusinessContact {
 }
 
 // Only explicit, owner-approved configuration belongs here. In particular, do
-// not use the legacy settings helper: its fallback includes a sample number.
+// not supply a number when verified business contact configuration is absent.
 function internationalNumber(value?: string): string | null {
   if (!value || !/^\+[\d\s().-]+$/.test(value.trim())) return null;
   const number = value.replace(/[\s().-]/g, '');

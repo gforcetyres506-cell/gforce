@@ -6,9 +6,10 @@ export const runtime = 'nodejs';
 export async function POST() {
   try {
     const supabase = await createClient();
-    await supabase.auth.signOut();
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
   } catch {
-    // Returning the same response avoids leaking configuration details.
+    return NextResponse.json({ ok: false, error: 'service_unavailable' }, { status: 503 });
   }
 
   return NextResponse.json({ ok: true });

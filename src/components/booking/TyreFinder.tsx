@@ -5,7 +5,7 @@ import { ContactActions } from '@/components/layout/BusinessContact';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Loader2, Check, AlertCircle, Car, MapPin } from 'lucide-react';
 import { formatReg } from '@/lib/utils';
-import { isMockDataEnabled } from '@/lib/mock-mode';
+import { tyreSizeSchema } from '@/lib/validation';
 import type { VRMResult, ServiceZone } from '@/types';
 
 type Stage = 'postcode' | 'vehicle' | 'result' | 'manual';
@@ -16,7 +16,6 @@ const RIMS     = [14, 15, 16, 17, 18, 19, 20, 21, 22];
 
 export default function TyreFinder() {
   const router = useRouter();
-  const mockMode = isMockDataEnabled();
 
   const [stage, setStage] = useState<Stage>('postcode');
   const [busy, setBusy] = useState(false);
@@ -28,7 +27,8 @@ export default function TyreFinder() {
   const [vehicle, setVehicle] = useState<VRMResult | null>(null);
   const [axle, setAxle] = useState<'front' | 'rear'>('front');
 
-  const [manual, setManual] = useState({ width: 225, profile: 45, rim: 18 });
+  const [manual, setManual] = useState({ width: '', profile: '', rim: '' });
+  const manualComplete = !!manual.width && !!manual.profile && !!manual.rim;
 
   // ── Step 1: Postcode Check ──────────────────────────────────
   async function checkPostcode(e: React.FormEvent) {
@@ -72,16 +72,20 @@ export default function TyreFinder() {
       });
       const json = await res.json();
 
-      if (!json.ok) {
+      const found = json.data?.vehicle;
+      if (!res.ok || !json.ok || !found?.make || !found?.model || !tyreSizeSchema.safeParse(found.front).success
+        || (found.isStaggered && !tyreSizeSchema.safeParse(found.rear).success)) {
+        setVehicle(null);
         setError(json.message || 'We could not match that registration. Enter the tyre size instead.');
         setStage('manual');
         return;
       }
 
-      setVehicle(json.data.vehicle);
+      setVehicle(found);
       setZone(json.data.zone ?? zone);
       setStage('result');
     } catch {
+      setVehicle(null);
       setError('Vehicle lookup is unavailable. Enter the tyre size from the sidewall instead.');
       setStage('manual');
     } finally {
@@ -90,6 +94,7 @@ export default function TyreFinder() {
   }
 
   function goToTyres(w: number, p: number, r: number) {
+    if (![w, p, r].every((value) => Number.isInteger(value) && value > 0)) return;
     const params = new URLSearchParams({
       w: String(w),
       p: String(p),
@@ -149,11 +154,6 @@ export default function TyreFinder() {
               </button>
             </div>
 
-            {mockMode && (
-              <p className="mt-3 border-t border-line pt-3 text-xs text-ink-3">
-                Local preview: try <strong className="text-ink-2">E14 8PX</strong>, then <strong className="text-ink-2">AB21 ABC</strong>.
-              </p>
-            )}
           </div>
         </form>
       )}
@@ -181,7 +181,7 @@ export default function TyreFinder() {
             <input
               id="reg"
               className="input-vrm uppercase text-center font-bold tracking-widest text-lg"
-              placeholder="e.g. AB21 ABC"
+              placeholder="Vehicle registration"
               value={reg}
               onChange={(e) => setReg(e.target.value.toUpperCase())}
               maxLength={10}
@@ -219,7 +219,7 @@ export default function TyreFinder() {
         <div className="card space-y-5 border-border-brand/40 shadow-2xl animate-in fade-in">
           <div>
             <div className="label mb-1 text-brand">
-              {mockMode ? 'Local fitment preview' : 'Vehicle fitment found'}
+              Vehicle fitment found
             </div>
             <div className="text-xl font-bold text-ink-1">
               {vehicle.make} {vehicle.model}
@@ -271,7 +271,7 @@ export default function TyreFinder() {
               {spec.width}/{spec.profile} R{spec.rim}
             </div>
             <div className="mt-1 text-xs text-ink-3">
-              Load: {spec.load_index ?? '95'} · Speed: {spec.speed_rating ?? 'Y'}
+              Load: {spec.load_index ?? 'Not provided'} · Speed: {spec.speed_rating ?? 'Not provided'}
             </div>
           </div>
 
@@ -307,7 +307,7 @@ export default function TyreFinder() {
           <div>
             <div className="label mb-1 text-brand">Manual Tyre Size Selection</div>
             <p className="text-xs text-ink-2">
-              Select the 3 numbers stamped on your tyre sidewall, e.g. <span className="mono text-ink-1 font-bold">225/45 R18</span>.
+              Select the width, profile and rim size stamped on your tyre sidewall.
             </p>
           </div>
 
@@ -325,8 +325,9 @@ export default function TyreFinder() {
                   id={key}
                   className="input px-2"
                   value={manual[key]}
-                  onChange={(e) => setManual({ ...manual, [key]: Number(e.target.value) })}
+                  onChange={(e) => setManual({ ...manual, [key]: e.target.value })}
                 >
+                  <option value="">Choose {label.toLowerCase()}</option>
                   {opts.map((o) => <option key={o} value={o}>{o}</option>)}
                 </select>
               </div>
@@ -335,14 +336,15 @@ export default function TyreFinder() {
 
           <div className="border-y border-line py-3 text-center">
             <span className="text-2xl font-bold mono text-brand">
-              {manual.width}/{manual.profile} R{manual.rim}
+              {manualComplete ? manual.width + '/' + manual.profile + ' R' + manual.rim : 'Choose all three sizes'}
             </span>
           </div>
 
           <button
             type="button"
             className="btn btn-primary w-full"
-            onClick={() => goToTyres(manual.width, manual.profile, manual.rim)}
+            disabled={!manualComplete}
+            onClick={() => { if (manualComplete) goToTyres(Number(manual.width), Number(manual.profile), Number(manual.rim)); }}
           >
             Show Available Tyres <ArrowRight size={16} />
           </button>

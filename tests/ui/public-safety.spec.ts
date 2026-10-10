@@ -15,18 +15,27 @@ const slot = {
   id: 'ui-slot', slot_date: '2030-01-02', start_time: '10:00:00', end_time: '12:00:00',
   max_bookings: 2, available: true, remaining: 2, active: true,
 };
+const rear = { ...tyre, id: 'ui-rear-tyre', width: 255, profile: 40, sell_price: 12000 };
+const journey = '/booking?tyre=ui-test-tyre&w=225&p=45&r=18&pc=E14%208PX';
 
 test.beforeEach(async ({ page }) => {
-  // Every API is intercepted, including GET /slots (which can write in the
-  // legacy implementation). No test can reach hosted Supabase or providers.
+  // Browser fixtures are isolated from the credential-free production server.
   await page.route('**/api/**', async (route) => {
     const path = new URL(route.request().url()).pathname;
-    let body: object = { ok: false, message: 'No matching UI fixture' };
-    if (path === '/api/tyres') body = { ok: true, data: [tyre] };
+    let body: object = { ok: false, error: 'not_found', message: 'No matching UI fixture' };
+    if (path === '/api/tyres') body = { ok: true, data: [tyre, rear] };
     if (path === '/api/slots') body = { ok: true, data: [slot] };
     if (path === '/api/postcode/check') body = { ok: true, covered: true, data: { zone } };
     if (path === '/api/account/me') body = { ok: false };
-    if (path === '/api/holds/create') body = { ok: true, data: { hold_id: 'ui-hold' } };
+    if (path === '/api/holds/create') body = { ok: true, data: { hold_id: 'ui-hold', slot_id: slot.id, expires_at: new Date(Date.now() + 900000).toISOString() } };
+    if (path === '/api/checkout/quote') {
+      const items: Array<{ tyre_id: string; quantity: number }> = route.request().postDataJSON().items;
+      const lines = items.map((item) => ({ ...item, label: 'UI quote fixture', unit_price: item.tyre_id === rear.id ? rear.sell_price : tyre.sell_price,
+        line_total: item.quantity * (item.tyre_id === rear.id ? rear.sell_price : tyre.sell_price) }));
+      const tyres_total = lines.reduce((sum, line) => sum + line.line_total, 0);
+      body = { ok: true, data: { lines, tyres_total, fitting_fee: 1700, callout_charge: 0,
+        total_amount: tyres_total + 1700, deposit_amount: 3000, balance_due: tyres_total + 1700 - 3000 } };
+    }
     await route.fulfill({ contentType: 'application/json', body: JSON.stringify(body) });
   });
 });
@@ -78,7 +87,7 @@ test('contact configuration has no invented defaults', () => {
 
 test('public pages: metadata, contact configuration and no overflow', async ({ page }) => {
   const titles = new Set<string>();
-  for (const path of ['/', '/tyres', '/booking', '/manage/ui-invalid-token', '/terms', '/privacy', '/cancellation']) {
+  for (const path of ['/', '/tyres', journey, '/manage/ui-invalid-token', '/terms', '/privacy', '/cancellation']) {
     await page.goto(path);
     await noOverflow(page);
     await publicNavigation(page);
@@ -131,6 +140,14 @@ test('finder, contact locations and mobile navigation are accessible', async ({ 
   }
   await finder.getByRole('button', { name: 'Enter it manually' }).click();
   await expect(finder.getByRole('button', { name: 'Show Available Tyres' })).toBeVisible();
+  for (const label of ['Width', 'Profile', 'Rim']) await expect(finder.getByLabel(label, { exact: true })).toHaveValue('');
+  const manualContinue = finder.getByRole('button', { name: 'Show Available Tyres' });
+  await expect(manualContinue).toBeDisabled();
+  await finder.getByLabel('Width', { exact: true }).selectOption('205');
+  await finder.getByLabel('Profile', { exact: true }).selectOption('55');
+  await expect(manualContinue).toBeDisabled();
+  await finder.getByLabel('Rim', { exact: true }).selectOption('16');
+  await expect(manualContinue).toBeEnabled();
   await touchTarget(finder.getByRole('button', { name: 'Show Available Tyres' }));
   await noOverflow(page);
   await customerAccessibility(page);
@@ -145,7 +162,7 @@ test('finder, contact locations and mobile navigation are accessible', async ({ 
 });
 
 test('all four booking steps fit, have named controls and autofill', async ({ page }) => {
-  await page.goto('/booking?tyre=ui-test-tyre&pc=E14%208PX');
+  await page.goto(journey);
   await expect(page.getByRole('heading', { name: tyre.model })).toBeVisible();
   await expect(page.getByText('Standard', { exact: true })).toBeVisible();
   for (const button of await page.getByRole('group', { name: 'Booking progress' }).getByRole('button').all()) {
@@ -155,6 +172,9 @@ test('all four booking steps fit, have named controls and autofill', async ({ pa
   await expect(page.getByRole('button', { name: 'Step 1: Tyres & Qty', exact: true })).toHaveAttribute('aria-current', 'step');
   await touchTarget(page.getByRole('button', { name: 'Increase tyre quantity', exact: true }));
   await page.getByRole('checkbox').check();
+  await expect(page.getByLabel('Select Rear Tyre Model')).toHaveValue('');
+  await expect(page.getByRole('button', { name: 'Continue to Location & Vehicle' })).toBeDisabled();
+  await page.getByLabel('Select Rear Tyre Model').selectOption(rear.id);
   await touchTarget(page.getByRole('button', { name: 'Increase rear tyre quantity' }));
   await noOverflow(page);
   await customerAccessibility(page);
@@ -174,7 +194,8 @@ test('all four booking steps fit, have named controls and autofill', async ({ pa
   await touchTarget(page.getByRole('button', { name: 'Proceed to Secure Deposit' }));
   await noOverflow(page);
   await customerAccessibility(page);
-  // Intentionally stop before checkout: Gate A does not exercise payment logic.
+  await expect(page.locator('main')).toContainText('£17.00');
+  await expect(page.locator('main')).toContainText('£30.00');
 });
 
 test('error and empty states offer only configured contact actions', async ({ page }) => {
@@ -186,24 +207,131 @@ test('error and empty states offer only configured contact actions', async ({ pa
   if (contactsConfigured) await expect(page.locator('#tyre-finder a[href^="tel:"]')).toBeVisible();
   await noOverflow(page);
   await page.goto('/tyres?w=999&p=99&r=99');
-  await expect(page.getByRole('heading', { name: 'No tyres found' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Inventory unavailable' })).toBeVisible();
   if (contactsConfigured) await expect(page.locator('main a[href^="tel:"]')).toBeVisible();
   await noOverflow(page);
   await customerAccessibility(page);
 });
 
-test('catalogue uses styled standard badges and 44px selection actions', async ({ page }) => {
-  // SSR catalogue has no configured database in this local test server. This
-  // checks the existing legacy fallback rendering, not business inventory.
+test('catalogue fails closed without database configuration', async ({ page }) => {
   await page.goto('/tyres?tier=standard');
   await expect(page.getByRole('link', { name: 'Standard', exact: true })).toHaveAttribute('href', /tier=standard/);
-  const badges = page.locator('.badge-standard');
-  expect(await badges.count()).toBeGreaterThan(0);
-  await expect(badges.first()).toHaveText('Standard');
+  await expect(page.getByRole('heading', { name: 'Inventory unavailable' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Select & Choose Slot' })).toHaveCount(0);
+  await expect(page.locator('.card-tyre')).toHaveCount(0);
   await expect(page.locator('main')).not.toContainText('Mid-Range');
-  for (const action of await page.getByRole('link', { name: 'Select & Choose Slot' }).all()) await touchTarget(action);
-  const badgeColors = await badges.first().evaluate((node) => ({ color: getComputedStyle(node).color, bg: getComputedStyle(node).backgroundColor }));
-  expect(badgeColors.bg).not.toBe('rgba(0, 0, 0, 0)');
   await noOverflow(page);
   await customerAccessibility(page);
+});
+
+test('missing context redirects to finder and unknown tyre never selects another', async ({ page }) => {
+  await page.goto('/booking');
+  await expect(page).toHaveURL('/#tyre-finder');
+  await page.goto('/booking?tyre=wrong-id&w=225&p=45&r=18');
+  await expect(page.getByRole('main').getByRole('alert')).toContainText('That tyre is unavailable');
+  await expect(page.getByRole('heading', { name: tyre.model })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Continue to Location & Vehicle' })).toBeDisabled();
+  await page.getByRole('button', { name: 'Step 4: Contact & Pay' }).click();
+  await expect(page.getByLabel('Full Name')).toHaveCount(0);
+  await noOverflow(page);
+});
+
+test('unavailable vehicle lookup switches to empty manual size fields', async ({ page }) => {
+  await page.goto('/');
+  await page.getByLabel('Fitting postcode').fill('E14 8PX');
+  await page.getByRole('button', { name: 'Check area' }).click();
+  await page.getByLabel('Enter the vehicle registration').fill('AB21ABC');
+  await page.getByRole('button', { name: 'Find matching size' }).click();
+  for (const label of ['Width', 'Profile', 'Rim']) await expect(page.getByLabel(label, { exact: true })).toHaveValue('');
+  await expect(page.getByRole('button', { name: 'Show Available Tyres' })).toBeDisabled();
+  await expect(page.locator('main')).not.toContainText('BMW');
+});
+
+for (const failure of ['network', 'database', 'missing expiry', 'expired']) {
+  test('hold failure is truthful: ' + failure, async ({ page }) => {
+    await page.route('**/api/holds/create', async (route) => {
+      if (failure === 'network') return route.abort('failed');
+      const data = { hold_id: 'ui-hold', slot_id: slot.id, ...(failure === 'expired' ? { expires_at: '2000-01-01' } : {}) };
+      await route.fulfill({ status: failure === 'database' ? 503 : 200, contentType: 'application/json',
+        body: JSON.stringify({ ok: failure !== 'database', data }) });
+    });
+    await page.goto(journey);
+    await page.getByRole('button', { name: 'Continue to Location & Vehicle' }).click();
+    await page.getByRole('button', { name: 'Choose Fitting Slot' }).click();
+    await page.getByRole('button', { name: /10am.*12pm/ }).click();
+    await expect(page.getByRole('main').getByRole('alert')).toHaveText('That fitting time could not be reserved. Please choose another.');
+    await expect(page.getByRole('button', { name: 'Enter Contact Details' })).toBeDisabled();
+    await expect(page.locator('main')).not.toContainText('Time reserved until');
+    await page.getByRole('button', { name: 'Step 4: Contact & Pay' }).click();
+    await expect(page.getByLabel('Full Name')).toHaveCount(0);
+    await noOverflow(page);
+  });
+}
+
+test('a confirmed hold expires and stops advancement', async ({ page }) => {
+  await page.route('**/api/holds/create', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify({
+    ok: true, data: { hold_id: 'ui-hold', slot_id: slot.id, expires_at: new Date(Date.now() + 2500).toISOString() },
+  }) }));
+  await page.goto(journey);
+  await page.getByRole('button', { name: 'Continue to Location & Vehicle' }).click();
+  await page.getByRole('button', { name: 'Choose Fitting Slot' }).click();
+  await page.getByRole('button', { name: /10am.*12pm/ }).click();
+  await expect(page.getByRole('button', { name: 'Enter Contact Details' })).toBeEnabled();
+  await expect(page.getByRole('button', { name: 'Enter Contact Details' })).toBeDisabled({ timeout: 8000 });
+  await expect(page.getByRole('main').getByRole('alert')).toContainText('could not be reserved');
+});
+
+test('pricing outage blocks the journey without invented totals', async ({ page }) => {
+  await page.route('**/api/checkout/quote', (route) => route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ ok: false }) }));
+  await page.goto(journey);
+  await expect(page.getByRole('main').getByRole('alert')).toContainText('Pricing unavailable. Cannot continue.');
+  await page.getByRole('button', { name: 'Continue to Location & Vehicle' }).click();
+  await expect(page.getByRole('button', { name: 'Choose Fitting Slot' })).toBeDisabled();
+  await expect(page.locator('main')).not.toContainText('£20.00');
+  await expect(page.locator('main')).not.toContainText('£50.00');
+  await expect(page.locator('main')).toContainText('Unavailable');
+});
+
+test('pending bookings have no paid step or fictional fitter', async ({ page }) => {
+  await page.route('**/api/manage/ui-pending', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify({
+    ok: true, data: { id: 'ui-booking', booking_ref: 'UI-PENDING', status: 'pending_payment',
+      fitter_id: null, customer: null, slot: null, items: [], total_amount: 10000, deposit_amount: 3000,
+      balance_due: 7000, deposit_paid_at: null, stripe_payment_intent_id: null, stripe_charge_id: null },
+  }) }));
+  await page.goto('/manage/ui-pending');
+  await expect(page.getByText('Fitter not assigned yet', { exact: true })).toBeVisible();
+  await expect(page.getByText('Deposit required', { exact: true })).toBeVisible();
+  await expect(page.locator('main .ring-brand')).toHaveCount(0);
+  await noOverflow(page);
+});
+
+test('payment screen ignores browser state and never offers fake payment', async ({ page }) => {
+  await page.addInitScript(() => sessionStorage.setItem('gf_checkout_data', JSON.stringify({ is_mock_payment: true, breakdown: { deposit_amount: 5000 } })));
+  await page.goto('/booking/pay?ref=not-a-booking');
+  await expect(page.getByRole('heading', { name: 'Online payments unavailable' })).toBeVisible();
+  await expect(page.locator('main input, main form')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /confirm|pay|test/i })).toHaveCount(0);
+  await noOverflow(page);
+});
+
+test('credential-free production APIs fail closed', async ({ request }) => {
+  for (const path of ['/api/tyres', '/api/slots', '/api/manage/not-a-booking', '/api/account/me']) {
+    const response = await request.get(path);
+    expect(response.status(), path).toBe(503);
+    expect((await response.json()).ok).toBe(false);
+  }
+  const hold = { slot_id: '00000000-0000-4000-8000-000000000001', session_token: 'isolated-ui-test-session' };
+  const cases: Array<[string, object, number]> = [
+    ['/api/checkout/create', {}, 503],
+    ['/api/checkout/confirm-mock', {}, 404],
+    ['/api/holds/create', hold, 503], ['/api/holds/release', hold, 503],
+    ['/api/checkout/quote', { postcode: 'E14 8PX', items: [{ tyre_id: tyre.id, quantity: 1 }] }, 503],
+    ['/api/vrm/lookup', { registration: 'AB21ABC', postcode: 'E14 8PX' }, 503],
+    ['/api/account/signup', { name: 'UI test', email: 'test@example.com', password: 'isolated-test-password', phone: '07700900001' }, 503],
+  ];
+  for (const [path, data, status] of cases) {
+    const response = await request.post(path, { data });
+    expect(response.status(), path).toBe(status);
+    expect((await response.json()).ok).toBe(false);
+  }
 });
