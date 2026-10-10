@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowRight, Loader2, Check, AlertCircle, Car, MapPin } from 'lucide-react';
 import { formatReg } from '@/lib/utils';
 import { tyreSizeSchema } from '@/lib/validation';
+import TurnstileChallenge from './TurnstileChallenge';
 import type { VRMResult, ServiceZone } from '@/types';
 
 type Stage = 'postcode' | 'vehicle' | 'result' | 'manual';
@@ -25,7 +26,9 @@ export default function TyreFinder() {
   const [zone, setZone] = useState<ServiceZone | null>(null);
   const [reg, setReg] = useState('');
   const [vehicle, setVehicle] = useState<VRMResult | null>(null);
-  const [axle, setAxle] = useState<'front' | 'rear'>('front');
+  const [axle, setAxle] = useState<'front' | 'rear' | 'both' | null>(null);
+  const [sidewallConfirmed, setSidewallConfirmed] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState('');
 
   const [manual, setManual] = useState({ width: '', profile: '', rim: '' });
   const manualComplete = !!manual.width && !!manual.profile && !!manual.rim;
@@ -50,6 +53,7 @@ export default function TyreFinder() {
       }
 
       setZone(json.data.zone);
+      if (json.data.postcode) setPostcode(json.data.postcode);
       setStage('vehicle');
     } catch {
       setError('Could not verify postcode. Please check your connection.');
@@ -65,10 +69,16 @@ export default function TyreFinder() {
     setBusy(true);
 
     try {
+      if (!turnstileToken) {
+        setVehicle(null);
+        setError('Registration lookup is unavailable. Enter the tyre size from your sidewall.');
+        setStage('manual');
+        return;
+      }
       const res = await fetch('/api/vrm/lookup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ registration: reg, postcode }),
+        body: JSON.stringify({ registration: reg, postcode, turnstileToken }),
       });
       const json = await res.json();
 
@@ -82,6 +92,8 @@ export default function TyreFinder() {
       }
 
       setVehicle(found);
+      setAxle(null);
+      setSidewallConfirmed(false);
       setZone(json.data.zone ?? zone);
       setStage('result');
     } catch {
@@ -95,6 +107,7 @@ export default function TyreFinder() {
 
   function goToTyres(w: number, p: number, r: number) {
     if (![w, p, r].every((value) => Number.isInteger(value) && value > 0)) return;
+    if (vehicle && (!sidewallConfirmed || (vehicle.isStaggered && !axle))) return;
     const params = new URLSearchParams({
       w: String(w),
       p: String(p),
@@ -103,6 +116,10 @@ export default function TyreFinder() {
       ...(reg && { reg }),
       ...(vehicle?.make && { make: vehicle.make }),
       ...(vehicle?.model && { model: vehicle.model }),
+      ...(vehicle && { axle: axle ?? 'both', sidewall: 'confirmed' }),
+      ...(vehicle?.isStaggered && axle === 'both' && vehicle.rear && {
+        rw: String(vehicle.rear.width), rp: String(vehicle.rear.profile), rr: String(vehicle.rear.rim),
+      }),
     });
     router.push(`/tyres?${params}`);
   }
@@ -189,7 +206,8 @@ export default function TyreFinder() {
             />
           </div>
 
-          <button type="submit" className="btn btn-primary w-full" disabled={busy || reg.trim().length < 2}>
+          <TurnstileChallenge onToken={setTurnstileToken} />
+          <button type="submit" className="btn btn-primary w-full" disabled={busy || reg.trim().length < 2 || (!!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && !turnstileToken)}>
               {busy ? <><Loader2 size={18} className="animate-spin" /> Checking fitment...</> : <>Find matching size <ArrowRight size={16} /></>}
           </button>
 
@@ -205,7 +223,7 @@ export default function TyreFinder() {
             </button>
             <button
               type="button"
-              onClick={() => setStage('manual')}
+              onClick={() => { setVehicle(null); setStage('manual'); }}
               className="min-h-11 text-brand hover:underline font-semibold"
             >
               I know my tyre size &rarr;
@@ -239,23 +257,24 @@ export default function TyreFinder() {
               <div className="text-xs font-semibold text-ink-1 mb-2">
                 This vehicle runs staggered front &amp; rear tyre sizes:
               </div>
-              <div className="grid grid-cols-2 gap-2">
-                {(['front', 'rear'] as const).map((a) => {
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2" role="group" aria-label="Choose tyres to replace">
+                {(['front', 'rear', 'both'] as const).map((a) => {
                   const isSelected = axle === a;
                   const s = a === 'front' ? vehicle.front : vehicle.rear!;
                   return (
                     <button
                       key={a}
                       type="button"
-                      onClick={() => setAxle(a)}
-                      className={`p-2 rounded border text-left transition-colors ${
+                      onClick={() => { setAxle(a); setSidewallConfirmed(false); }}
+                      aria-pressed={isSelected}
+                      className={`min-h-11 p-2 rounded border text-left transition-colors ${
                         isSelected
                           ? 'bg-brand/10 border-brand text-ink-1 font-bold'
                           : 'bg-surface-2 border-line text-ink-3'
                       }`}
                     >
-                      <span className="text-xs uppercase font-bold block">{a} Axle</span>
-                      <span className="mono text-xs">{s.width}/{s.profile} R{s.rim}</span>
+                      <span className="text-xs uppercase font-bold block">{a === 'both' ? 'Both axles' : a + ' axle'}</span>
+                      <span className="mono text-xs">{a === 'both' ? 'Front and rear sizes' : s.width + '/' + s.profile + ' R' + s.rim}</span>
                     </button>
                   );
                 })}
@@ -265,11 +284,12 @@ export default function TyreFinder() {
 
           <div className="border-y border-line py-4 text-center">
             <div className="text-xs uppercase tracking-wider text-ink-3 mb-1">
-              Detected {axle.toUpperCase()} Size
+              {axle === 'both' ? 'Front and rear sizes to confirm' : 'Detected ' + (axle ?? 'front').toUpperCase() + ' size'}
             </div>
             <div className="text-3xl font-bold text-brand mono tracking-tight">
               {spec.width}/{spec.profile} R{spec.rim}
             </div>
+            {axle === 'both' && vehicle.rear && <div className="text-xl font-bold text-brand mono mt-2">Rear: {vehicle.rear.width}/{vehicle.rear.profile} R{vehicle.rear.rim}</div>}
             <div className="mt-1 text-xs text-ink-3">
               Load: {spec.load_index ?? 'Not provided'} · Speed: {spec.speed_rating ?? 'Not provided'}
             </div>
@@ -281,10 +301,16 @@ export default function TyreFinder() {
             <span className="text-ink-3">Check the numbers embossed on your physical tyre sidewall.</span>
           </div>
 
+          <label className="flex items-start gap-3 text-sm min-h-11 cursor-pointer">
+            <input type="checkbox" checked={sidewallConfirmed} className="mt-1 h-5 w-5 shrink-0 accent-brand"
+              disabled={vehicle.isStaggered && !axle} onChange={(e) => setSidewallConfirmed(e.target.checked)} />
+            I checked the physical sidewalls on every selected axle and these sizes match.
+          </label>
           <div className="space-y-2.5">
             <button
               type="button"
               className="btn btn-primary w-full"
+              disabled={!sidewallConfirmed || (vehicle.isStaggered && !axle)}
               onClick={() => goToTyres(spec.width, spec.profile, spec.rim)}
             >
               YES, THESE MATCH — VIEW TYRES <ArrowRight size={16} />
@@ -292,7 +318,7 @@ export default function TyreFinder() {
 
             <button
               type="button"
-              onClick={() => setStage('manual')}
+              onClick={() => { setVehicle(null); setStage('manual'); }}
               className="btn btn-secondary w-full btn-sm text-xs"
             >
               MY TYRE SIZE IS DIFFERENT

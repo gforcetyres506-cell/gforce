@@ -32,6 +32,7 @@ export interface Tyre {
   wet_grip: string | null;
   fuel_economy: string | null;
   noise_db: number | null;
+  image_url: string | null;
   active: boolean;
   created_at: string;
 }
@@ -85,7 +86,7 @@ export interface VRMResult {
   rear?: VehicleTyreSpec;
   isStaggered: boolean;
   /** Where the data came from — surfaced in dev, not to customers. */
-  source: 'cache' | 'oneauto' | 'local';
+  source: 'oneauto';
 }
 
 export type VRMErrorCode =

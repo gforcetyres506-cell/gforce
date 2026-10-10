@@ -1,5 +1,39 @@
 # G FORCE TYRES - Production recovery progress
 
+## Gate 1 - real search / coverage / catalogue (2026-10-10)
+
+Branch: gate/1-real-data. Starting HEAD:
+7dcc8d8035e4fdb48788378024da8f6076ff8b54 (Gate 0 local baseline).
+Status: **BLOCKED - owner-approved records and account-specific sandbox proof missing**.
+Detailed implementation, import fields and acceptance matrix:
+[03_GATE1_REAL_DATA.md](03_GATE1_REAL_DATA.md).
+
+- Exact outward-postcode coverage and authoritative postcode normalization;
+  quotes revalidate postcode before looking up prices.
+- Owner-only review/import workflow for zones, products and inventory. Forward
+  migration 015 saves batches with audit logs and preserves reservations;
+  001-014 remain unchanged. No business seed records were created.
+- Public catalogue projects supplied images/labels, actual selling prices and
+  net stock, excludes supplier/cost fields, and stays empty when storage is empty.
+- FRONT/REAR/BOTH selection requires physical sidewall confirmation. Both
+  sizes survive search/filter navigation and rear product selection is explicit.
+- Turnstile widget token is verified server-side for host/action. Missing or
+  invalid verification denies lookup. Durable per-IP and shared limits, postcode
+  verification and database coverage precede any paid provider request.
+- Retired the undocumented OneAuto transport and permissive field guesses.
+  The account adapter/normalizer is intentionally not implemented without the
+  actual account documentation and sandbox proof. Runtime lookup returns no
+  vehicle; customers use manual tyre size. A key alone cannot enable it.
+- Local reliability: 76/76. Local SQL/database: 16/16. Security structure: PASS.
+  Browser: 147/147 across 360, 375, 390, 430, 768, 1366 and 1440px.
+  Typecheck, lint, production build and git diff --check: PASS. Lint retains
+  four pre-existing warnings. Compiled browser assets: 68 files scanned;
+  SUPABASE_SERVICE_ROLE_KEY identifier occurrences = 0.
+
+No cloud reset/migration, real owner-data import, provider lookup, push or deployment
+was performed. Real covered/uncovered postcode, sandbox VRM and real product
+acceptance remain BLOCKED; local tests do not substitute for these checks.
+
 ## Gate 0 - canonical Supabase / Auth / RLS (2026-10-10)
 
 Branch: gate/0-live-supabase. Starting HEAD:

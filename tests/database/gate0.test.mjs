@@ -22,6 +22,9 @@ before(async () => {
     grant usage on schema auth to anon, authenticated, service_role;
   `);
   for (const file of readdirSync('supabase/migrations').sort()) await db.exec(readFileSync('supabase/migrations/' + file, 'utf8'));
+  // A fresh migration chain supplies no public products or service zones.
+  assert.equal((await db.query('select count(*)::integer as n from public.tyre_products')).rows[0].n, 0);
+  assert.equal((await db.query('select count(*)::integer as n from public.service_zones')).rows[0].n, 0);
   for (const [role, actor] of Object.entries(actors)) {
     await db.query('insert into auth.users values ($1)', [actor.user]);
     await db.query('insert into auth.sessions values ($1,$2)', [actor.session, actor.user]);
@@ -109,5 +112,51 @@ test('atomic rate limiter and unconfigured pricing are truthful', async () => {
     assert.equal((await consume()).rows[0].remaining, 1);
     assert.equal((await consume()).rows[0].remaining, 0);
     assert.equal((await consume()).rows[0].allowed, false);
+  });
+});
+
+const importRows = (actor, kind, rows) => db.query('select public.owner_import_business_data($1,$2,$3,$4::jsonb) as saved', [actor.user, actor.session, kind, JSON.stringify(rows)]);
+const ownerZone = { postcode_prefix: 'E1', name: 'Test only coverage', callout_fee_pence: 731, priority: 4, active: true };
+const ownerProduct = { sku: 'GATE1-TEST', brand: 'Test only', model: 'Import fixture', width: 205, profile: 55, rim: 16,
+  load_index: '91', speed_rating: 'V', run_flat: false, extra_load: true, season: 'summer', tier: 'standard',
+  wet_grip_rating: 'A', fuel_efficiency_rating: 'B', noise_db: 70, image_url: 'https://example.invalid/test-only.png', active: true,
+  inventory: { stock_qty: 6, reserved_qty: 0, cost_price_pence: 321, selling_price_pence: 654, supplier_sku: 'TEST-SUPPLIER', low_stock_threshold: 1 } };
+test('owner data import is denied to browser roles and non-owner server actors', async () => {
+  for (const role of ['anon','authenticated']) await as(role, role === 'authenticated' ? actors.owner : null,
+    () => assert.rejects(importRows(actors.owner,'zones',[ownerZone]), /permission denied/));
+  await as('service_role', null, async () => {
+    for (const name of ['normal','inactive','viewer','admin']) await assert.rejects(importRows(actors[name],'zones',[ownerZone]), /Owner access required/);
+    await assert.rejects(importRows({ ...actors.owner, session: randomUUID() },'zones',[ownerZone]), /Owner access required/);
+  });
+});
+test('owner zone batch saves explicit fields and atomic audits; invalid row rolls back whole batch', async () => {
+  await as('service_role', null, async () => {
+    assert.equal((await importRows(actors.owner,'zones',[ownerZone])).rows[0].saved, 1);
+    const saved = (await db.query("select name,callout_fee_pence,priority,active from public.service_zones where postcode_prefix='E1'")).rows[0];
+    assert.deepEqual(saved, { name: ownerZone.name, callout_fee_pence: 731, priority: 4, active: true });
+    await assert.rejects(importRows(actors.owner,'zones',[{ ...ownerZone, name: 'Must roll back' }, { ...ownerZone, postcode_prefix: 'E*' }]), /Invalid service zone/);
+    assert.equal((await db.query("select name from public.service_zones where postcode_prefix='E1'")).rows[0].name, ownerZone.name);
+    assert.equal((await db.query("select count(*)::integer as n from public.audit_logs where action='owner.zone_imported'")).rows[0].n, 1);
+  });
+});
+test('owner catalogue batch persists supplied metadata and preserves reservations', async () => {
+  await as('service_role', null, async () => {
+    assert.equal((await importRows(actors.owner,'catalogue',[ownerProduct])).rows[0].saved, 1);
+    let row = (await db.query("select p.*,i.stock_qty,i.reserved_qty,i.cost_price_pence,i.selling_price_pence,i.supplier_sku from public.tyre_products p join public.inventory i on i.tyre_product_id=p.id where p.sku='GATE1-TEST'")).rows[0];
+    assert.equal(row.image_url, ownerProduct.image_url); assert.equal(row.cost_price_pence, 321); assert.equal(row.selling_price_pence, 654); assert.equal(row.extra_load,true);
+    await db.query('update public.inventory set reserved_qty=2 where tyre_product_id=$1',[row.id]);
+    await assert.rejects(importRows(actors.owner,'catalogue',[{ ...ownerProduct, model:'Must roll back' }]), /Reserved stock changed/);
+    await importRows(actors.owner,'catalogue',[{ ...ownerProduct, inventory:{ ...ownerProduct.inventory,reserved_qty:2,stock_qty:8 } }]);
+    row=(await db.query('select stock_qty,reserved_qty from public.inventory where tyre_product_id=$1',[row.id])).rows[0];
+    assert.deepEqual(row,{ stock_qty:8,reserved_qty:2 });
+    await assert.rejects(importRows(actors.owner,'catalogue',[{ ...ownerProduct,sku:'INVENTED-RESERVATION',inventory:{ ...ownerProduct.inventory,reserved_qty:1 } }]), /invented/);
+    assert.equal((await db.query("select count(*)::integer as n from public.tyre_products where sku='INVENTED-RESERVATION'")).rows[0].n,0);
+  });
+});
+test('atomic limiter permits at most its limit across queued simultaneous requests', async () => {
+  await as('service_role',null,async () => {
+    const replies=await Promise.all(Array.from({length:20},()=>db.query("select * from public.consume_rate_limit('gate1-burst-test',3,10)")));
+    assert.equal(replies.filter((r)=>r.rows[0].allowed).length,3);
+    assert.equal((await db.query("select hits from public.rate_limits where bucket_key='gate1-burst-test'")).rows[0].hits,3);
   });
 });

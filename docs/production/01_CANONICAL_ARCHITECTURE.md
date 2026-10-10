@@ -4,7 +4,7 @@ Date: 2026-10-10. Branch: gate/0-live-supabase.
 Status: implemented and tested locally; cloud acceptance BLOCKED.
 Starting HEAD: 545bac195fcabdd71e722a4412baa6dbd0dc05cd.
 
-Use only ordered SQL in supabase/migrations/001-014. The original 001-012
+Use only ordered SQL in supabase/migrations/001-015. The original 001-012
 files are unchanged. Forward migrations 013 and 014 reconcile the foundation
 and enforce the access boundary. The conflicting schema.sql was moved to
 supabase/archive/legacy-schema.sql.disabled; its Git-normalized contents are
@@ -100,3 +100,14 @@ A live database on a legacy architecture needs a separately reviewed data
 upgrade plan. This gate's reset runner targets only an explicitly authorized
 disposable project, never a production database. Read 02_GATE0_ACCEPTANCE.md
 for exact live evidence requirements and the current block.
+
+## Gate 1 forward extension (2026-10-10)
+
+Migration 015 adds owner_import_business_data(uuid,uuid,text,jsonb), callable
+only by the server role after a verified owner session. Batches upsert
+service_zones or tyre_products plus inventory with atomic audits. Reserved
+stock is preserved; stale import values reject the entire batch. No tables,
+seed rows or browser write grants are added. Zone postcode_prefix now means
+an exact outward postcode, never a broad prefix or wildcard. The public
+catalogue maps nullable owner images and labels without costs/supplier data.
+See [03_GATE1_REAL_DATA.md](03_GATE1_REAL_DATA.md) for the contract and blockers.

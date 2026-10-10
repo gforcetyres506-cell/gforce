@@ -39,6 +39,9 @@ export default defineConfig({
       STRIPE_SECRET_KEY: '',
       RESEND_API_KEY: '',
       ONEAUTO_API_KEY: '',
+      // Official public test sitekey; widget network is isolated by page fixtures.
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: '1x00000000000000000000AA',
+      TURNSTILE_SECRET_KEY: '',
     },
   },
 });

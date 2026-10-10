@@ -21,6 +21,7 @@ import TierBadge from '@/components/ui/TierBadge';
 import { ContactActions } from '@/components/layout/BusinessContact';
 import { formatPrice, formatTyreSize, formatSlotTime, makeSessionToken } from '@/lib/utils';
 import { validBookingEntry, quoteSchema } from '@/lib/journey';
+import { tyreSizeSchema } from '@/lib/validation';
 import type { Tyre, SlotWithAvailability, ServiceZone, PriceBreakdown } from '@/types';
 
 function BookingWizard() {
@@ -32,15 +33,20 @@ function BookingWizard() {
   const paramRim = Number(searchParams.get('r'));
   const paramQty = searchParams.has('qty') ? Number(searchParams.get('qty')) : 1;
   const paramPostcode = searchParams.get('pc') ?? '';
+  const bothAxles = searchParams.get('axle') === 'both' && searchParams.has('rw');
+  const rearWidth = Number(searchParams.get('rw'));
+  const rearProfile = Number(searchParams.get('rp'));
+  const rearRim = Number(searchParams.get('rr'));
   const validEntry = validBookingEntry(paramTyreId, searchParams.get('w'), searchParams.get('p'), searchParams.get('r'))
-    && Number.isInteger(paramQty) && paramQty >= 1 && paramQty <= 8;
+    && Number.isInteger(paramQty) && paramQty >= 1 && paramQty <= 8
+    && (!bothAxles || tyreSizeSchema.safeParse({ width: rearWidth, profile: rearProfile, rim: rearRim }).success);
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [sessionToken] = useState(() => makeSessionToken());
   const [allTyres, setAllTyres] = useState<Tyre[]>([]);
   const [selectedTyre, setSelectedTyre] = useState<Tyre | null>(null);
   const [journeyError, setJourneyError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(paramQty);
-  const [hasRearTyre, setHasRearTyre] = useState(false);
+  const [hasRearTyre, setHasRearTyre] = useState(bothAxles);
   const [rearTyre, setRearTyre] = useState<Tyre | null>(null);
   const [rearQuantity, setRearQuantity] = useState(1);
   const [postcode, setPostcode] = useState(paramPostcode);
@@ -125,16 +131,17 @@ function BookingWizard() {
     if (!hasRearTyre) return;
     const controller = new AbortController();
     setAllTyres([]);
-    fetch('/api/tyres', { signal: controller.signal })
+    fetch('/api/tyres' + (bothAxles ? '?w=' + rearWidth + '&p=' + rearProfile + '&r=' + rearRim : ''), { signal: controller.signal })
       .then((response) => response.json())
       .then((response) => {
         if (!response.ok || !Array.isArray(response.data)) throw new Error();
         setAllTyres(response.data.filter((tyre: Tyre) => tyre.active && tyre.stock > 0 && tyre.sell_price > 0
+          && (!bothAxles || (tyre.width === rearWidth && tyre.profile === rearProfile && tyre.rim === rearRim))
           && (tyre.width !== paramWidth || tyre.profile !== paramProfile || tyre.rim !== paramRim)));
       })
       .catch(() => { if (!controller.signal.aborted) setAllTyres([]); });
     return () => controller.abort();
-  }, [hasRearTyre, paramWidth, paramProfile, paramRim]);
+  }, [hasRearTyre, paramWidth, paramProfile, paramRim, bothAxles, rearWidth, rearProfile, rearRim]);
 
   useEffect(() => {
     setQuote(null); setQuoteError(null);

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { getTyres } from '@/lib/db';
 import { formatPrice, formatTyreSize } from '@/lib/utils';
 import MStripe from '@/components/ui/MStripe';
@@ -17,7 +18,7 @@ export const dynamic = 'force-dynamic';
 
 interface Props {
   // Next 15: searchParams is a Promise
-  searchParams: Promise<{ w?: string; p?: string; r?: string; pc?: string; reg?: string; tier?: string; season?: string }>;
+  searchParams: Promise<{ w?: string; p?: string; r?: string; pc?: string; reg?: string; tier?: string; season?: string; axle?: string; rw?: string; rp?: string; rr?: string; make?: string; model?: string; sidewall?: string }>;
 }
 
 export default async function TyresPage({ searchParams }: Props) {
@@ -44,6 +45,10 @@ export default async function TyresPage({ searchParams }: Props) {
     ...(sp.r && { r: sp.r }),
     ...(sp.pc && { pc: sp.pc }),
     ...(sp.reg && { reg: sp.reg }),
+    ...(sp.make && { make: sp.make }), ...(sp.model && { model: sp.model }),
+    ...(sp.axle && { axle: sp.axle }), ...(sp.rw && { rw: sp.rw }),
+    ...(sp.rp && { rp: sp.rp }), ...(sp.rr && { rr: sp.rr }),
+    ...(sp.sidewall && { sidewall: sp.sidewall }),
   });
 
   return (
@@ -70,27 +75,10 @@ export default async function TyresPage({ searchParams }: Props) {
           </p>
         </div>
 
-        {/* Quick size pill selector if browsing general catalogue */}
-        {!width && (
-          <div className="flex flex-wrap gap-2">
-            {[
-              { label: '225/45 R18', w: '225', p: '45', r: '18' },
-              { label: '205/55 R16', w: '205', p: '55', r: '16' },
-              { label: '195/65 R15', w: '195', p: '65', r: '15' },
-              { label: '255/40 R18 (Rear)', w: '255', p: '40', r: '18' },
-            ].map((s) => (
-              <Link
-                key={s.label}
-                href={`/tyres?w=${s.w}&p=${s.p}&r=${s.r}`}
-                className="btn btn-secondary btn-sm"
-              >
-                {s.label}
-              </Link>
-            ))}
-          </div>
-        )}
+
       </div>
 
+      {sp.axle === 'both' && sp.rw && sp.rp && sp.rr && <p className="text-sm text-ink-2 mb-6">Choose the front tyre first. Your confirmed rear size is {sp.rw}/{sp.rp} R{sp.rr}; choose its model separately in booking.</p>}
       {/* Filter Tabs */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-y border-line py-4 mb-10 text-sm">
         <div className="flex flex-wrap items-center gap-2">
@@ -163,6 +151,7 @@ export default async function TyresPage({ searchParams }: Props) {
           {tyres.map((t) => (
             <article key={t.id} className="card-tyre flex flex-col justify-between group">
               <div>
+                {t.image_url && <Image src={t.image_url} alt={t.brand + ' ' + t.model} width={320} height={200} unoptimized className="w-full h-44 object-contain mb-4" />}
                 <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <div className="text-xs font-bold uppercase tracking-wider text-brand">{t.brand}</div>
@@ -213,12 +202,12 @@ export default async function TyresPage({ searchParams }: Props) {
                 <p className="text-xs text-ink-3 mb-4">
                   Fitting and any location charge are shown in the booking summary.
                 </p>
-                <Link
+                {t.stock > 0 ? <Link
                   href={'/booking?' + new URLSearchParams({ ...Object.fromEntries(qs), tyre: t.id, qty: '1', w: String(t.width), p: String(t.profile), r: String(t.rim) })}
                   className="btn btn-primary w-full btn-sm"
                 >
                   Select &amp; Choose Slot
-                </Link>
+                </Link> : <p className="text-sm text-ink-2">No stock available</p>}
               </div>
             </article>
           ))}

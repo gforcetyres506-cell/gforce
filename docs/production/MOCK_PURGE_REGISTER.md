@@ -1,5 +1,16 @@
 # Gate B - truthful funnel / mock purge register
 
+Gate 1 update (2026-10-10): no owner business records or account credentials
+were supplied. The speculative OneAuto request/response parser is retired;
+vehicle lookup remains manual until the current account contract is verified.
+Exact outward-code coverage replaces broad prefix matching. Imports require
+explicit owner data; migration 015 contains no business seed records. Public
+Cloudflare test sitekeys and widget/provider responses exist only in Playwright
+configuration/tests. PostgreSQL import rows remain TEST_ONLY_SAFE. Source
+scan still finds PRODUCTION FAKE SUCCESS PATHS = 0; live data remains unverified.
+See [03_GATE1_REAL_DATA.md](03_GATE1_REAL_DATA.md).
+
+
 Gate 0 update (2026-10-10): runtime queries now use ordered migrations 001-014;
 the legacy schema is archived. PostgreSQL test identities/rows in
 `tests/database/gate0.test.mjs` and key-shaped values in

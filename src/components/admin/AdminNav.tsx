@@ -29,6 +29,7 @@ export default function AdminNav() {
     { href: '/admin/bookings', label: 'Bookings', icon: Calendar },
     { href: '/admin/inventory', label: 'Tyre Inventory', icon: Package },
     { href: '/admin/slots', label: 'Slot Schedule', icon: Clock },
+    { href: '/admin/data', label: 'Owner data', icon: Package },
   ];
 
   return (
@@ -44,7 +45,7 @@ export default function AdminNav() {
       </div>
 
       {signOutError && <p role="alert" className="text-sm text-danger">{signOutError}</p>}
-      <nav className="flex items-center gap-2">
+      <nav className="flex flex-wrap items-center gap-2">
         {links.map(({ href, label, icon: Icon }) => {
           const isActive = pathname === href;
           return (

@@ -34,7 +34,7 @@ export const ukPostcodeSchema = z
   .min(5)
   .max(9)
   .refine(
-    (v) => /^[A-Z]{1,2}[0-9][A-Z0-9]?[0-9][A-Z]{2}$/.test(v.toUpperCase().replace(/\s+/g, '')),
+    (v) => /^(?:[A-Z]{1,2}[0-9][A-Z0-9]?|GIR)[0-9][A-Z]{2}$/.test(v.toUpperCase().replace(/\s+/g, '')),
     { message: 'Enter a full UK postcode.' }
   );
 
@@ -72,7 +72,7 @@ export const vrmLookupSchema = z.object({
   registration: ukRegSchema,
   postcode: ukPostcodeSchema,
   email: emailSchema.optional(),
-  turnstileToken: z.string().optional(),
+  turnstileToken: z.string().max(2048).optional(),
 });
 
 export const createHoldSchema = z.object({

@@ -1,5 +1,5 @@
 -- Phase 1 live catalogue verification.
--- Run only after migrations 001-014 have been applied from zero to the
+-- Run only after migrations 001-015 have been applied from zero to the
 -- authorized disposable project. This transaction changes no persistent data
 -- and fails closed when an expected catalogue/security property is absent.
 
@@ -500,7 +500,8 @@ begin
   foreach table_name in array array[
     'public.admin_set_inventory(uuid,uuid,uuid,integer,integer)',
     'public.owner_set_admin_access(uuid,uuid,uuid,text,boolean)',
-    'public.consume_rate_limit(text,integer,integer)'
+    'public.consume_rate_limit(text,integer,integer)',
+    'public.owner_import_business_data(uuid,uuid,text,jsonb)'
   ] loop
     if has_function_privilege('anon', table_name, 'EXECUTE')
       or has_function_privilege('authenticated', table_name, 'EXECUTE')
@@ -514,7 +515,8 @@ begin
     'public.admin_session_context()',
     'public.admin_set_inventory(uuid,uuid,uuid,integer,integer)',
     'public.owner_set_admin_access(uuid,uuid,uuid,text,boolean)',
-    'public.consume_rate_limit(text,integer,integer)'
+    'public.consume_rate_limit(text,integer,integer)',
+    'public.owner_import_business_data(uuid,uuid,text,jsonb)'
   ]) signature where not exists (
     select 1 from pg_proc p where p.oid = signature::regprocedure
       and p.prosecdef and 'search_path=""' = any(p.proconfig)

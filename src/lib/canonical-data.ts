@@ -4,7 +4,7 @@ import { ServiceUnavailableError } from './service-error';
 import type { Tyre, AppSettings } from '@/types';
 
 // Public projections never select inventory costs or supplier details.
-export const CATALOGUE_SELECT = 'id,sku,brand,model,width,profile,rim,load_index,speed_rating,run_flat,extra_load,season,tier,wet_grip_rating,fuel_efficiency_rating,noise_db,active,created_at,inventory(stock_qty,reserved_qty,selling_price_pence)';
+export const CATALOGUE_SELECT = 'id,sku,brand,model,width,profile,rim,load_index,speed_rating,run_flat,extra_load,season,tier,wet_grip_rating,fuel_efficiency_rating,noise_db,image_url,active,created_at,inventory(stock_qty,reserved_qty,selling_price_pence)';
 const inventorySchema = z.object({
   stock_qty: z.number().int().nonnegative().safe(),
   reserved_qty: z.number().int().nonnegative().safe(),
@@ -17,6 +17,7 @@ const productSchema = z.object({
   season: z.enum(['summer', 'all-season', 'winter']), tier: z.enum(['budget', 'standard', 'premium']),
   wet_grip_rating: z.string().nullable(), fuel_efficiency_rating: z.string().nullable(), noise_db: z.number().nullable(),
   active: z.boolean(), created_at: z.string(),
+  image_url: z.string().url().refine((url) => url.startsWith('https://')).nullable(),
   inventory: z.union([inventorySchema, z.array(inventorySchema).length(1).transform((rows) => rows[0])]),
 });
 export function mapProducts(data: unknown): Tyre[] {
@@ -26,7 +27,7 @@ export function mapProducts(data: unknown): Tyre[] {
     id: p.id, sku: p.sku, brand: p.brand, model: p.model, width: p.width, profile: p.profile, rim: p.rim,
     load_index: p.load_index, speed_rating: p.speed_rating, is_run_flat: p.run_flat, is_xl: p.extra_load,
     season: p.season, tier: p.tier, wet_grip: p.wet_grip_rating, fuel_economy: p.fuel_efficiency_rating,
-    noise_db: p.noise_db, active: p.active, created_at: p.created_at,
+    noise_db: p.noise_db, image_url: p.image_url, active: p.active, created_at: p.created_at,
     sell_price: p.inventory.selling_price_pence, stock: p.inventory.stock_qty - p.inventory.reserved_qty,
   }));
 }

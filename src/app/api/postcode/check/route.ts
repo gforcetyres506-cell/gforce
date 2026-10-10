@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { validatePostcode, checkCoverage } from '@/lib/postcodes';
+import { resolvePostcode, checkCoverage } from '@/lib/postcodes';
 import { z } from 'zod';
 
 export const runtime = 'nodejs';
@@ -22,8 +22,8 @@ export async function POST(req: Request) {
     const { postcode } = parsed.data;
 
     // 1. Postcodes.io validation
-    const isValidUk = await validatePostcode(postcode);
-    if (!isValidUk) {
+    const resolved = await resolvePostcode(postcode);
+    if (!resolved) {
       return NextResponse.json(
         { ok: false, error: 'invalid_uk_postcode', message: 'That does not appear to be a valid UK postcode.' },
         { status: 400 }
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
     }
 
     // 2. Service zones coverage check
-    const coverage = await checkCoverage(postcode);
+    const coverage = await checkCoverage(resolved.postcode);
     if (!coverage.covered || !coverage.zone) {
       return NextResponse.json(
         {
@@ -48,6 +48,7 @@ export async function POST(req: Request) {
       ok: true,
       covered: true,
       data: {
+        postcode: resolved.postcode,
         zone: coverage.zone,
         callout_charge: coverage.zone.callout_charge,
         message: coverage.message,
