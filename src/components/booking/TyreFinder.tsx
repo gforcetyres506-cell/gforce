@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { ContactActions } from '@/components/layout/BusinessContact';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Loader2, Check, AlertCircle, Car, MapPin } from 'lucide-react';
 import { formatReg } from '@/lib/utils';
@@ -44,7 +45,7 @@ export default function TyreFinder() {
       const json = await res.json();
 
       if (!json.ok || !json.covered) {
-        setError(json.message || "Sorry, we don't currently cover this postcode.");
+        setError(json.covered === false ? "This postcode is outside our current fitting area. Check another postcode." : "We could not check that postcode. Please try again.");
         return;
       }
 
@@ -121,7 +122,7 @@ export default function TyreFinder() {
           </div>
 
           <div className="finder-panel-body">
-            <label htmlFor="pc" className="sr-only">Fitting postcode</label>
+            <label htmlFor="pc" className="label block mb-2">Fitting postcode</label>
             <div className="finder-input-row">
               <input
                 id="pc"
@@ -149,7 +150,7 @@ export default function TyreFinder() {
             </div>
 
             {mockMode && (
-              <p className="mt-3 border-t border-line pt-3 text-[11px] text-ink-3">
+              <p className="mt-3 border-t border-line pt-3 text-xs text-ink-3">
                 Local preview: try <strong className="text-ink-2">E14 8PX</strong>, then <strong className="text-ink-2">AB21 ABC</strong>.
               </p>
             )}
@@ -194,18 +195,18 @@ export default function TyreFinder() {
 
           {error && <ErrorMessage msg={error} />}
 
-          <div className="pt-2 flex items-center justify-between text-xs">
+          <div className="pt-2 flex flex-wrap items-center justify-between gap-2 text-xs">
             <button
               type="button"
               onClick={() => setStage('postcode')}
-              className="text-ink-3 hover:text-ink-1"
+              className="min-h-11 text-ink-3 hover:text-ink-1"
             >
               &larr; Change Postcode
             </button>
             <button
               type="button"
               onClick={() => setStage('manual')}
-              className="text-brand hover:underline font-semibold"
+              className="min-h-11 text-brand hover:underline font-semibold"
             >
               I know my tyre size &rarr;
             </button>
@@ -253,7 +254,7 @@ export default function TyreFinder() {
                           : 'bg-surface-2 border-line text-ink-3'
                       }`}
                     >
-                      <span className="text-[10px] uppercase font-bold block">{a} Axle</span>
+                      <span className="text-xs uppercase font-bold block">{a} Axle</span>
                       <span className="mono text-xs">{s.width}/{s.profile} R{s.rim}</span>
                     </button>
                   );
@@ -312,7 +313,7 @@ export default function TyreFinder() {
 
           {error && <ErrorMessage msg={error} />}
 
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-2">
             {([
               ['Width',   'width',   WIDTHS],
               ['Profile', 'profile', PROFILES],
@@ -322,7 +323,7 @@ export default function TyreFinder() {
                 <label htmlFor={key} className="label mb-1.5 block">{label}</label>
                 <select
                   id={key}
-                  className="input"
+                  className="input px-2"
                   value={manual[key]}
                   onChange={(e) => setManual({ ...manual, [key]: Number(e.target.value) })}
                 >
@@ -349,7 +350,7 @@ export default function TyreFinder() {
           <button
             type="button"
             onClick={() => setStage('postcode')}
-            className="text-xs text-ink-3 underline hover:text-ink-2 block text-center"
+            className="min-h-11 w-full text-xs text-ink-3 underline hover:text-ink-2 block text-center"
           >
             &larr; Start over
           </button>
@@ -361,9 +362,12 @@ export default function TyreFinder() {
 
 function ErrorMessage({ msg }: { msg: string }) {
   return (
-    <div className="p-3 bg-danger/10 border border-danger/30 rounded text-xs text-danger flex items-start gap-2" role="alert">
-      <AlertCircle size={16} className="mt-0.5 shrink-0" />
-      <span>{msg}</span>
+    <div className="space-y-3">
+      <div className="p-3 bg-danger/10 border border-danger/30 rounded text-xs text-danger flex items-start gap-2" role="alert">
+        <AlertCircle size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
+        <span>{msg}</span>
+      </div>
+      <ContactActions />
     </div>
   );
 }

@@ -1,6 +1,12 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ShieldCheck, ArrowLeft } from 'lucide-react';
 import MStripe from '@/components/ui/MStripe';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy',
+  description: 'Read how G Force Tyres handles customer information and privacy requests.',
+};
 
 export default function PrivacyPage() {
   return (

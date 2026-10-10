@@ -9,17 +9,13 @@ import {
   MapPin,
   ShieldCheck,
   Calendar,
-  PhoneCall,
-  Wrench,
-  AlertTriangle,
   ArrowLeft,
   Loader2,
 } from 'lucide-react';
-import { localStore, MOCK_FITTERS } from '@/lib/mockData';
+import { ContactActions } from '@/components/layout/BusinessContact';
 import { formatPrice, formatSlotTime, formatReg } from '@/lib/utils';
 import MStripe from '@/components/ui/MStripe';
 import type { BookingWithDetails, BookingStatus } from '@/types';
-import { isMockDataEnabled } from '@/lib/mock-mode';
 
 const STATUS_STEPS: Array<{ key: BookingStatus; label: string; description: string }> = [
   { key: 'confirmed',        label: 'Deposit Confirmed', description: 'Your slot and tyres are locked in.' },
@@ -36,7 +32,6 @@ export default function ManageBookingPage({
 }) {
   const unwrappedParams = use(params);
   const token = unwrappedParams.token;
-  const mockMode = isMockDataEnabled();
 
   const [booking, setBooking] = useState<BookingWithDetails | null>(null);
   const [loading, setLoading] = useState(true);
@@ -70,15 +65,15 @@ export default function ManageBookingPage({
         <MStripe className="mb-6 mx-auto" />
         <h1 className="display-2 mb-4">Booking Not Found</h1>
         <p className="text-sm text-ink-2 mb-8">
-          We couldn&apos;t locate a booking associated with that link. Please verify your reference or contact dispatch.
+          We couldn&apos;t locate a booking associated with that link. Please check the link in your booking confirmation.
         </p>
         <Link href="/" className="btn btn-primary">Return to Homepage</Link>
+        <ContactActions className="justify-center mt-4" />
       </div>
     );
   }
 
   const b = booking;
-  const fitter = MOCK_FITTERS.find((f) => f.id === b.fitter_id) || (b.status === 'en_route' || b.status === 'fitter_assigned' || b.status === 'completed' ? MOCK_FITTERS[0] : null);
 
   const when = b.slot
     ? `${new Date(b.slot.slot_date).toLocaleDateString('en-GB', {
@@ -117,7 +112,7 @@ export default function ManageBookingPage({
 
       {/* Live Status Pipeline Tracker */}
       <div className="card mb-8 border-border-brand/40 shadow-xl space-y-6">
-        <div className="flex items-center justify-between border-b border-line pb-3">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3">
           <h3 className="text-sm font-bold uppercase tracking-wider">Live Fitting Status</h3>
           <span className="badge badge-info">{b.status.replace('_', ' ').toUpperCase()}</span>
         </div>
@@ -138,7 +133,7 @@ export default function ManageBookingPage({
                 }`}
               >
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="mono text-[10px] font-bold">0{idx + 1}</span>
+                  <span className="mono text-xs font-bold">0{idx + 1}</span>
                   {isCompleted ? (
                     <CheckCircle2 size={14} className={isCurrent ? 'text-brand' : 'text-ok'} />
                   ) : (
@@ -146,34 +141,16 @@ export default function ManageBookingPage({
                   )}
                 </div>
                 <div className="text-xs font-bold leading-tight">{s.label}</div>
-                <div className="text-[11px] text-ink-3 mt-1 leading-snug">{s.description}</div>
+                <div className="text-xs text-ink-3 mt-1 leading-snug">{s.description}</div>
               </div>
             );
           })}
         </div>
 
-        {fitter && (
-          <div className="p-4 bg-surface-3 rounded border border-line flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-brand/20 text-brand flex items-center justify-center font-bold">
-                <Wrench size={18} />
-              </div>
-              <div>
-                <div className="text-xs uppercase text-ink-3 font-semibold">Assigned Technician</div>
-                <div className="text-sm font-bold text-ink-1">{fitter.name} ({fitter.van_reg})</div>
-              </div>
-            </div>
-            <a
-              href={`tel:${fitter.phone}`}
-              className="btn btn-secondary btn-sm text-xs flex items-center gap-1.5 self-start sm:self-auto"
-            >
-              <PhoneCall size={14} /> Call Technician ({fitter.phone})
-            </a>
-          </div>
-        )}
+        <ContactActions />
       </div>
 
-      <div className="grid lg:grid-cols-[1.3fr_1fr] gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] gap-8 items-start">
         {/* Booking Details */}
         <div className="card space-y-5">
           <h3 className="text-sm font-bold uppercase tracking-wider border-b border-line pb-3">
@@ -261,7 +238,7 @@ export default function ManageBookingPage({
               <button
                 type="button"
                 className="btn btn-secondary w-full btn-sm text-xs font-semibold"
-                onClick={() => setActionMessage('To reschedule your fitting window, please call dispatch directly on 020 7946 0991 with your booking reference (' + b.booking_ref + ').')}
+                onClick={() => setActionMessage('For help with rescheduling, use a configured contact option below or reply to your booking confirmation. Include reference ' + b.booking_ref + '.')}
               >
                 Request Reschedule Window
               </button>
@@ -293,6 +270,7 @@ export default function ManageBookingPage({
                 Cancel Booking
               </button>
             </div>
+            <ContactActions />
           </div>
 
           <div className="card bg-surface-2 space-y-3 text-xs text-ink-2">

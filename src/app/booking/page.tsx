@@ -19,6 +19,8 @@ import {
   Check,
 } from 'lucide-react';
 import MStripe from '@/components/ui/MStripe';
+import TierBadge from '@/components/ui/TierBadge';
+import { ContactActions } from '@/components/layout/BusinessContact';
 import { formatPrice, formatTyreSize, formatSlotTime, makeSessionToken } from '@/lib/utils';
 import { MOCK_TYRES, MOCK_SERVICE_ZONES } from '@/lib/mockData';
 import { isMockDataEnabled } from '@/lib/mock-mode';
@@ -309,7 +311,7 @@ function BookingWizard() {
       </div>
 
       {/* Progress Tracker */}
-      <div className="grid grid-cols-4 gap-2 mb-10 pb-4 border-b border-line">
+      <div className="grid grid-cols-4 gap-2 mb-10 pb-4 border-b border-line" role="group" aria-label="Booking progress">
         {[
           { num: 1, title: 'Tyres & Qty' },
           { num: 2, title: 'Location & Van' },
@@ -321,12 +323,15 @@ function BookingWizard() {
           return (
             <button
               key={s.num}
+              type="button"
+              aria-label={"Step " + s.num + ": " + s.title}
+              aria-current={isActive ? 'step' : undefined}
               onClick={() => {
                 if (isDone || (s.num === 1) || (s.num === 2 && selectedTyre) || (s.num === 3 && zone) || (s.num === 4 && selectedSlot)) {
                   setStep(s.num as any);
                 }
               }}
-              className="flex items-center gap-3 text-left focus:outline-none"
+              className="min-w-0 min-h-11 flex flex-col sm:flex-row items-center sm:items-start gap-2 text-center sm:text-left"
             >
               <div
                 className={`step-num ${
@@ -335,8 +340,8 @@ function BookingWizard() {
               >
                 {isDone ? <Check size={16} /> : s.num}
               </div>
-              <div className="hidden sm:block">
-                <div className="text-[10px] uppercase font-bold tracking-wider text-ink-3">Step 0{s.num}</div>
+              <div className="min-w-0">
+                <div className="text-xs uppercase font-bold tracking-wider text-ink-3">Step 0{s.num}</div>
                 <div className={`text-xs font-semibold ${isActive ? 'text-brand' : 'text-ink-2'}`}>
                   {s.title}
                 </div>
@@ -346,13 +351,13 @@ function BookingWizard() {
         })}
       </div>
 
-      <div className="grid lg:grid-cols-[1.5fr_1fr] gap-10 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] gap-6 lg:gap-10 items-start">
         {/* Left Column: Interactive Wizard Steps */}
         <div>
           {/* ════════ STEP 1: TYRES & QUANTITY ════════ */}
           {step === 1 && (
             <div className="card space-y-6">
-              <div className="flex items-center justify-between border-b border-line pb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-line pb-4">
                 <div>
                   <h2 className="text-xl font-bold">1. Select Your Tyres</h2>
                   <p className="text-sm text-ink-2">Pick tyre model and how many you need fitted.</p>
@@ -367,7 +372,7 @@ function BookingWizard() {
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
                       <div className="text-xs uppercase tracking-wider text-brand font-bold">
-                        {selectedTyre.brand} · {selectedTyre.tier}
+                        {selectedTyre.brand} <TierBadge tier={selectedTyre.tier} />
                       </div>
                       <h3 className="text-lg font-bold">{selectedTyre.model}</h3>
                       <div className="mono text-sm text-ink-2">{formatTyreSize(selectedTyre)}</div>
@@ -376,7 +381,7 @@ function BookingWizard() {
                       <div className="price-display text-2xl text-ink-1">
                         {formatPrice(selectedTyre.sell_price)}
                       </div>
-                      <div className="text-xs text-ink-3">each, fitted</div>
+                      <div className="text-xs text-ink-3">per tyre</div>
                     </div>
                   </div>
 
@@ -386,18 +391,20 @@ function BookingWizard() {
                     <div className="flex items-center gap-3">
                       <button
                         type="button"
+                        aria-label="Decrease tyre quantity"
                         onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                         disabled={quantity <= 1}
-                        className="btn btn-secondary btn-sm h-9 w-9 p-0 flex items-center justify-center"
+                        className="btn btn-secondary btn-sm h-11 w-11 p-0 flex items-center justify-center"
                       >
                         <Minus size={14} />
                       </button>
                       <span className="mono text-lg font-bold w-6 text-center">{quantity}</span>
                       <button
                         type="button"
+                        aria-label="Increase tyre quantity"
                         onClick={() => setQuantity((q) => Math.min(selectedTyre.stock, q + 1))}
                         disabled={quantity >= selectedTyre.stock}
-                        className="btn btn-secondary btn-sm h-9 w-9 p-0 flex items-center justify-center"
+                        className="btn btn-secondary btn-sm h-11 w-11 p-0 flex items-center justify-center"
                       >
                         <Plus size={14} />
                       </button>
@@ -407,6 +414,7 @@ function BookingWizard() {
               ) : (
                 <div className="text-center py-6">
                   <p className="text-ink-2 mb-4">No tyre currently selected.</p>
+                  <ContactActions className="justify-center mb-4" />
                   <Link href="/tyres" className="btn btn-primary">Select Tyre from Catalogue</Link>
                 </div>
               )}
@@ -434,8 +442,9 @@ function BookingWizard() {
 
                 {hasRearTyre && (
                   <div className="mt-4 pt-4 border-t border-line space-y-3">
-                    <label className="label block">Select Rear Tyre Model</label>
+                    <label htmlFor="rear-tyre" className="label block">Select Rear Tyre Model</label>
                     <select
+                      id="rear-tyre"
                       className="input"
                       value={rearTyre?.id ?? ''}
                       onChange={(e) => {
@@ -455,16 +464,18 @@ function BookingWizard() {
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
-                          onClick={() => setRearQuantity((q) => Math.max(1, q - 1))}
-                          className="btn btn-secondary btn-sm h-8 w-8 p-0"
+                          aria-label="Decrease rear tyre quantity"
+                        onClick={() => setRearQuantity((q) => Math.max(1, q - 1))}
+                          className="btn btn-secondary btn-sm h-11 w-11 p-0"
                         >
                           <Minus size={12} />
                         </button>
                         <span className="mono font-bold px-2">{rearQuantity}</span>
                         <button
                           type="button"
-                          onClick={() => setRearQuantity((q) => Math.min(4, q + 1))}
-                          className="btn btn-secondary btn-sm h-8 w-8 p-0"
+                          aria-label="Increase rear tyre quantity"
+                        onClick={() => setRearQuantity((q) => Math.min(4, q + 1))}
+                          className="btn btn-secondary btn-sm h-11 w-11 p-0"
                         >
                           <Plus size={12} />
                         </button>
@@ -496,10 +507,11 @@ function BookingWizard() {
               <div className="space-y-4">
                 <div>
                   <label htmlFor="postcode" className="label mb-2 block">London Postcode *</label>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <input
                       id="postcode"
-                      className="input uppercase flex-1"
+                      autoComplete="postal-code"
+                      className="input uppercase min-w-0 flex-1"
                       placeholder="e.g. E14 5AB"
                       value={postcode}
                       onChange={(e) => setPostcode(e.target.value)}
@@ -514,10 +526,11 @@ function BookingWizard() {
                     </button>
                   </div>
                   {postcodeError && (
-                    <div className="text-danger text-xs flex items-center gap-1.5 mt-2">
+                    <div className="text-danger text-xs flex items-center gap-1.5 mt-2" role="alert">
                       <AlertCircle size={14} /> {postcodeError}
                     </div>
                   )}
+                  {postcodeError && <ContactActions className="mt-3" />}
                   {zone && (
                     <div className="text-ok text-xs flex items-center gap-1.5 mt-2 font-semibold">
                       <CheckCircle2 size={14} /> Postcode accepted. Any applicable location charge will be shown before payment.
@@ -560,7 +573,7 @@ function BookingWizard() {
                 </div>
               </div>
 
-              <div className="flex gap-3 pt-4">
+              <div className="flex flex-col sm:flex-row gap-3 pt-4">
                 <button type="button" onClick={() => setStep(1)} className="btn btn-secondary flex-1">
                   <ArrowLeft size={16} /> Back
                 </button>
@@ -633,7 +646,7 @@ function BookingWizard() {
                     <Loader2 size={18} className="animate-spin text-brand" /> Loading available van slots...
                   </div>
                 ) : slotsForSelectedDate.length === 0 ? (
-                  <p className="text-sm text-ink-3 py-4">No remaining slots for this date. Please choose another day.</p>
+                  <div><p className="text-sm text-ink-3 py-4">No remaining slots for this date. Please choose another day.</p><ContactActions /></div>
                 ) : (
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {slotsForSelectedDate.map((s) => {
@@ -649,7 +662,7 @@ function BookingWizard() {
                           <span className="text-sm font-bold">
                             {formatSlotTime(s.start_time)} – {formatSlotTime(s.end_time)}
                           </span>
-                          <span className={`text-[10px] mt-1 ${isSelected ? 'text-ink-inverse font-semibold' : 'text-ok'}`}>
+                          <span className={`text-xs mt-1 ${isSelected ? 'text-ink-inverse font-semibold' : 'text-ok'}`}>
                             {isSelected ? 'Held for 15 mins' : `${s.remaining} van slot left`}
                           </span>
                         </button>
@@ -659,10 +672,11 @@ function BookingWizard() {
                 )}
 
                 {holdError && (
-                  <div className="mt-3 text-danger text-xs flex items-center gap-1.5">
+                  <div className="mt-3 text-danger text-xs flex items-center gap-1.5" role="alert">
                     <AlertCircle size={14} /> {holdError}
                   </div>
                 )}
+                {holdError && <ContactActions className="mt-3" />}
 
                 {selectedSlot && (
                   <div className="mt-4 p-3 bg-brand/10 border border-brand/30 rounded flex items-center gap-2 text-xs text-brand">
@@ -672,7 +686,7 @@ function BookingWizard() {
                 )}
               </div>
 
-              <div className="flex gap-3 pt-4">
+              <div className="flex flex-col sm:flex-row gap-3 pt-4">
                 <button type="button" onClick={() => setStep(2)} className="btn btn-secondary flex-1">
                   <ArrowLeft size={16} /> Back
                 </button>
@@ -702,6 +716,7 @@ function BookingWizard() {
                     <label htmlFor="name" className="label mb-2 block">Full Name *</label>
                     <input
                       id="name"
+                      autoComplete="name"
                       className="input"
                       placeholder="e.g. David Smith"
                       required
@@ -713,6 +728,7 @@ function BookingWizard() {
                     <label htmlFor="email" className="label mb-2 block">Email Address *</label>
                     <input
                       id="email"
+                      autoComplete="email"
                       type="email"
                       className="input"
                       placeholder="david@example.com"
@@ -728,6 +744,7 @@ function BookingWizard() {
                     <label htmlFor="phone" className="label mb-2 block">UK Mobile Number *</label>
                     <input
                       id="phone"
+                      autoComplete="tel"
                       type="tel"
                       className="input"
                       placeholder="07700 900123"
@@ -740,6 +757,7 @@ function BookingWizard() {
                     <label htmlFor="city" className="label mb-2 block">City</label>
                     <input
                       id="city"
+                      autoComplete="address-level2"
                       className="input"
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
@@ -751,6 +769,7 @@ function BookingWizard() {
                   <label htmlFor="address1" className="label mb-2 block">Fitting Street Address *</label>
                   <input
                     id="address1"
+                      autoComplete="street-address"
                     className="input mb-2"
                     placeholder="e.g. 10 Park Lane"
                     required
@@ -758,7 +777,9 @@ function BookingWizard() {
                     onChange={(e) => setAddressLine1(e.target.value)}
                   />
                   <input
+                    aria-label="Apartment, suite or unit (optional)"
                     id="address2"
+                      autoComplete="address-line2"
                     className="input"
                     placeholder="Apartment, suite, unit (optional)"
                     value={addressLine2}
@@ -780,12 +801,13 @@ function BookingWizard() {
               </div>
 
               {formError && (
-                <div className="p-3 bg-danger/10 border border-danger/30 rounded text-danger text-xs flex items-center gap-2">
+                <div className="p-3 bg-danger/10 border border-danger/30 rounded text-danger text-xs flex items-center gap-2" role="alert">
                   <AlertCircle size={16} /> {formError}
                 </div>
               )}
+              {formError && <ContactActions className="mt-3" />}
 
-              <div className="flex gap-3 pt-4 border-t border-line">
+              <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-line">
                 <button type="button" onClick={() => setStep(3)} className="btn btn-secondary flex-1">
                   <ArrowLeft size={16} /> Back to Slots
                 </button>
@@ -810,8 +832,8 @@ function BookingWizard() {
         </div>
 
         {/* Right Column: Sticky Live Order Summary */}
-        <div className="card sticky top-24 space-y-6 border-border-brand/40 shadow-2xl">
-          <div className="flex items-center justify-between border-b border-line pb-3">
+        <div className="card lg:sticky lg:top-24 space-y-6 border-border-brand/40 shadow-2xl">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3">
             <h3 className="text-base font-bold uppercase tracking-wider">Order Summary</h3>
             <span className="badge badge-info">Fitted Mobile</span>
           </div>
@@ -889,7 +911,7 @@ function BookingWizard() {
             </div>
           )}
 
-          <div className="pt-2 text-[11px] text-ink-3 space-y-1">
+          <div className="pt-2 text-xs text-ink-3 space-y-1">
             <p className="flex items-center gap-1">
               <ShieldCheck size={14} className="text-brand" /> 100% Free cancellation up to 48 hours before.
             </p>

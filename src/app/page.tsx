@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
   ArrowRight,
@@ -14,6 +15,12 @@ import MStripe from '@/components/ui/MStripe';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import HeroTyreMotion from '@/components/animations/HeroTyreMotion';
 import TyreFinder from '@/components/booking/TyreFinder';
+import { ContactActions } from '@/components/layout/BusinessContact';
+
+export const metadata: Metadata = {
+  title: 'Mobile Tyre Fitting',
+  description: 'Check your fitting postcode, find your tyre size and book mobile tyre fitting with G Force Tyres.',
+};
 
 const STEPS = [
   {
@@ -78,6 +85,7 @@ export default function HomePage() {
               Check your postcode, identify the correct tyre size and move into
               booking through one focused, mobile-first journey.
             </p>
+            <ContactActions className="mt-5" />
 
             <div id="tyre-finder" className="hero-finder-anchor">
               <TyreFinder />

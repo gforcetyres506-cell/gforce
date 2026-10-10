@@ -1,9 +1,17 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getTyres } from '@/lib/db';
 import { formatPrice, formatTyreSize } from '@/lib/utils';
 import MStripe from '@/components/ui/MStripe';
+import TierBadge from '@/components/ui/TierBadge';
+import { ContactActions } from '@/components/layout/BusinessContact';
 import { ShieldCheck, Zap, Fuel, Volume2 } from 'lucide-react';
 import type { Tyre } from '@/types';
+
+export const metadata: Metadata = {
+  title: 'Browse Tyres by Size',
+  description: 'Compare budget, standard and premium tyres by size, season and specification.',
+};
 
 export const revalidate = 60;
 
@@ -17,14 +25,14 @@ export default async function TyresPage({ searchParams }: Props) {
   const width = sp.w ? Number(sp.w) : undefined;
   const profile = sp.p ? Number(sp.p) : undefined;
   const rim = sp.r ? Number(sp.r) : undefined;
-  const filterTier = sp.tier;
+  const filterTier = sp.tier === 'mid' ? 'standard' : sp.tier;
   const filterSeason = sp.season;
 
   const tyres = await getTyres({
     width,
     profile,
     rim,
-    tier: filterTier,
+    tier: filterTier === 'standard' ? 'mid' : filterTier,
     season: filterSeason,
   });
 
@@ -83,12 +91,12 @@ export default async function TyresPage({ searchParams }: Props) {
 
       {/* Filter Tabs */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-y border-line py-4 mb-10 text-sm">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs uppercase tracking-wider text-ink-3">Tier:</span>
           {[
             { id: 'all', label: 'All Tiers' },
             { id: 'premium', label: 'Premium' },
-            { id: 'mid', label: 'Mid-Range' },
+            { id: 'standard', label: 'Standard' },
             { id: 'budget', label: 'Budget' },
           ].map((tab) => {
             const active = (!filterTier && tab.id === 'all') || filterTier === tab.id;
@@ -99,7 +107,7 @@ export default async function TyresPage({ searchParams }: Props) {
               <Link
                 key={tab.id}
                 href={`/tyres?${newQs.toString()}`}
-                className={`px-3 py-1.5 rounded transition-colors text-xs font-semibold uppercase ${
+                className={`inline-flex min-h-11 items-center px-3 py-1.5 rounded transition-colors text-xs font-semibold uppercase ${
                   active ? 'bg-brand text-ink-inverse' : 'bg-surface-3 text-ink-2 hover:text-ink-1'
                 }`}
               >
@@ -109,7 +117,7 @@ export default async function TyresPage({ searchParams }: Props) {
           })}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs uppercase tracking-wider text-ink-3">Season:</span>
           {[
             { id: 'all', label: 'All' },
@@ -124,7 +132,7 @@ export default async function TyresPage({ searchParams }: Props) {
               <Link
                 key={tab.id}
                 href={`/tyres?${newQs.toString()}`}
-                className={`px-3 py-1.5 rounded transition-colors text-xs font-semibold uppercase ${
+                className={`inline-flex min-h-11 items-center px-3 py-1.5 rounded transition-colors text-xs font-semibold uppercase ${
                   active ? 'bg-brand text-ink-inverse' : 'bg-surface-3 text-ink-2 hover:text-ink-1'
                 }`}
               >
@@ -142,22 +150,23 @@ export default async function TyresPage({ searchParams }: Props) {
           <p className="text-sm text-ink-2 mb-6">
             No tyres matching that exact combination. Please try a different size or contact us.
           </p>
-          <div className="flex justify-center gap-3">
+          <div className="flex flex-col sm:flex-row justify-center gap-3">
             <Link href="/tyres" className="btn btn-secondary">Clear filters</Link>
-            <Link href="/booking" className="btn btn-primary">Book custom size</Link>
+            <Link href="/#tyre-finder" className="btn btn-primary">Check tyre size</Link>
           </div>
+          <ContactActions className="justify-center mt-4" />
         </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {tyres.map((t) => (
             <article key={t.id} className="card-tyre flex flex-col justify-between group">
               <div>
-                <div className="mb-3 flex items-start justify-between gap-3">
+                <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <div className="text-xs font-bold uppercase tracking-wider text-brand">{t.brand}</div>
                     <h2 className="text-xl font-bold leading-tight mt-0.5">{t.model}</h2>
                   </div>
-                  <span className={`badge badge-${t.tier}`}>{t.tier}</span>
+                  <TierBadge tier={t.tier} />
                 </div>
 
                 <div className="mono text-base font-semibold text-ink-1 mb-4">
@@ -165,7 +174,7 @@ export default async function TyresPage({ searchParams }: Props) {
                 </div>
 
                 {/* EU Tyre Label Ratings */}
-                <div className="grid grid-cols-3 gap-2 bg-surface-3/60 p-2.5 rounded border border-border/50 mb-4 text-xs">
+                <div className="grid grid-cols-1 xl:grid-cols-3 gap-2 bg-surface-3/60 p-2.5 rounded border border-border/50 mb-4 text-xs">
                   <div className="flex items-center gap-1.5 text-ink-2">
                     <Fuel size={14} className="text-brand shrink-0" />
                     <span>Eco: <strong className="text-ink-1">{t.fuel_economy ?? '—'}</strong></span>
@@ -192,15 +201,15 @@ export default async function TyresPage({ searchParams }: Props) {
                 <div className="mb-2 flex items-baseline justify-between">
                   <div>
                     <span className="price-display text-2xl text-ink-1">{formatPrice(t.sell_price)}</span>
-                    <span className="text-xs text-ink-3 ml-1.5">each, fitted</span>
+                    <span className="text-xs text-ink-3 ml-1.5">per tyre</span>
                   </div>
                   <div className="text-xs text-ok font-semibold flex items-center gap-1">
                     <span className="h-1.5 w-1.5 rounded-full bg-ok animate-pulse" />
                     {`${t.stock} available`}
                   </div>
                 </div>
-                <p className="text-[11px] text-ink-3 mb-4">
-                  Review the selected tyre, quantity and appointment details before continuing.
+                <p className="text-xs text-ink-3 mb-4">
+                  Fitting and any location charge are shown in the booking summary.
                 </p>
                 <Link
                   href={`/booking?tyre=${t.id}&qty=2&${qs.toString()}`}
@@ -219,21 +228,21 @@ export default async function TyresPage({ searchParams }: Props) {
         <div className="flex items-start gap-3">
           <ShieldCheck size={22} className="text-brand shrink-0 mt-0.5" />
           <div>
-            <h4 className="text-sm font-bold">Confirm the fitment</h4>
+            <h3 className="text-sm font-bold">Confirm the fitment</h3>
             <p className="text-xs text-ink-2 mt-1">Compare the selected size with the numbers printed on the physical tyre sidewall.</p>
           </div>
         </div>
         <div className="flex items-start gap-3">
           <Zap size={22} className="text-brand shrink-0 mt-0.5" />
           <div>
-            <h4 className="text-sm font-bold">Review the complete price</h4>
+            <h3 className="text-sm font-bold">Review the complete price</h3>
             <p className="text-xs text-ink-2 mt-1">Any applicable fitting-location charge must be shown before a real payment step.</p>
           </div>
         </div>
         <div className="flex items-start gap-3">
           <Fuel size={22} className="text-brand shrink-0 mt-0.5" />
           <div>
-            <h4 className="text-sm font-bold">Keep the vehicle details</h4>
+            <h3 className="text-sm font-bold">Keep the vehicle details</h3>
             <p className="text-xs text-ink-2 mt-1">The tyre size, registration and postcode remain attached to the booking journey.</p>
           </div>
         </div>

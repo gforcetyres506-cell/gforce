@@ -1,6 +1,12 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft, FileCheck2, Info } from 'lucide-react';
 import MStripe from '@/components/ui/MStripe';
+
+export const metadata: Metadata = {
+  title: 'Cancellations and Refunds',
+  description: 'Read the current G Force Tyres cancellation and refund information.',
+};
 
 export default function CancellationPage() {
   return (

@@ -241,7 +241,7 @@ function PaymentPageContent() {
           <div className="p-4 bg-brand/5 border border-brand/20 rounded space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-brand uppercase tracking-wider">Local Test Mode</span>
-              <span className="badge badge-info text-[10px]">Local test only</span>
+              <span className="badge badge-info text-xs">Local test only</span>
             </div>
             <p className="text-xs text-ink-2">
               Simulate the development-only confirmation path without collecting card data.

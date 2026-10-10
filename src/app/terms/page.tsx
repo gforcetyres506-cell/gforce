@@ -1,6 +1,12 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import MStripe from '@/components/ui/MStripe';
+
+export const metadata: Metadata = {
+  title: 'Terms and Conditions',
+  description: 'Read the G Force Tyres terms and conditions, including service scope and customer responsibilities.',
+};
 
 export default function TermsPage() {
   return (

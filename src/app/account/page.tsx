@@ -293,7 +293,7 @@ export default function CustomerAccountDashboard() {
                       </td>
                       <td className="p-3.5 font-bold text-ink-1">{formatPrice(b.total_amount)}</td>
                       <td className="p-3.5">
-                        <span className={`px-2 py-0.5 rounded text-[11px] font-semibold uppercase ${
+                        <span className={`px-2 py-0.5 rounded text-xs font-semibold uppercase ${
                           b.status === 'completed'
                             ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
                             : 'bg-rose-500/15 text-rose-300 border border-rose-500/30'

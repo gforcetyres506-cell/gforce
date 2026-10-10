@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test:security": "node scripts/security-check.mjs",
+    "test:ui": "playwright test",
     "test:phase1:live": "node scripts/phase1-live-acceptance.mjs",
     "pages:build": "opennextjs-cloudflare build",
     "pages:dev": "npx wrangler pages dev .vercel/output/static --compatibility-flag=nodejs_compat",
@@ -36,7 +37,9 @@
     "zustand": "^5.0.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@opennextjs/cloudflare": "^1.3.0",
+    "@playwright/test": "^1.64.0",
     "@types/node": "^22.7.5",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",

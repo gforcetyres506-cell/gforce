@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import MStripe from '@/components/ui/MStripe';
 import BrandLogo from '@/components/layout/BrandLogo';
+import { ContactActions } from '@/components/layout/BusinessContact';
 
 export default function Footer() {
   return (
@@ -23,6 +24,7 @@ export default function Footer() {
             <Link href="/#tyre-finder" className="text-xs font-semibold text-brand hover:underline">
               Start tyre search &rarr;
             </Link>
+            <ContactActions className="mt-4" showNumber />
           </div>
 
           <div>
@@ -41,7 +43,6 @@ export default function Footer() {
               <li>Postcode service check</li>
               <li>Vehicle registration lookup</li>
               <li>Manual tyre-size entry</li>
-              <li className="pt-2"><Link href="/admin/login" className="text-xs text-brand hover:underline font-semibold">&rarr; Admin Dispatch Console</Link></li>
             </ul>
           </div>
 
@@ -62,7 +63,7 @@ export default function Footer() {
           <div className="flex items-center gap-4">
             <span>Location-first booking</span>
             <span className="h-1 w-1 rounded-full bg-brand" />
-            <Link href="/admin/login" className="hover:text-ink-1">Staff Portal</Link>
+            <Link href="/tyres" className="hover:text-ink-1">Browse tyres</Link>
           </div>
         </div>
       </div>

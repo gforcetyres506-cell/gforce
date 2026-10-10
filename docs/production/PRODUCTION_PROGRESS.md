@@ -1,9 +1,48 @@
 # G FORCE TYRES - Production recovery progress
 
+## Gate A - customer-facing UI safety (2026-10-10)
+
+Scope: the UI safety work explicitly authorized after the documentation-only recovery checkpoint. Branch: `fix/a-ui-safety`. Starting commit: `2d2178bbdaa1b54407a8b3902a104bfd4e1d0ed5`; application source baseline: `61346440dd64e5dacff31d6e6409236d08d3e6c8`. Audit input: workspace `GFORCE_UIUX_AUDIT.md`, which identifies the same repository and application SHA.
+
+### Implemented
+
+- Booking uses a single mobile grid column, zero-minimum desktop tracks, shrinkable inputs/cards and wrapping/stacked actions. Removed body overflow clipping as a workaround; summary sticks only on desktop.
+- Public navigation and footer no longer advertise Staff, Operator Login, Admin Dispatch Console, Staff Portal or customer sign-in. `/admin/login` is retained. The mobile menu supports Escape, focus trapping and focus restoration.
+- One contact component serves desktop header, hero, mobile drawer, mobile bottom bar, footer and relevant error/empty states. Only explicit `BUSINESS_PHONE` and independently configured `BUSINESS_WHATSAPP` are accepted, in international format. Missing/invalid values render no contact link. No approved business number was supplied; no default was invented. Legacy settings/mock phone values are never used by this component. Redeploy after contact configuration changes so static pages are regenerated.
+- Removed the manage page's fictional technician phone card and sample dispatch number. Cancellation, refund, booking persistence and payment behavior were not changed.
+- Bebas Neue and Inter load through `next/font`, with self-hosted generated font assets and swap behavior. Display fonts no longer depend on Windows font availability.
+- Budget / Standard / Premium badges use literal classes. The existing database `mid` value maps to Standard in presentation, including the inventory label; database enums and queries retain their existing contract. Catalogue links use `tier=standard`, translated at the existing query boundary.
+- Raised shared helper/placeholder/disabled text contrast, retained visible focus, set customer captions to at least 12px, and expanded critical actions to at least 44px. Added named quantity controls, visible/named progress steps with `aria-current`, form labels and customer autofill attributes.
+- Added distinct metadata for home, tyres, booking, management and legal pages; management is noindex. Added a branded 404 with recovery and configured contact links.
+- Corrected catalogue price copy to say per tyre and identify separate fitting/location charges; all price calculations and payment logic are unchanged.
+
+### Verification
+
+| Check | Result |
+| --- | --- |
+| `npm run typecheck` | PASS, including UI test sources |
+| `npm run lint` | PASS, zero errors and 56 existing warnings |
+| `npm run build` | PASS with database credentials and business contacts unset |
+| Playwright / axe guardrails | PASS, 42/42 tests against compiled production UI at 360, 375, 390, 430, 768, 1366 and 1440px |
+| Contact configuration absent | PASS, 7/7 additional production page tests at the same widths; no `tel:`/WhatsApp links or sticky contact bar |
+| Structural security script | PASS; does not establish hosted authorization or payment correctness |
+| `git diff --check` | PASS after whitespace review |
+| Commit scope | Reviewed: UI, contact presentation/configuration, test infrastructure and this progress entry; no migrations, database helpers or API/payment behavior changes |
+
+The Playwright server builds locally with reserved fictional contact values supplied **only by test configuration**. Browser API requests are fulfilled with local fixtures before navigation, including `/api/slots`, holds and management. Database/provider credentials are unset. The existing server catalogue fallback is observed for rendering checks; it is not asserted to be business stock. Tests stop before checkout and do not exercise live payments or cancellation.
+
+UI verification is separate from hosted acceptance and does not clear the recovery audit's schema conflicts, unsafe mock persistence, payment conflicts, privacy gaps or legal approval requirements. Dependency installation reported 19 audit findings (3 moderate, 14 high, 2 critical); dependency remediation is outside this UI gate.
+
+Commit message: `fix(ui): resolve production mobile and public UX blockers`. No push, merge, deploy, migration, cloud database write, or production business-data change is included. Stop after the local commit and clean-tree verification.
+
+---
+
+## Historical documentation-only recovery checkpoint
+
 Updated: 2026-10-10 (Asia/Dhaka).
 Scope: establish baseline, propose canonical architecture, commit documentation only, stop.
 
-## CURRENT HEAD
+## CURRENT HEAD (historical recovery snapshot)
 
 | Item | Value |
 | --- | --- |

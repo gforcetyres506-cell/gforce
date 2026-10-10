@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Package, Plus, Minus, Search, Edit3, Check, AlertCircle } from 'lucide-react';
 import AdminNav from '@/components/admin/AdminNav';
 import MStripe from '@/components/ui/MStripe';
+import TierBadge from '@/components/ui/TierBadge';
 import { localStore } from '@/lib/mockData';
 import { isMockDataEnabled } from '@/lib/mock-mode';
 import AdminDataPending from '@/components/admin/AdminDataPending';
@@ -173,7 +174,7 @@ export default function AdminInventoryPage() {
 
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-1.5">
-                      <span className={`badge badge-${t.tier} text-[10px] py-0.5 px-2`}>{t.tier}</span>
+                      <TierBadge tier={t.tier} />
                       <span className="badge badge-info text-[10px] py-0.5 px-2">{t.season}</span>
                     </div>
                   </td>
@@ -290,7 +291,7 @@ export default function AdminInventoryPage() {
                   <label className="label mb-1 block">Tier</label>
                   <select className="input" value={tier} onChange={(e) => setTier(e.target.value as any)}>
                     <option value="premium">Premium</option>
-                    <option value="mid">Mid-Range</option>
+                    <option value="mid">Standard</option>
                     <option value="budget">Budget</option>
                   </select>
                 </div>
