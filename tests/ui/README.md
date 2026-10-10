@@ -11,13 +11,13 @@ Database/provider credentials are explicitly empty. Browser API requests are
 fulfilled with isolated test fixtures for layout and failure-path scenarios.
 Server catalogue rendering must show inventory unavailable, with no products.
 Direct APIRequestContext checks bypass browser routing and assert the actual
-credential-free production server returns 503/404 instead of fake success.
+credential-free production server returns validation errors or 503/404 instead of fake success.
 
 Coverage includes mobile overflow, WCAG axe checks, primary actions, contact
 locations, hidden staff/account navigation, drawer keyboard behavior, 44px
 critical targets, autofill, fonts, metadata, tier presentation and four booking
 steps. Truth tests require empty manual size fields, explicit rear selection,
-valid product context, failed/malformed/expired hold blocking, real quote
+valid product context, truthful atomic checkout failure/retry, deadline refresh, real quote
 amounts, pricing outages, unassigned fitter copy, unpaid progress and retired
 payment behavior. No test creates a cloud booking, hold, payment or user.
 

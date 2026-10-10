@@ -123,6 +123,8 @@ export interface SlotHold {
 }
 
 export type BookingStatus =
+  | 'AWAITING_BANK_PAYMENT'
+  | 'EXPIRED'
   | 'pending_payment'
   | 'confirmed'
   | 'tyres_reserved'
@@ -194,6 +196,7 @@ export interface Booking {
   stripe_payment_intent_id: string | null;
   stripe_charge_id: string | null;
   deposit_paid_at: string | null;
+  bank_payment_expires_at?: string | null;
 
   created_at: string;
   updated_at: string;

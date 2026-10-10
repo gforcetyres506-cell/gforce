@@ -1,4 +1,5 @@
 node_modules
+.local-postgres/
 .next
 .vercel
 .open-next

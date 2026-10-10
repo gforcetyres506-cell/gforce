@@ -79,7 +79,7 @@ test('server mutation rechecks viewer/inactive/normal and live session', async (
 test('admin and owner operational changes persist with atomic audits; stock cannot violate reservations', async () => {
   await as('service_role', null, async () => {
     for (const role of ['admin', 'owner']) assert.equal((await inventoryChange(actors[role], 6)).rows[0].stock_qty, 6);
-    await assert.rejects(inventoryChange(actors.admin, 1), /check constraint/);
+    await assert.rejects(inventoryChange(actors.admin, 1), { code: '23514' });
   });
   assert.equal((await db.query("select count(*)::int as n from public.audit_logs where action='inventory.updated'")).rows[0].n, 2);
   assert.equal((await db.query('select stock_qty from public.inventory')).rows[0].stock_qty, 6);

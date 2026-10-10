@@ -76,8 +76,8 @@ export const vrmLookupSchema = z.object({
 });
 
 export const createHoldSchema = z.object({
-  slot_id: z.string().min(1),
-  session_token: z.string().min(8).max(64),
+  slot_id: z.string().uuid(),
+  session_token: z.string().uuid(),
 });
 
 export const releaseHoldSchema = z.object({
@@ -86,8 +86,8 @@ export const releaseHoldSchema = z.object({
 });
 
 export const checkoutSchema = z.object({
-  slot_id: z.string().min(1),
-  session_token: z.string().min(8).max(64),
+  slot_id: z.string().uuid(),
+  session_token: z.string().uuid(),
   customer: z.object({
     name: z.string().min(2).max(80),
     email: emailSchema,
@@ -96,16 +96,16 @@ export const checkoutSchema = z.object({
     address_line2: z.string().max(120).optional().or(z.literal('')),
     city: z.string().max(60).optional().or(z.literal('')),
     postcode: ukPostcodeSchema,
-  }),
+  }).strict(),
   vehicle: z.object({
     reg: z.string().max(10).optional().or(z.literal('')),
     make: z.string().max(60).optional().or(z.literal('')),
     model: z.string().max(60).optional().or(z.literal('')),
-  }),
+  }).strict(),
   // Only IDs and quantities cross the wire. Prices are looked up server-side.
   items: z
-    .array(z.object({ tyre_id: z.string().min(1), quantity: z.number().int().min(1).max(8) }))
+    .array(z.object({ tyre_id: z.string().uuid(), quantity: z.number().int().min(1).max(8) }).strict())
     .min(1)
     .max(6),
   notes: z.string().max(500).optional().or(z.literal('')),
-});
+}).strict();

@@ -22,6 +22,7 @@ import { ContactActions } from '@/components/layout/BusinessContact';
 import { formatPrice, formatTyreSize, formatSlotTime, makeSessionToken } from '@/lib/utils';
 import { validBookingEntry, quoteSchema } from '@/lib/journey';
 import { tyreSizeSchema } from '@/lib/validation';
+import { reservationSchema } from '@/lib/checkout-result';
 import type { Tyre, SlotWithAvailability, ServiceZone, PriceBreakdown } from '@/types';
 
 function BookingWizard() {
@@ -62,11 +63,6 @@ function BookingWizard() {
   const [slotsError, setSlotsError] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedSlot, setSelectedSlot] = useState<SlotWithAvailability | null>(null);
-  const [holdId, setHoldId] = useState<string | null>(null);
-  const [holdExpiresAt, setHoldExpiresAt] = useState<string | null>(null);
-  const [holdError, setHoldError] = useState<string | null>(null);
-  const [isHolding, setIsHolding] = useState(false);
-  const holdRequest = useRef(0);
   const postcodeRequest = useRef(0);
   const [quote, setQuote] = useState<PriceBreakdown | null>(null);
   const [quoteError, setQuoteError] = useState<string | null>(null);
@@ -83,8 +79,7 @@ function BookingWizard() {
   const tyresReady = !!selectedTyre && quantity <= selectedTyre.stock
     && (!hasRearTyre || (!!rearTyre && rearQuantity <= rearTyre.stock));
   const locationReady = !!zone && validatedPostcode === postcode.trim().toUpperCase();
-  const holdReady = !!selectedSlot && !!holdId && !!holdExpiresAt && Date.parse(holdExpiresAt) > Date.now();
-  const holdFailure = 'That fitting time could not be reserved. Please choose another.';
+  const slotReady = !!selectedSlot;
 
   useEffect(() => {
     if (!validEntry) { router.replace('/#tyre-finder'); return; }
@@ -164,15 +159,6 @@ function BookingWizard() {
     return () => controller.abort();
   }, [selectedTyre, quantity, hasRearTyre, rearTyre, rearQuantity, tyresReady, locationReady, validatedPostcode]);
 
-  useEffect(() => {
-    if (!holdExpiresAt) return;
-    const timer = setTimeout(() => {
-      setHoldId(null); setHoldExpiresAt(null); setSelectedSlot(null);
-      setHoldError(holdFailure); setStep(3);
-    }, Math.max(0, Date.parse(holdExpiresAt) - Date.now()));
-    return () => clearTimeout(timer);
-  }, [holdExpiresAt]);
-
   async function validateLocation(pc: string) {
     const request = ++postcodeRequest.current;
     setZone(null); setValidatedPostcode(''); setPostcodeError(null);
@@ -191,22 +177,8 @@ function BookingWizard() {
     }
   }
 
-  async function handleSelectSlot(slot: SlotWithAvailability) {
-    const request = ++holdRequest.current;
-    setSelectedSlot(null); setHoldId(null); setHoldExpiresAt(null); setHoldError(null); setIsHolding(true);
-    try {
-      const response = await fetch('/api/holds/create', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ slot_id: slot.id, session_token: sessionToken }) });
-      const data = await response.json();
-      if (request !== holdRequest.current) return;
-      if (!response.ok || !data.ok || !data.data?.hold_id || data.data.slot_id !== slot.id
-        || !Number.isFinite(Date.parse(data.data.expires_at)) || Date.parse(data.data.expires_at) <= Date.now()) throw new Error();
-      setHoldId(data.data.hold_id); setHoldExpiresAt(data.data.expires_at); setSelectedSlot(slot);
-    } catch {
-      if (request === holdRequest.current) setHoldError(holdFailure);
-    } finally {
-      if (request === holdRequest.current) setIsHolding(false);
-    }
+  function handleSelectSlot(slot: SlotWithAvailability) {
+    setSelectedSlot(slot);
   }
 
   const availableDates = Array.from(new Set(slots.map((slot) => slot.slot_date))).slice(0, 10);
@@ -217,8 +189,8 @@ function BookingWizard() {
 
   async function handleProceedToPayment(e: React.FormEvent) {
     e.preventDefault();
-    if (!tyresReady || !locationReady || !holdReady || !quote) {
-      setFormError('Confirm the tyres, price, fitting area and reserved time before continuing.'); return;
+    if (!tyresReady || !locationReady || !slotReady || !quote) {
+      setFormError('Confirm the tyres, price, fitting area and selected time before continuing.'); return;
     }
     if (!fullName || !email || !phone || !addressLine1) {
       setFormError('Please fill in all required contact and fitting address fields.'); return;
@@ -235,9 +207,13 @@ function BookingWizard() {
           notes: fittingNotes }),
       });
       const data = await response.json();
-      setFormError(data.message || 'Online booking payments are unavailable. No booking has been created.');
+      const reservation = reservationSchema.safeParse(data.data);
+      if (response.ok && data.ok && reservation.success) {
+        router.push('/manage/' + reservation.data.manage_token); return;
+      }
+      setFormError(data.message || 'Your reservation could not be verified. Retry this checkout to check the same booking.');
     } catch {
-      setFormError('Booking service unavailable. Please try again later.');
+      setFormError('Your reservation could not be verified. Retry this checkout to check the same booking.');
     } finally { setIsSubmitting(false); }
   }
   if (!validEntry) return <div className="container-g section" role="status">Returning to tyre finder…</div>;
@@ -258,7 +234,7 @@ function BookingWizard() {
           { num: 1, title: 'Tyres & Qty' },
           { num: 2, title: 'Location & Van' },
           { num: 3, title: 'Choose Slot' },
-          { num: 4, title: 'Contact & Pay' },
+          { num: 4, title: 'Contact & Reserve' },
         ].map((s) => {
           const isActive = step === s.num;
           const isDone = step > s.num;
@@ -269,7 +245,7 @@ function BookingWizard() {
               aria-label={"Step " + s.num + ": " + s.title}
               aria-current={isActive ? 'step' : undefined}
               onClick={() => {
-                if (s.num === 1 || (s.num === 2 && tyresReady) || (s.num === 3 && tyresReady && locationReady && quote) || (s.num === 4 && tyresReady && locationReady && quote && holdReady)) {
+                if (s.num === 1 || (s.num === 2 && tyresReady) || (s.num === 3 && tyresReady && locationReady && quote) || (s.num === 4 && tyresReady && locationReady && quote && slotReady)) {
                   setStep(s.num as 1 | 2 | 3 | 4);
                 }
               }}
@@ -554,7 +530,7 @@ function BookingWizard() {
                         type="button"
                         onClick={() => {
                           setSelectedDate(d);
-                          ++holdRequest.current; setSelectedSlot(null); setHoldId(null); setHoldExpiresAt(null); setIsHolding(false);
+                          setSelectedSlot(null);
                         }}
                         className={`p-2.5 rounded border text-center transition-all ${
                           isSelected
@@ -590,7 +566,7 @@ function BookingWizard() {
                         <button
                           key={s.id}
                           type="button"
-                          disabled={!s.available || isHolding}
+                          disabled={!s.available}
                           onClick={() => handleSelectSlot(s)}
                           className={`slot ${isSelected ? 'slot-selected' : s.available ? 'slot-available' : 'slot-full'}`}
                         >
@@ -598,7 +574,7 @@ function BookingWizard() {
                             {formatSlotTime(s.start_time)} – {formatSlotTime(s.end_time)}
                           </span>
                           <span className={`text-xs mt-1 ${isSelected ? 'text-ink-inverse font-semibold' : 'text-ok'}`}>
-                            {isSelected && holdReady ? 'Reserved until ' + new Date(holdExpiresAt!).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : `${s.remaining} fitting time available`}
+                            {isSelected ? 'Selected — reserved at checkout' : `${s.remaining} fitting time available`}
                           </span>
                         </button>
                       );
@@ -606,17 +582,10 @@ function BookingWizard() {
                   </div>
                 )}
 
-                {holdError && (
-                  <div className="mt-3 text-danger text-xs flex items-center gap-1.5" role="alert">
-                    <AlertCircle size={14} /> {holdError}
-                  </div>
-                )}
-                {holdError && <ContactActions className="mt-3" />}
-
-                {holdReady && (
+                {slotReady && (
                   <div className="mt-4 p-3 bg-brand/10 border border-brand/30 rounded flex items-center gap-2 text-xs text-brand">
                     <CheckCircle2 size={16} />
-                    <span>Time reserved until {new Date(holdExpiresAt!).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}. Complete your details before it expires.</span>
+                    <span>Time selected. Your time and tyres will be reserved together when you submit your details.</span>
                   </div>
                 )}
               </div>
@@ -628,7 +597,7 @@ function BookingWizard() {
                 <button
                   type="button"
                   onClick={() => setStep(4)}
-                  disabled={!holdReady || isHolding}
+                  disabled={!slotReady}
                   className="btn btn-primary flex-1"
                 >
                   Enter Contact Details <ArrowRight size={16} />
@@ -748,16 +717,16 @@ function BookingWizard() {
                 </button>
                 <button
                   type="submit"
-                  disabled={isSubmitting || !quote || !holdReady || !locationReady || !tyresReady}
+                  disabled={isSubmitting || !quote || !slotReady || !locationReady || !tyresReady}
                   className="btn btn-primary flex-1"
                 >
                   {isSubmitting ? (
                     <>
-                      <Loader2 size={16} className="animate-spin" /> Preparing Checkout...
+                      <Loader2 size={16} className="animate-spin" /> Reserving Booking...
                     </>
                   ) : (
                     <>
-                      Proceed to Secure Deposit <ArrowRight size={16} />
+                      Reserve for Bank Payment <ArrowRight size={16} />
                     </>
                   )}
                 </button>
@@ -848,7 +817,7 @@ function BookingWizard() {
 
           {quoteError && <p role="alert" className="text-sm text-danger">{quoteError}</p>}
           {!quote && !quoteError && <p className="text-xs text-ink-2" role="status">{quoteLoading ? 'Checking price…' : 'Confirm your tyres and fitting area to check the complete price.'}</p>}
-          <p className="text-xs text-ink-2">Online payments are currently unavailable. A quote or temporary time reservation does not confirm a booking.</p>
+          <p className="text-xs text-ink-2">Pay by manual bank transfer. Your payment deadline appears after the reservation is confirmed. A quote or selected time does not reserve a booking.</p>
         </div>
       </div>
     </div>

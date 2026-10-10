@@ -1,0 +1,127 @@
+{
+  "scope": "LOCAL_REAL_POSTGRESQL_ONLY",
+  "started_at": "2026-10-10T17:33:56.781Z",
+  "races": [
+    {
+      "name": "slot",
+      "independent_connections": 20,
+      "simultaneous_lock_waiters": 20,
+      "successes": 1,
+      "failures": 19,
+      "failure_code": "P2002"
+    },
+    {
+      "name": "inventory",
+      "independent_connections": 20,
+      "simultaneous_lock_waiters": 20,
+      "successes": 1,
+      "failures": 19,
+      "failure_code": "P2003"
+    },
+    {
+      "name": "multi",
+      "independent_connections": 20,
+      "simultaneous_lock_waiters": 20,
+      "successes": 1,
+      "failures": 19,
+      "failure_code": "P2003"
+    },
+    {
+      "name": "retry",
+      "independent_connections": 20,
+      "simultaneous_lock_waiters": 20,
+      "successes": 20,
+      "failures": 0,
+      "failure_code": null
+    }
+  ],
+  "postgresql_version": "PostgreSQL 16.15, compiled by Visual C++ build 1944, 64-bit",
+  "target_attestation": "PASS: runner-created local directory; loopback only; no cloud connection",
+  "migrations": [
+    {
+      "file": "001_extensions.sql",
+      "sha256": "9a668f2e5c3620e6e4eb7ee03362ad73e7bcfea66c204671e6b7af4c2e7d4985"
+    },
+    {
+      "file": "002_admin_profiles.sql",
+      "sha256": "551adb2d235ef77b27368edd17406bbe3f156936075386610211505d37e230f5"
+    },
+    {
+      "file": "003_customers.sql",
+      "sha256": "0b6001644a9536aa45bec80434b3b8d10e174f193c0ccaa2f3134c6231e4cf1a"
+    },
+    {
+      "file": "004_service_zones.sql",
+      "sha256": "5aa52fbdbd1b3c66eeb8f3ad2cf362826d82cdaca3debc140f26dfdf1f7f04cd"
+    },
+    {
+      "file": "005_catalogue.sql",
+      "sha256": "174aa162ffbb9407466332f93e009ea02586c1d4dbe305c6816bdc9680771052"
+    },
+    {
+      "file": "006_availability.sql",
+      "sha256": "04e5529cbcded17e1e764dbb1c1196fd68c3b844de15eb889b064c830e1e3644"
+    },
+    {
+      "file": "007_booking_resources.sql",
+      "sha256": "ca368b6dac6e104c820792e42c0f60430d745c4c205f7b98705c6b345594bd29"
+    },
+    {
+      "file": "008_bookings.sql",
+      "sha256": "9f60bb705a75f604637913115f44acf36361a1af9b670c1a5ae712dcea2b08ac"
+    },
+    {
+      "file": "009_payments.sql",
+      "sha256": "4960a9c589e22fb2db7285537fe407e83813bc2778bd7cb66b735ec82f7ad69c"
+    },
+    {
+      "file": "010_operations.sql",
+      "sha256": "af87f01185e0cd904e129969740c4534fe4e6602716a8879b668dc36351e5cdb"
+    },
+    {
+      "file": "011_rls.sql",
+      "sha256": "5f7bc4ca7014c061202295e50ec642f48c8b7c9aa7ebc0c08523c145bdf416b1"
+    },
+    {
+      "file": "012_indexes.sql",
+      "sha256": "91158fce7bebbcd9731f532f30ae54e29d3d833f53a1981ef1a67f667b096975"
+    },
+    {
+      "file": "013_gate0_canonical_foundation.sql",
+      "sha256": "298538a74e6b807bb858828148c7827aad9ca919a947709483978087653c3705"
+    },
+    {
+      "file": "014_gate0_access_boundary.sql",
+      "sha256": "aecf05c8f213a09860179fef4a652f0d42c3b6489b2395b24a4f62d3aeb868fc"
+    },
+    {
+      "file": "015_gate1_owner_business_data.sql",
+      "sha256": "30e738d08316568c511d2fc74294d92fc0c150454e1a4dbc40e74edce4f0b58a"
+    },
+    {
+      "file": "016_gate2_atomic_booking.sql",
+      "sha256": "5bb212a75a022ba6d65565438c1502dab316da5a046045a9356c300494317fef"
+    }
+  ],
+  "schema": "PASS",
+  "authoritative_pricing_and_immutability": "PASS",
+  "full_rollback": "PASS",
+  "expiry_without_cron": "PASS",
+  "negative_inventory_rows": 0,
+  "oversold_inventory_rows": 0,
+  "oversold_slot_rows": 0,
+  "finished_at": "2026-10-10T17:34:59.903Z",
+  "suite": {
+    "tests": 12,
+    "passed": 12,
+    "failed": 0,
+    "skipped": 0
+  },
+  "tested_base_head": "3f52936bb2a78babd7aa491f7ceea8fdfe2afa1f",
+  "source_sha256": {
+    "tests/concurrency/gate2.test.mjs": "7dfc6ccfbf22c32fe07e59abc691f355c502c75788afa03bcadec4432e0b5926",
+    "scripts/gate2-local-postgres.mjs": "0adebf0c64108612f6c112fc1093722c7ad3f83a8031cfe9f747ff109adb5d63",
+    "src/app/api/checkout/create/route.ts": "16d3d602709491c96636b01eaa1b0db99249020ee4fef10d755be437ef7eea3d",
+    "supabase/verification/phase1_catalog_checks.sql": "f1f1694081b239cd42a69080124e170d8307ebb8e9b941f521dc285ead782687"
+  }
+}

@@ -16,7 +16,7 @@ import { ContactActions } from '@/components/layout/BusinessContact';
 import { formatPrice, formatSlotTime, formatReg } from '@/lib/utils';
 import MStripe from '@/components/ui/MStripe';
 import type { BookingWithDetails, BookingStatus } from '@/types';
-import { hasRecordedDeposit } from '@/lib/booking-state';
+import { hasRecordedDeposit, bookingHeading } from '@/lib/booking-state';
 
 const STATUS_STEPS: Array<{ key: BookingStatus; label: string; description: string }> = [
   { key: 'confirmed',        label: 'Deposit Recorded', description: 'Payment recorded on this booking.' },
@@ -53,6 +53,22 @@ export default function ManageBookingPage({
       .catch(() => { setBooking(null); setLoadError('Booking service unavailable. Please try again later.'); })
       .finally(() => setLoading(false));
   }, [token]);
+
+  useEffect(() => {
+    if (booking?.status !== 'AWAITING_BANK_PAYMENT' || !booking.bank_payment_expires_at) return;
+    const controller = new AbortController();
+    const timer = setTimeout(async () => {
+      try {
+        const response = await fetch(`/api/manage/${token}`, { cache: 'no-store', signal: controller.signal });
+        const result = await response.json();
+        if (!response.ok || !result.ok || !result.data) throw new Error();
+        setBooking(result.data);
+      } catch {
+        if (!controller.signal.aborted) { setBooking(null); setLoadError('Booking service unavailable. Please try again later.'); }
+      }
+    }, Math.max(0, Date.parse(booking.bank_payment_expires_at) - Date.now()) + 100);
+    return () => { clearTimeout(timer); controller.abort(); };
+  }, [booking?.status, booking?.bank_payment_expires_at, token]);
 
   if (loading) {
     return (
@@ -118,9 +134,17 @@ export default function ManageBookingPage({
       <div className="card mb-8 border-border-brand/40 shadow-xl space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3">
           <h3 className="text-sm font-bold uppercase tracking-wider">Live Fitting Status</h3>
-          <span className="badge badge-info">{b.status.replace('_', ' ').toUpperCase()}</span>
+          <span className="badge badge-info">{b.status.replaceAll('_', ' ').toUpperCase()}</span>
         </div>
 
+        <p className="text-sm font-semibold" role="status">{bookingHeading(b)}</p>
+        {b.status === 'AWAITING_BANK_PAYMENT' && b.bank_payment_expires_at && (
+          <p className="text-sm text-ink-2">
+            Your time and tyres are reserved until {new Date(b.bank_payment_expires_at).toLocaleString('en-GB')}.
+            Bank payment has not been recorded. Contact us with your reference for payment instructions.
+          </p>
+        )}
+        {b.status === 'EXPIRED' && <p className="text-sm text-ink-2">The unpaid reservation has expired. Its fitting time and tyres have been released. Please start a new search.</p>}
         <div className="grid sm:grid-cols-5 gap-3 pt-2">
           {STATUS_STEPS.map((s, idx) => {
             const isCompleted = idx <= activeIndex;

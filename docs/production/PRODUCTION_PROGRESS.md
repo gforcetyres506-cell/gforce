@@ -1,5 +1,34 @@
 # G FORCE TYRES - Production recovery progress
 
+## Gate 2 - atomic booking engine (2026-10-10)
+
+Branch: gate/2-booking-engine. Starting HEAD: 3f52936bb2a78babd7aa491f7ceea8fdfe2afa1f.
+Status: **PASS - native PostgreSQL concurrency verified locally**.
+Details and replay instructions: [04_GATE2_BOOKING_ENGINE.md](04_GATE2_BOOKING_ENGINE.md).
+
+- Forward migration 016 adds the authoritative slot + inventory + customer +
+  booking + immutable-item transaction. Migrations 001-015 are unchanged.
+- Successful reservations are AWAITING_BANK_PAYMENT. Database prices and
+  integer-pence totals are authoritative. Browser business-state fields reject.
+- Required bank_payment_window_minutes has no invented default. Expiry releases
+  resources through time predicates, with EXPIRED materialized on read/checkout.
+- Twenty real concurrent connections, all observed waiting simultaneously:
+  capacity 1 -> 1 success / 19 conflicts; stock 2, qty 2 -> 1 success / 19
+  out_of_stock. Reverse-order multi-item race also 1 / 19, without deadlock.
+- Twenty same-key retries persist one booking/customer/hold set. Late injected
+  failure rolls back every business write. Real one-minute expiry passes with
+  cleanup idle. Negative stock, oversold inventory and overbooked slots: 0.
+- Native PostgreSQL 16.15: 12/12; SQL/security replay: 16/16; reliability: 94/94.
+  Responsive UI: 154/154 across all seven widths. Final backend correction was
+  rebuilt and actual credential-free API checks rerun: 7/7. Typecheck, lint,
+  production build, security scan and git diff --check: PASS (four old warnings).
+- Evidence: [GATE2_POSTGRES.json](evidence/GATE2_POSTGRES.json),
+  [native test output](evidence/GATE2_POSTGRES_TESTS.txt).
+
+No cloud mutation, real business-data import, push or deployment. Gate 0 cloud
+verification and Gate 1 owner/provider acceptance remain BLOCKED. Manual bank
+payment confirmation and bank instructions are not implemented in Gate 2.
+
 ## Gate 1 - real search / coverage / catalogue (2026-10-10)
 
 Branch: gate/1-real-data. Starting HEAD:

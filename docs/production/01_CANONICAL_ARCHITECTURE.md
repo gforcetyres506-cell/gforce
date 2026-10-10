@@ -1,10 +1,10 @@
 # G FORCE TYRES - Canonical architecture
 
-Date: 2026-10-10. Branch: gate/0-live-supabase.
-Status: implemented and tested locally; cloud acceptance BLOCKED.
-Starting HEAD: 545bac195fcabdd71e722a4412baa6dbd0dc05cd.
+Date: 2026-10-10. Current branch: gate/2-booking-engine.
+Status: native PostgreSQL booking acceptance PASS; cloud acceptance BLOCKED.
+Foundation starting HEAD: 545bac195fcabdd71e722a4412baa6dbd0dc05cd.
 
-Use only ordered SQL in supabase/migrations/001-015. The original 001-012
+Use only ordered SQL in supabase/migrations/001-016. The original 001-012
 files are unchanged. Forward migrations 013 and 014 reconcile the foundation
 and enforce the access boundary. The conflicting schema.sql was moved to
 supabase/archive/legacy-schema.sql.disabled; its Git-normalized contents are
@@ -89,11 +89,11 @@ omit costs and suppliers. Booking projections omit internal notes. A short
 reference alone cannot reveal a booking; confirmation also requires its UUID
 management capability. Database/validation failures remain unavailable states.
 
-This gate does not enable a reservation, Checkout, signed payment transition,
+Gate 0 did not enable a reservation, Checkout, signed payment transition,
 refund, email worker, scheduling editor or booking editor. create_slot_hold is
 not implemented in this chain: attempts fail closed, without a local insert or
 fake reservation. Future commerce migrations must implement and test the
-atomic engine against this schema. succeeded_at is nullable storage for future
+atomic engine against this schema (implemented by Gate 2 below). succeeded_at is nullable storage for future
 verified receipts; no new payment success path is enabled here.
 
 A live database on a legacy architecture needs a separately reviewed data
@@ -111,3 +111,25 @@ seed rows or browser write grants are added. Zone postcode_prefix now means
 an exact outward postcode, never a broad prefix or wildcard. The public
 catalogue maps nullable owner images and labels without costs/supplier data.
 See [03_GATE1_REAL_DATA.md](03_GATE1_REAL_DATA.md) for the contract and blockers.
+
+## Gate 2 forward extension (2026-10-10)
+
+Migration 016 implements reserve_booking_checkout() as the only new booking
+reservation transaction. It locks a slot, then catalogue/inventory in UUID
+order, reads actual settings/prices, and writes both resource holds, supplied
+customer, AWAITING_BANK_PAYMENT booking and immutable items atomically.
+The checkout key serializes retries and preserves the original result.
+
+Temporary inventory_holds are additional to the existing reserved_qty
+operational allocation. Live inventory and slot predicates exclude expired
+unpaid deadlines immediately. expire_unpaid_bookings() materializes EXPIRED
+on checkout/manage read; resource release never requires a cron. Hold rows
+remain historical evidence. bank_payment_window_minutes requires owner
+configuration with no default. Bank terms/items, stock and slot capacity are
+guarded against unsafe changes. No paid state transition is enabled.
+
+There are still 21 canonical tables: 19 unique constraints, 54 checks, 16 FKs,
+23 required named indexes, 24 SELECT-only RLS policies, the existing eight
+updated-at triggers and four new reservation/immutability guards. Privileged
+RPCs remain service-only with empty search_path; no browser write is granted.
+Native race, rollback and expiry evidence: [04_GATE2_BOOKING_ENGINE.md](04_GATE2_BOOKING_ENGINE.md).

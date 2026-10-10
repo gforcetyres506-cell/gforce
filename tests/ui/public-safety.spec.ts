@@ -4,19 +4,19 @@ import { createBusinessContact } from '../../src/lib/business-contact';
 
 const contactsConfigured = process.env.UI_TEST_CONTACTS !== 'off';
 const tyre = {
-  id: 'ui-test-tyre', brand: 'UI test', model: 'Responsive test tyre', sku: 'ui-test',
-  width: 225, profile: 45, rim: 18, tier: 'mid', season: 'summer',
+  id: '00000000-0000-4000-8000-000000000001', brand: 'UI test', model: 'Responsive test tyre', sku: 'ui-test',
+  width: 225, profile: 45, rim: 18, tier: 'standard', season: 'summer',
   sell_price: 10000, cost_price: 5000, stock: 4, active: true,
   is_run_flat: false, is_xl: false, load_index: '95', speed_rating: 'Y',
   fuel_economy: 'B', wet_grip: 'A', noise_db: 70, created_at: '2026-01-01',
 };
 const zone = { id: 'ui-zone', postcode_prefix: 'E14', zone_name: 'UI test zone', callout_charge: 0, active: true };
 const slot = {
-  id: 'ui-slot', slot_date: '2030-01-02', start_time: '10:00:00', end_time: '12:00:00',
+  id: '00000000-0000-4000-8000-000000000003', slot_date: '2030-01-02', start_time: '10:00:00', end_time: '12:00:00',
   max_bookings: 2, available: true, remaining: 2, active: true,
 };
-const rear = { ...tyre, id: 'ui-rear-tyre', width: 255, profile: 40, sell_price: 12000 };
-const journey = '/booking?tyre=ui-test-tyre&w=225&p=45&r=18&pc=E14%208PX';
+const rear = { ...tyre, id: '00000000-0000-4000-8000-000000000002', width: 255, profile: 40, sell_price: 12000 };
+const journey = '/booking?tyre=00000000-0000-4000-8000-000000000001&w=225&p=45&r=18&pc=E14%208PX';
 
 test.beforeEach(async ({ page }) => {
   // TEST_ONLY_SAFE: exercise widget callbacks without external Cloudflare traffic.
@@ -195,7 +195,7 @@ test('all four booking steps fit, have named controls and autofill', async ({ pa
   for (const [id,autocomplete] of [['name','name'],['email','email'],['phone','tel'],['address1','street-address']]) {
     await expect(page.locator('#' + id)).toHaveAttribute('autocomplete', autocomplete);
   }
-  await touchTarget(page.getByRole('button', { name: 'Proceed to Secure Deposit' }));
+  await touchTarget(page.getByRole('button', { name: 'Reserve for Bank Payment' }));
   await noOverflow(page);
   await customerAccessibility(page);
   await expect(page.locator('main')).toContainText('£17.00');
@@ -235,7 +235,7 @@ test('missing context redirects to finder and unknown tyre never selects another
   await expect(page.getByRole('main').getByRole('alert')).toContainText('That tyre is unavailable');
   await expect(page.getByRole('heading', { name: tyre.model })).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Continue to Location & Vehicle' })).toBeDisabled();
-  await page.getByRole('button', { name: 'Step 4: Contact & Pay' }).click();
+  await page.getByRole('button', { name: 'Step 4: Contact & Reserve' }).click();
   await expect(page.getByLabel('Full Name')).toHaveCount(0);
   await noOverflow(page);
 });
@@ -251,38 +251,83 @@ test('unavailable vehicle lookup switches to empty manual size fields', async ({
   await expect(page.locator('main')).not.toContainText('BMW');
 });
 
-for (const failure of ['network', 'database', 'missing expiry', 'expired']) {
-  test('hold failure is truthful: ' + failure, async ({ page }) => {
-    await page.route('**/api/holds/create', async (route) => {
-      if (failure === 'network') return route.abort('failed');
-      const data = { hold_id: 'ui-hold', slot_id: slot.id, ...(failure === 'expired' ? { expires_at: '2000-01-01' } : {}) };
-      await route.fulfill({ status: failure === 'database' ? 503 : 200, contentType: 'application/json',
-        body: JSON.stringify({ ok: failure !== 'database', data }) });
-    });
-    await page.goto(journey);
-    await page.getByRole('button', { name: 'Continue to Location & Vehicle' }).click();
-    await page.getByRole('button', { name: 'Choose Fitting Slot' }).click();
-    await page.getByRole('button', { name: /10am.*12pm/ }).click();
-    await expect(page.getByRole('main').getByRole('alert')).toHaveText('That fitting time could not be reserved. Please choose another.');
-    await expect(page.getByRole('button', { name: 'Enter Contact Details' })).toBeDisabled();
-    await expect(page.locator('main')).not.toContainText('Time reserved until');
-    await page.getByRole('button', { name: 'Step 4: Contact & Pay' }).click();
-    await expect(page.getByLabel('Full Name')).toHaveCount(0);
-    await noOverflow(page);
-  });
-}
-
-test('a confirmed hold expires and stops advancement', async ({ page }) => {
-  await page.route('**/api/holds/create', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify({
-    ok: true, data: { hold_id: 'ui-hold', slot_id: slot.id, expires_at: new Date(Date.now() + 2500).toISOString() },
-  }) }));
+async function reachCheckout(page: Page) {
   await page.goto(journey);
   await page.getByRole('button', { name: 'Continue to Location & Vehicle' }).click();
   await page.getByRole('button', { name: 'Choose Fitting Slot' }).click();
   await page.getByRole('button', { name: /10am.*12pm/ }).click();
-  await expect(page.getByRole('button', { name: 'Enter Contact Details' })).toBeEnabled();
-  await expect(page.getByRole('button', { name: 'Enter Contact Details' })).toBeDisabled({ timeout: 8000 });
-  await expect(page.getByRole('main').getByRole('alert')).toContainText('could not be reserved');
+  await expect(page.locator('main')).toContainText('Time selected.');
+  await expect(page.locator('main')).not.toContainText('Time reserved until');
+  await page.getByRole('button', { name: 'Enter Contact Details' }).click();
+  await page.getByLabel('Full Name').fill('UI Test Only');
+  await page.locator('#email').fill('ui@example.invalid');
+  await page.locator('#phone').fill('+441632960001');
+  await page.locator('#address1').fill('Test fixture only');
+}
+
+for (const failure of ['network', 'database', 'malformed result', 'slot conflict']) {
+  test('atomic checkout failure is truthful: ' + failure, async ({ page }) => {
+    await page.route('**/api/checkout/create', async (route) => {
+      if (failure === 'network') return route.abort('failed');
+      await route.fulfill({ status: failure === 'database' ? 503 : failure === 'slot conflict' ? 409 : 200,
+        contentType: 'application/json', body: JSON.stringify(failure === 'slot conflict'
+          ? { ok: false, message: 'That fitting time could not be reserved. Please choose another.' }
+          : { ok: failure === 'malformed result', data: { status: 'AWAITING_BANK_PAYMENT' } }) });
+    });
+    await reachCheckout(page);
+    await page.getByRole('button', { name: 'Reserve for Bank Payment' }).click();
+    await expect(page.getByRole('main').getByRole('alert')).toContainText(failure === 'slot conflict' ? 'could not be reserved' : 'could not be verified');
+    await expect(page).toHaveURL(/booking/);
+    await expect(page.locator('main')).not.toContainText('Booking confirmed');
+    await noOverflow(page);
+  });
+}
+
+test('checkout retries keep the same key and slot selection creates no premature hold', async ({ page }) => {
+  const keys: string[] = [];
+  let prematureHolds = 0;
+  page.on('request', (request) => { if (request.url().includes('/api/holds/create')) prematureHolds++; });
+  await page.route('**/api/checkout/create', async route => {
+    const payload = route.request().postDataJSON(); keys.push(payload.session_token);
+    expect(Object.keys(payload)).not.toContain('price');
+    await route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ ok: false }) });
+  });
+  await reachCheckout(page);
+  for (let i = 0; i < 2; i++) {
+    await page.getByRole('button', { name: 'Reserve for Bank Payment' }).click();
+    await expect(page.getByRole('main').getByRole('alert')).toContainText('could not be verified');
+  }
+  expect(prematureHolds).toBe(0); expect(keys).toHaveLength(2); expect(keys[0]).toBe(keys[1]);
+});
+
+test('confirmed atomic reservation shows bank deadline and rechecks expiry without a paid claim', async ({ page }) => {
+  const token = '00000000-0000-4000-8000-000000000004';
+  let deadline = '';
+  let reads = 0;
+  await page.route('**/api/checkout/create', route => {
+    deadline = new Date(Date.now() + 3500).toISOString();
+    return route.fulfill({ contentType: 'application/json', body: JSON.stringify({ ok: true, data: {
+      booking_id: '00000000-0000-4000-8000-000000000005', reference: 'UI-BANK-ONLY', manage_token: token,
+      status: 'AWAITING_BANK_PAYMENT', expires_at: deadline, total_pence: 11700, deposit_pence: 3000, balance_pence: 8700,
+    } }) });
+  });
+  await page.route('**/api/manage/' + token, route => {
+    reads++;
+    return route.fulfill({ contentType: 'application/json', body: JSON.stringify({ ok: true, data: {
+      id: 'ui-bank-only', booking_ref: 'UI-BANK-ONLY', status: reads > 1 ? 'EXPIRED' : 'AWAITING_BANK_PAYMENT',
+      bank_payment_expires_at: deadline, fitter_id: null, customer: null, slot: null, items: [],
+      total_amount: 11700, deposit_amount: 3000, balance_due: 8700, deposit_paid_at: null,
+    } }) });
+  });
+  await reachCheckout(page);
+  await page.getByRole('button', { name: 'Reserve for Bank Payment' }).click();
+  await expect(page).toHaveURL('/manage/' + token);
+  await expect(page.getByText('Awaiting bank payment', { exact: true })).toBeVisible();
+  await expect(page.locator('main')).toContainText('Bank payment has not been recorded');
+  await expect(page.locator('main .ring-brand')).toHaveCount(0);
+  await expect(page.getByText('Booking expired', { exact: true })).toBeVisible({ timeout: 10000 });
+  await expect(page.locator('main')).toContainText('fitting time and tyres have been released');
+  await noOverflow(page);
 });
 
 test('pricing outage blocks the journey without invented totals', async ({ page }) => {
@@ -326,7 +371,7 @@ test('credential-free production APIs fail closed', async ({ request }) => {
   }
   const hold = { slot_id: '00000000-0000-4000-8000-000000000001', session_token: 'isolated-ui-test-session' };
   const cases: Array<[string, object, number]> = [
-    ['/api/checkout/create', {}, 503],
+    ['/api/checkout/create', {}, 400],
     ['/api/checkout/confirm-mock', {}, 404],
     ['/api/holds/create', hold, 503], ['/api/holds/release', hold, 503],
     ['/api/checkout/quote', { postcode: 'E14 8PX', items: [{ tyre_id: tyre.id, quantity: 1 }] }, 503],

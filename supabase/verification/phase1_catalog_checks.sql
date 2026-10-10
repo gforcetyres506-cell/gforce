@@ -1,5 +1,5 @@
 -- Phase 1 live catalogue verification.
--- Run only after migrations 001-015 have been applied from zero to the
+-- Run only after migrations 001-016 have been applied from zero to the
 -- authorized disposable project. This transaction changes no persistent data
 -- and fails closed when an expected catalogue/security property is absent.
 
@@ -97,6 +97,8 @@ begin
     ('booking_slots', array['date', 'start_at', 'end_at']::name[]),
     ('blocked_dates', array['date']::name[]),
     ('slot_holds', array['token']::name[]),
+    ('slot_holds', array['booking_id']::name[]),
+    ('bookings', array['checkout_key']::name[]),
     ('inventory_holds', array['slot_hold_id', 'tyre_product_id']::name[]),
     ('bookings', array['reference']::name[]),
     ('bookings', array['manage_token']::name[]),
@@ -136,8 +138,8 @@ begin
     and r.relname = any(required_tables)
     and c.contype = 'u';
 
-  if actual_count <> 17 then
-    raise exception 'Expected exactly 17 canonical unique constraints, found %', actual_count;
+  if actual_count <> 19 then
+    raise exception 'Expected exactly 19 canonical unique constraints, found %', actual_count;
   end if;
 
   -- pg_get_expr canonicalizes IN clauses to = ANY(ARRAY[...]). The expression
@@ -167,7 +169,7 @@ begin
     ('booking_slots', 'capacity>0'),
     ('booking_slots', 'end_at>start_at'),
     ('inventory_holds', 'quantity>0'),
-    ('bookings', 'status=anyarray[''pending_payment'',''confirmed'',''tyres_reserved'',''fitter_assigned'',''en_route'',''completed'',''cancelled'',''refunded'',''payment_failed'']'),
+    ('bookings', 'status=anyarray[''pending_payment'',''confirmed'',''tyres_reserved'',''fitter_assigned'',''en_route'',''completed'',''cancelled'',''refunded'',''payment_failed'',''awaiting_bank_payment'',''expired'']'),
     ('bookings', 'subtotal_pence>=0'),
     ('bookings', 'fitting_fee_pence>=0'),
     ('bookings', 'callout_fee_pence>=0'),
@@ -180,6 +182,9 @@ begin
     ('payments', 'type=anyarray[''deposit'',''balance'',''refund'']'),
     ('payments', 'status=anyarray[''pending'',''succeeded'',''failed'',''cancelled'',''refunded'']'),
     ('payments', 'amount_pence>=0'),
+    ('business_settings', 'bank_payment_window_minutes>=1andbank_payment_window_minutes<=10080'),
+    ('bookings', 'status<>''awaiting_bank_payment''orcheckout_keyisnotnull'),
+    ('bookings', 'checkout_keyisnullandcheckout_fingerprintisnullandbank_payment_expires_atisnullorcheckout_keyisnotnullandcheckout_fingerprintisnotnullandbank_payment_expires_atisnotnullandsubtotal_pence+fitting_fee_pence+callout_fee_pence=total_penceanddeposit_pence+balance_pence=total_pence'),
     ('business_settings', 'id=1'),
     ('business_settings', 'deposit_mode=anyarray[''fixed'',''percent'']'),
     ('business_settings', 'deposit_value>=0'),
@@ -220,8 +225,8 @@ begin
     and r.relname = any(required_tables)
     and c.contype = 'c';
 
-  if actual_count <> 51 then
-    raise exception 'Expected exactly 51 canonical check constraints, found %', actual_count;
+  if actual_count <> 54 then
+    raise exception 'Expected exactly 54 canonical check constraints, found %', actual_count;
   end if;
 
   -- Exact source/target columns and ON DELETE actions for all 14 FKs.
@@ -235,6 +240,7 @@ begin
     ('admin_profiles', array['user_id']::name[], 'auth', 'users', array['id']::name[], 'c'),
     ('inventory', array['tyre_product_id']::name[], 'public', 'tyre_products', array['id']::name[], 'c'),
     ('blocked_dates', array['created_by']::name[], 'auth', 'users', array['id']::name[], 'n'),
+    ('slot_holds', array['booking_id']::name[], 'public', 'bookings', array['id']::name[], 'r'),
     ('slot_holds', array['slot_id']::name[], 'public', 'booking_slots', array['id']::name[], 'c'),
     ('inventory_holds', array['slot_hold_id']::name[], 'public', 'slot_holds', array['id']::name[], 'c'),
     ('inventory_holds', array['tyre_product_id']::name[], 'public', 'tyre_products', array['id']::name[], 'c'),
@@ -290,8 +296,8 @@ begin
     and r.relname = any(required_tables)
     and c.contype = 'f';
 
-  if actual_count <> 15 then
-    raise exception 'Expected exactly 15 canonical foreign keys, found %', actual_count;
+  if actual_count <> 16 then
+    raise exception 'Expected exactly 16 canonical foreign keys, found %', actual_count;
   end if;
 
   -- The expected relation must be a valid, ready index on the expected table.
@@ -318,7 +324,9 @@ begin
     ('idx_vrm_cache_lookup_expires', 'vrm_cache'),
     ('idx_rate_limits_expires_at', 'rate_limits'),
     ('idx_email_outbox_dispatch', 'email_outbox'),
-    ('idx_email_outbox_booking', 'email_outbox')
+    ('idx_email_outbox_booking', 'email_outbox'),
+    ('idx_bookings_bank_expiry', 'bookings'),
+    ('idx_inventory_holds_live_product', 'inventory_holds')
   ) as expected(index_name, table_name)
   where not exists (
     select 1
@@ -501,7 +509,9 @@ begin
     'public.admin_set_inventory(uuid,uuid,uuid,integer,integer)',
     'public.owner_set_admin_access(uuid,uuid,uuid,text,boolean)',
     'public.consume_rate_limit(text,integer,integer)',
-    'public.owner_import_business_data(uuid,uuid,text,jsonb)'
+    'public.owner_import_business_data(uuid,uuid,text,jsonb)',
+    'public.reserve_booking_checkout(uuid,uuid,jsonb,jsonb,text,jsonb,text)',
+    'public.expire_unpaid_bookings()', 'public.live_inventory_held(uuid)', 'public.slot_consumption(uuid)'
   ] loop
     if has_function_privilege('anon', table_name, 'EXECUTE')
       or has_function_privilege('authenticated', table_name, 'EXECUTE')
@@ -535,6 +545,17 @@ begin
       and t.tgfoid = 'public.set_updated_at()'::regprocedure
   );
   if missing is not null then raise exception 'Missing/incorrect update triggers: %', missing; end if;
+
+  select string_agg(expected.name, ', ') into missing from (values
+    ('booking_items_immutable','booking_items','public.guard_booking_items()',27),
+    ('bookings_bank_terms_immutable','bookings','public.guard_bank_booking()',19),
+    ('inventory_live_reservations','inventory','public.guard_inventory_holds_stock()',19),
+    ('booking_slots_live_reservations','booking_slots','public.guard_slot_capacity()',19)
+  ) expected(name,table_name,fn,kind) where not exists (
+    select 1 from pg_trigger t join pg_class r on r.oid=t.tgrelid join pg_namespace n on n.oid=r.relnamespace
+    where n.nspname='public' and r.relname=expected.table_name and t.tgname=expected.name
+      and t.tgfoid=expected.fn::regprocedure and t.tgtype=expected.kind and t.tgenabled='O' and not t.tgisinternal);
+  if missing is not null then raise exception 'Missing Gate 2 guards: %',missing; end if;
 
   if exists (select 1 from pg_class r join pg_namespace n on n.oid=r.relnamespace
     where n.nspname='public' and r.relname in ('tyre_inventory','app_settings','audit_log')) then
@@ -581,7 +602,7 @@ with counts(check_name, actual, expected) as (
       'interest_registrations', 'rate_limits', 'email_outbox'
     ])
   union all
-  select 'unique_constraints', count(*)::integer, 17
+  select 'unique_constraints', count(*)::integer, 19
   from pg_constraint c
   join pg_class r on r.oid = c.conrelid
   join pg_namespace n on n.oid = r.relnamespace
@@ -594,7 +615,7 @@ with counts(check_name, actual, expected) as (
       'interest_registrations', 'rate_limits', 'email_outbox'
     ])
   union all
-  select 'check_constraints', count(*)::integer, 51
+  select 'check_constraints', count(*)::integer, 54
   from pg_constraint c
   join pg_class r on r.oid = c.conrelid
   join pg_namespace n on n.oid = r.relnamespace
@@ -607,7 +628,7 @@ with counts(check_name, actual, expected) as (
       'interest_registrations', 'rate_limits', 'email_outbox'
     ])
   union all
-  select 'foreign_keys', count(*)::integer, 15
+  select 'foreign_keys', count(*)::integer, 16
   from pg_constraint c
   join pg_class r on r.oid = c.conrelid
   join pg_namespace n on n.oid = r.relnamespace
@@ -620,7 +641,7 @@ with counts(check_name, actual, expected) as (
       'interest_registrations', 'rate_limits', 'email_outbox'
     ])
   union all
-  select 'required_named_indexes', count(*)::integer, 21
+  select 'required_named_indexes', count(*)::integer, 23
   from pg_class c
   join pg_namespace n on n.oid = c.relnamespace
   join pg_index i on i.indexrelid = c.oid
@@ -635,7 +656,8 @@ with counts(check_name, actual, expected) as (
       'idx_bookings_created_at', 'idx_booking_items_booking_id',
       'idx_payments_booking_id', 'idx_audit_logs_created_at',
       'idx_vrm_cache_lookup_expires', 'idx_rate_limits_expires_at',
-      'idx_email_outbox_dispatch', 'idx_email_outbox_booking'
+      'idx_email_outbox_dispatch', 'idx_email_outbox_booking',
+      'idx_bookings_bank_expiry', 'idx_inventory_holds_live_product'
     ])
   union all
   select 'required_policies', count(*)::integer, 24

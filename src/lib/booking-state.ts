@@ -8,6 +8,8 @@ export function hasRecordedDeposit(booking: Booking): boolean {
 }
 
 export function bookingHeading(booking: Booking): string {
+  if (booking.status === 'AWAITING_BANK_PAYMENT') return 'Awaiting bank payment';
+  if (booking.status === 'EXPIRED') return 'Booking expired';
   if (booking.status === 'cancelled') return 'Booking cancelled';
   if (booking.status === 'refunded') return 'Refund recorded';
   if (booking.status === 'payment_failed') return 'Payment failed';

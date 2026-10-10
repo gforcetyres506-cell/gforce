@@ -56,7 +56,7 @@ export async function getSlots(fromDate?: string, toDate?: string): Promise<Slot
   const ids = slots.map((s) => s.id);
   const [bookings, holds] = await Promise.all([
     db.from('bookings').select('slot_id').in('slot_id', ids)
-      .not('status', 'in', '(cancelled,refunded,payment_failed,pending_payment)'),
+      .not('status', 'in', '(cancelled,refunded,payment_failed,pending_payment,AWAITING_BANK_PAYMENT,EXPIRED)'),
     db.from('slot_holds').select('slot_id').in('slot_id', ids).gt('expires_at', new Date().toISOString()),
   ]);
   if (bookings.error || holds.error || !bookings.data || !holds.data) throw new ServiceUnavailableError('Fitting availability unavailable.');
@@ -86,11 +86,13 @@ export async function createSlotHold(slotId: string, sessionToken: string, minut
 }
 
 export async function releaseSlotHold(sessionToken: string, slotId?: string): Promise<boolean> {
-  let query = createServiceClient().from('slot_holds').delete().eq('token', sessionToken);
+  // Legacy pre-checkout holds can be released; a committed bank reservation
+  // cannot be dismantled by anyone knowing the browser's checkout key.
+  let query = createServiceClient().from('slot_holds').delete().eq('token', sessionToken).is('booking_id', null);
   if (slotId) query = query.eq('slot_id', slotId);
-  const { error } = await query;
-  if (error) throw new ServiceUnavailableError('Hold release could not be confirmed.');
-  return true;
+  const { data, error } = await query.select('id');
+  if (error || !Array.isArray(data)) throw new ServiceUnavailableError('Hold release could not be confirmed.');
+  return data.length > 0;
 }
 
 export async function isHoldValid(sessionToken: string, slotId: string): Promise<boolean> {
@@ -102,7 +104,10 @@ export async function isHoldValid(sessionToken: string, slotId: string): Promise
 
 const bookingSelect = BOOKING_SELECT;
 async function findBooking(column: string, value: string): Promise<BookingWithDetails | null> {
-  const { data, error } = await createServiceClient().from('bookings').select(bookingSelect).eq(column, value).maybeSingle();
+  const db = createServiceClient();
+  const expiry = await db.rpc('expire_unpaid_bookings');
+  if (expiry.error) throw new ServiceUnavailableError('Booking service unavailable. Please try again later.');
+  const { data, error } = await db.from('bookings').select(bookingSelect).eq(column, value).maybeSingle();
   if (error) throw new ServiceUnavailableError('Booking service unavailable. Please try again later.');
   return data ? mapBooking(data) : null;
 }
