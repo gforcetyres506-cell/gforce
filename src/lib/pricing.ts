@@ -1,5 +1,6 @@
 import { createServiceClient } from './supabase';
 import { getSettings, validateTyres } from './db';
+import { CATALOGUE_SELECT } from './canonical-data';
 import { formatTyreSize } from './utils';
 import { ServiceUnavailableError } from './service-error';
 import type { CartLine, PriceBreakdown } from '@/types';
@@ -21,7 +22,7 @@ export async function calculatePrice(lines: CartLine[], calloutCharge: number): 
     quantities.set(line.tyre_id, (quantities.get(line.tyre_id) ?? 0) + line.quantity);
   }
   const settings = await getSettings();
-  const { data, error } = await createServiceClient().from('tyre_inventory').select('*').in('id', [...quantities.keys()]).eq('active', true);
+  const { data, error } = await createServiceClient().from('tyre_products').select(CATALOGUE_SELECT).in('id', [...quantities.keys()]).eq('active', true);
   if (error) throw new ServiceUnavailableError('Pricing unavailable. Cannot continue.');
   const tyres = validateTyres(data);
   const priced = [...quantities].map(([id, quantity]) => {

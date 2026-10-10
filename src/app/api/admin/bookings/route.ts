@@ -5,7 +5,7 @@ import { getAllBookings } from '@/lib/db';
 export const runtime = 'nodejs';
 
 export async function GET(req: Request) {
-  try { await requireAdmin(); } catch (error) { return adminErrorResponse(error); }
+  try { await requireAdmin('read'); } catch (error) { return adminErrorResponse(error); }
   try {
     const params = new URL(req.url).searchParams;
     const data = await getAllBookings({ status: params.get('status') ?? undefined, query: params.get('q') ?? undefined });

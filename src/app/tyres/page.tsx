@@ -34,7 +34,7 @@ export default async function TyresPage({ searchParams }: Props) {
     width,
     profile,
     rim,
-    tier: filterTier === 'standard' ? 'mid' : filterTier,
+    tier: filterTier,
     season: filterSeason,
   }); } catch { inventoryUnavailable = true; }
 

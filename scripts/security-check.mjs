@@ -19,6 +19,8 @@ const expectedMigrations = [
   '010_operations.sql',
   '011_rls.sql',
   '012_indexes.sql',
+  '013_gate0_canonical_foundation.sql',
+  '014_gate0_access_boundary.sql',
 ];
 
 assert.deepEqual(
@@ -32,13 +34,13 @@ const requiredTables = [
   'admin_profiles', 'customers', 'service_zones', 'tyre_products', 'inventory',
   'availability_rules', 'booking_slots', 'blocked_dates', 'slot_holds',
   'inventory_holds', 'bookings', 'booking_items', 'payments', 'webhook_events',
-  'fitters', 'business_settings', 'audit_logs', 'vrm_cache', 'interest_registrations',
+  'fitters', 'business_settings', 'audit_logs', 'vrm_cache', 'interest_registrations', 'rate_limits', 'email_outbox',
 ];
 
 for (const table of requiredTables) {
   assert.match(allSql, new RegExp(`create table if not exists public\\.${table}\\b`, 'i'));
   assert.match(
-    read('supabase/migrations/011_rls.sql'),
+    allSql,
     new RegExp(`alter table public\\.${table} enable row level security`, 'i'),
   );
 }

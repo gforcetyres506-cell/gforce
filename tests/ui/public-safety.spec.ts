@@ -317,7 +317,7 @@ test('payment screen ignores browser state and never offers fake payment', async
 test('credential-free production APIs fail closed', async ({ request }) => {
   for (const path of ['/api/tyres', '/api/slots', '/api/manage/not-a-booking', '/api/account/me']) {
     const response = await request.get(path);
-    expect(response.status(), path).toBe(503);
+    expect(response.status(), path).toBe(path === '/api/account/me' ? 404 : 503);
     expect((await response.json()).ok).toBe(false);
   }
   const hold = { slot_id: '00000000-0000-4000-8000-000000000001', session_token: 'isolated-ui-test-session' };
@@ -327,7 +327,7 @@ test('credential-free production APIs fail closed', async ({ request }) => {
     ['/api/holds/create', hold, 503], ['/api/holds/release', hold, 503],
     ['/api/checkout/quote', { postcode: 'E14 8PX', items: [{ tyre_id: tyre.id, quantity: 1 }] }, 503],
     ['/api/vrm/lookup', { registration: 'AB21ABC', postcode: 'E14 8PX' }, 503],
-    ['/api/account/signup', { name: 'UI test', email: 'test@example.com', password: 'isolated-test-password', phone: '07700900001' }, 503],
+    ['/api/account/signup', { name: 'UI test', email: 'test@example.com', password: 'isolated-test-password', phone: '07700900001' }, 404],
   ];
   for (const [path, data, status] of cases) {
     const response = await request.post(path, { data });

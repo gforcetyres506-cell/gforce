@@ -8,7 +8,7 @@ const nativeRequire = createRequire(import.meta.url);
 /** Execute the actual TypeScript helpers with isolated database/provider doubles.
  * No production test switches, external network or cloud credentials are used.
  */
-export function loadSource(file, { db, fetch: fetchDouble, env = {} } = {}) {
+export function loadSource(file, { db, fetch: fetchDouble, env = {}, modules = {} } = {}) {
   const cache = new Map();
   function load(path) {
     path = resolve(path);
@@ -19,6 +19,7 @@ export function loadSource(file, { db, fetch: fetchDouble, env = {} } = {}) {
       compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020, esModuleInterop: true },
     }).outputText;
     function require(specifier) {
+      if (Object.hasOwn(modules, specifier)) return modules[specifier];
       if (specifier === 'server-only') return {};
       if (specifier === './supabase' || specifier === '@/lib/supabase') return {
         createServiceClient: () => { if (!db) throw new Error('Database unavailable'); return db; },

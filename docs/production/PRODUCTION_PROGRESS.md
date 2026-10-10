@@ -1,5 +1,41 @@
 # G FORCE TYRES - Production recovery progress
 
+## Gate 0 - canonical Supabase / Auth / RLS (2026-10-10)
+
+Branch: gate/0-live-supabase. Starting HEAD:
+545bac195fcabdd71e722a4412baa6dbd0dc05cd (completed Gate B).
+Status: **LOCAL IMPLEMENTATION VERIFIED; LIVE ACCEPTANCE BLOCKED**.
+Detailed evidence and exact disposable-only procedure:
+[02_GATE0_ACCEPTANCE.md](02_GATE0_ACCEPTANCE.md).
+Canonical contract: [01_CANONICAL_ARCHITECTURE.md](01_CANONICAL_ARCHITECTURE.md).
+
+- Preserved 001-012 unchanged; added forward migrations 013-014. Canonical
+  storage includes viewer, rate_limits and email_outbox, with 21 tables total.
+- Archived the conflicting schema.sql with unchanged Git-normalized text.
+  Runtime table/column queries now use the ordered migration contract.
+- Browser database roles, including owner, have no mutation/schema CREATE
+  privilege. Current session/profile checks gate private RLS and server routes.
+- Viewer reads; admin/owner stock and price changes are atomic with audits;
+  only owner can change existing operator access. Last-owner removal is denied.
+- Retired V1 customer account endpoints and signup screens. Provider-level
+  signup configuration remains a required live test, never assumed.
+- No new reservation, payment, refund, scheduling or delivery success path.
+  Missing hold engine remains unavailable; no fictional seed or business row.
+- Local PASS: typecheck, lint (0 errors, 4 existing warnings), production build,
+  security structure, 58/58 reliability/boundary tests, 12/12 PostgreSQL tests,
+  119/119 Playwright tests across all seven viewport widths, git diff --check.
+- Compiled client JavaScript/maps: SUPABASE_SERVICE_ROLE_KEY occurrences = 0.
+- TARGET ATTESTATION, cloud MIGRATIONS/SCHEMA/AUTH/RLS/RBAC/SESSIONS remain
+  BLOCKED. No authorized disposable target or credentials were supplied.
+  Reset runner exits before connecting when PHASE1_DISPOSABLE_PROJECT_REF is
+  absent. The PostgreSQL/WASM Auth stand-in is not Supabase cloud acceptance.
+- No cloud reset/write/user creation, push, merge or deployment was performed.
+
+The requested PHASE 1 - PASS, LIVE VERIFIED result has **not** been established.
+The local changes and gated verification tooling are committed for review;
+resume live acceptance only with the exact authorized disposable target.
+
+
 ## Gate B - truthful funnel / zero fake production state (2026-10-10)
 
 Branch: `fix/b-truthful-funnel`. Starting HEAD:

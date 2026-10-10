@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getBookingByRef } from '@/lib/db';
+import { getBookingByToken } from '@/lib/db';
 import { bookingHeading, hasRecordedDeposit } from '@/lib/booking-state';
 import { formatPrice, formatSlotTime } from '@/lib/utils';
 import MStripe from '@/components/ui/MStripe';
@@ -8,17 +8,22 @@ import { ContactActions } from '@/components/layout/BusinessContact';
 import type { BookingWithDetails } from '@/types';
 
 export const dynamic = 'force-dynamic';
-export default async function ConfirmationPage({ params }: { params: Promise<{ ref: string }> }) {
+export default async function ConfirmationPage({ params, searchParams }: {
+  params: Promise<{ ref: string }>; searchParams: Promise<{ token?: string }>;
+}) {
   const { ref } = await params;
+  const { token } = await searchParams;
+  // A short booking reference never authorizes access to customer information.
+  if (!token || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(token)) notFound();
   let booking: BookingWithDetails | null;
   try {
-    booking = await getBookingByRef(ref);
+    booking = await getBookingByToken(token);
   } catch {
     return <div className="container-g section max-w-2xl"><h1 className="display-2">Booking service unavailable</h1>
       <p role="alert" className="my-4 text-sm text-ink-2">We cannot check your booking right now. Please try again later.</p>
       <ContactActions /><Link href="/#tyre-finder" className="btn btn-secondary mt-4">Return to tyre finder</Link></div>;
   }
-  if (!booking) notFound();
+  if (!booking || booking.booking_ref !== ref) notFound();
   const paid = hasRecordedDeposit(booking);
   return (
     <div className="container-g section max-w-3xl">

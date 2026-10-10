@@ -1,16 +1,18 @@
 # G Force Tyres — Mobile Tyre Fitting Platform
 
-Next.js 15 mobile-tyre frontend with a Phase 1 local code foundation: versioned
-V3 migration SQL, environment safety controls, Supabase SSR admin authentication,
-role authorization and RLS definitions. Live Supabase acceptance is still blocked.
+Next.js 15 application with one canonical ordered Supabase migration chain
+(001-014), SSR operator Auth, live-session checks and read-only browser RLS.
+Customer accounts are disabled for V1. Catalogue and quotes require real,
+configured database records; reservation/payment/email workflows remain unavailable.
 
-**Current local checks:** `npm run build`, `npm run typecheck`, and
-`npm run test:security` pass. Lint exits successfully with 0 errors and 44 known
-warnings documented in the project status report.
+Gate 0 is verified locally, with cloud acceptance BLOCKED pending an explicitly
+authorized disposable project. Local checks: production build, typecheck,
+security structure, 58 reliability/boundary tests, 12 PostgreSQL tests and
+119 responsive UI tests pass. Lint has 0 errors and 4 existing warnings.
 
-**This is not production-ready:** real customer search is Phase 2 and persistent
-booking/holds/Stripe/email are Phase 3. Those paths are deliberately unavailable
-outside explicit development mock mode. Read `docs/PHASE1_REPORT.md`.
+Read [Gate 0 evidence and acceptance procedure](docs/production/02_GATE0_ACCEPTANCE.md)
+and [canonical architecture](docs/production/01_CANONICAL_ARCHITECTURE.md).
+No production reset, deployment or launch readiness is certified.
 
 ---
 
@@ -240,8 +242,8 @@ src/
 
 supabase/
 ├── migrations/                 ordered V3 schema, policies and indexes
-├── schema.sql                   legacy pre-V3 reference only
-└── seed.sql                     legacy demo data; do not apply to V3
+├── archive/                     retired legacy SQL; never execute
+└── seed.sql                     comments only; no business seed data
 
 DESIGN.md                        design system — read before UI work
 ```

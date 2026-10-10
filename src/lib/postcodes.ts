@@ -26,7 +26,8 @@ const zoneSchema = z.object({
 export async function checkCoverage(postcode: string): Promise<CoverageResult> {
   const clean = normalisePostcode(postcode);
   if (clean.length < 4) return { covered: false, message: 'Enter a full UK postcode.' };
-  const { data, error } = await createServiceClient().from('service_zones').select('*').eq('active', true);
+  const { data, error } = await createServiceClient().from('service_zones')
+    .select('id,postcode_prefix,zone_name:name,callout_charge:callout_fee_pence,active').eq('active', true);
   const parsed = z.array(zoneSchema).safeParse(data);
   if (error || !parsed.success) throw new ServiceUnavailableError('Fitting area verification unavailable.');
   const zone = parsed.data

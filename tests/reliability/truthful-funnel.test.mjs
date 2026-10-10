@@ -4,8 +4,8 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { loadSource, databaseDouble } from './loader.mjs';
 
-const tyre = { id: 'test-tyre', brand: 'Test only', model: 'Fixture', width: 205, profile: 55, rim: 16, sell_price: 12300, stock: 4, active: true };
-const settings = { deposit_mode: 'percent', deposit_fixed: 0, deposit_percent: 13, fitting_fee: 1700,
+const tyre = { sku: 'TEST', season: 'summer', tier: 'standard', load_index: null, speed_rating: null, run_flat: false, extra_load: false, wet_grip_rating: null, fuel_efficiency_rating: null, noise_db: null, created_at: '2030-01-01', inventory: { stock_qty: 4, reserved_qty: 0, selling_price_pence: 12300 }, id: 'test-tyre', brand: 'Test only', model: 'Fixture', width: 205, profile: 55, rim: 16, sell_price: 12300, stock: 4, active: true };
+const settings = { pricing_configured: true, deposit_value: 13, fitting_fee_pence: 1700, job_duration_minutes: 70, phone: null, deposit_mode: 'percent', deposit_fixed: 0, deposit_percent: 13, fitting_fee: 1700,
   job_duration_mins: 70, cancellation_policy: 'Test policy', business_phone: null };
 const slot = { id: 'test-slot', slot_date: '2030-01-02', start_time: '10:00:00', end_time: '12:00:00', max_bookings: 2, active: true };
 const dbResult = (data) => ({ data, error: null });
@@ -26,13 +26,13 @@ test('inventory database failures never become stock', async () => {
 test('missing tyre ID remains absent', async () => {
   assert.equal(await source('db', databaseDouble(() => dbResult(null))).getTyreById('missing'), null);
 });
-for (const invalid of [{ sell_price: 0 }, { sell_price: null }, { stock: null }, { width: null }]) {
+for (const invalid of [{ inventory: { stock_qty: 4, reserved_qty: 0, selling_price_pence: 0 } }, { inventory: null }, { inventory: { stock_qty: 4, reserved_qty: 5, selling_price_pence: 12300 } }, { width: null }]) {
   test('invalid inventory data fails closed: ' + JSON.stringify(invalid), async () => {
     await assert.rejects(source('db', databaseDouble(() => dbResult([{ ...tyre, ...invalid }]))).getTyres());
   });
 }
 test('price and deposit use actual supplied settings', async () => {
-  const db = databaseDouble(({ table }) => dbResult(table === 'app_settings' ? settings : [tyre]));
+  const db = databaseDouble(({ table }) => dbResult(table === 'business_settings' ? settings : [tyre]));
   const price = await source('pricing', db).calculatePrice([{ tyre_id: tyre.id, quantity: 2 }], 900);
   assert.equal(price.tyres_total, 24600);
   assert.equal(price.fitting_fee, 1700);
@@ -41,7 +41,7 @@ test('price and deposit use actual supplied settings', async () => {
   assert.equal(price.balance_due, 23664);
 });
 test('missing pricing settings cannot quote', async () => {
-  const db = databaseDouble(({ table }) => dbResult(table === 'app_settings' ? null : [tyre]));
+  const db = databaseDouble(({ table }) => dbResult(table === 'business_settings' ? null : [tyre]));
   await assert.rejects(source('pricing', db).calculatePrice([{ tyre_id: tyre.id, quantity: 1 }], 0));
 });
 test('partial pricing settings have no monetary defaults', async () => {
@@ -49,15 +49,15 @@ test('partial pricing settings have no monetary defaults', async () => {
   await assert.rejects(source('pricing', db).calculatePrice([{ tyre_id: tyre.id, quantity: 1 }], 0));
 });
 test('pricing query failure cannot quote', async () => {
-  const db = databaseDouble(({ table }) => table === 'app_settings' ? dbResult(settings) : failed);
+  const db = databaseDouble(({ table }) => table === 'business_settings' ? dbResult(settings) : failed);
   await assert.rejects(source('pricing', db).calculatePrice([{ tyre_id: tyre.id, quantity: 1 }], 0));
 });
 test('missing selected tyre never picks another product', async () => {
-  const db = databaseDouble(({ table }) => dbResult(table === 'app_settings' ? settings : [tyre]));
+  const db = databaseDouble(({ table }) => dbResult(table === 'business_settings' ? settings : [tyre]));
   await assert.rejects(source('pricing', db).calculatePrice([{ tyre_id: 'wrong-id', quantity: 1 }], 0), { code: 'TYRE_NOT_FOUND' });
 });
 test('duplicate lines cannot hide an out of stock quantity', async () => {
-  const db = databaseDouble(({ table }) => dbResult(table === 'app_settings' ? settings : [tyre]));
+  const db = databaseDouble(({ table }) => dbResult(table === 'business_settings' ? settings : [tyre]));
   await assert.rejects(source('pricing', db).calculatePrice([{ tyre_id: tyre.id, quantity: 3 }, { tyre_id: tyre.id, quantity: 3 }], 0), { code: 'OUT_OF_STOCK' });
 });
 for (const table of ['bookings', 'slot_holds']) {
@@ -95,7 +95,7 @@ test('confirmed hold exposes the persisted expiry', async () => {
   const expires_at = '2030-01-02T10:00:00Z';
   const db = databaseDouble(() => dbResult({ id: 'test-hold', slot_id: slot.id, expires_at }), () => dbResult([{ hold_id: 'test-hold' }]));
   assert.deepEqual(await source('db', db).createSlotHold(slot.id, 'test-session'), { hold_id: 'test-hold', slot_id: slot.id, expires_at });
-  assert.ok(db.calls[1].filters.some((filter) => filter[0] === 'eq' && filter[1] === 'session_token'));
+  assert.ok(db.calls[1].filters.some((filter) => filter[0] === 'eq' && filter[1] === 'token'));
 });
 test('failed release never reports released', async () => {
   await assert.rejects(source('db', databaseDouble(() => failed)).releaseSlotHold('test-session'));

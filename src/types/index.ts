@@ -10,7 +10,7 @@
 // Catalogue
 // ─────────────────────────────────────────────────────────────
 
-export type TyreTier = 'budget' | 'mid' | 'premium';
+export type TyreTier = 'budget' | 'standard' | 'premium';
 export type TyreSeason = 'summer' | 'all-season' | 'winter';
 
 export interface Tyre {
@@ -27,7 +27,6 @@ export interface Tyre {
   is_xl: boolean;
   season: TyreSeason;
   tier: TyreTier;
-  cost_price: number;
   sell_price: number;
   stock: number;
   wet_grip: string | null;

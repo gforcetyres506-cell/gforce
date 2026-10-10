@@ -1,5 +1,15 @@
 # Gate B - truthful funnel / mock purge register
 
+Gate 0 update (2026-10-10): runtime queries now use ordered migrations 001-014;
+the legacy schema is archived. PostgreSQL test identities/rows in
+`tests/database/gate0.test.mjs` and key-shaped values in
+`tests/reliability/admin-boundary.test.mjs` are TEST_ONLY_SAFE. Cloud sentinel
+records in the acceptance harness remain gated by disposable-target attestation
+and a matching fresh reset report. Historical pricing defaults are blocked by
+`pricing_configured=false`. No reservation/payment/email success path was
+enabled. PRODUCTION FAKE SUCCESS PATHS = 0 remains the local source finding;
+cloud contents are unverified. See [02_GATE0_ACCEPTANCE.md](02_GATE0_ACCEPTANCE.md).
+
 Date: 2026-10-10. Repository: gforcetyres506-cell/gforce.
 Branch: fix/b-truthful-funnel. Starting HEAD: d67b99d7ca1d00da6055d47ed48cb73313abe5c4.
 

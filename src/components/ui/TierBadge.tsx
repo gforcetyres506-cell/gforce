@@ -1,5 +1,5 @@
-// The persisted legacy enum stays unchanged. All customer labels and CSS
-// classes are literal so the production Tailwind build can retain the styles.
+// Canonical persisted tiers are budget/standard/premium. Historical input
+// aliases affect display only; literal classes survive the Tailwind build.
 const TIERS = {
   budget: { label: 'Budget', className: 'badge badge-budget' },
   standard: { label: 'Standard', className: 'badge badge-standard' },
