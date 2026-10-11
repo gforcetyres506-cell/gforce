@@ -1,5 +1,20 @@
 # G FORCE TYRES - Production recovery progress
 
+## Release V1 production acceptance (2026-10-12)
+
+Branch: `release/v1-production`. Verified executable baseline: `d823c36`.
+Status: **BLOCKED at Gate 0 live — PRODUCTION READY: NO**.
+Full matrix: [FINAL_PRODUCTION_ACCEPTANCE.md](FINAL_PRODUCTION_ACCEPTANCE.md).
+
+The release branch was created from the clean, verified Gate 4 commit. All ten
+required Gate 0 configuration values are missing, including the eight target
+and app variables plus the two new evidence paths. Three-way disposable target
+identity cannot be proved, so no cloud reset, migration, Auth user, provider
+call, deployment or live booking was attempted. The next human action is to
+configure an explicitly authorized disposable Supabase project through an
+ignored local environment file or approved secret store; secret values must not
+be committed or sent in chat.
+
 ## Gate 4 - owner admin operating system (2026-10-12)
 
 Branch: gate/4-admin-os. Starting HEAD: 3dd03fa.
