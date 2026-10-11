@@ -8,7 +8,7 @@ import { randomUUID } from 'node:crypto';
 // No external connection string is accepted. Start a fresh, loopback-only
 // PostgreSQL cluster; retain its ignored directory for forensic inspection.
 const suite = process.argv[2] ?? 'gate2';
-assert(['gate2','gate3'].includes(suite), 'Only the reviewed local suites are allowed');
+assert(['gate2','gate3','gate4'].includes(suite), 'Only the reviewed local suites are allowed');
 const root = resolve('.local-postgres');
 const bin = resolve(process.env.GATE2_POSTGRES_BIN ?? join(root, 'engine/pgsql/bin'));
 const exe = (name) => join(bin, name + (process.platform === 'win32' ? '.exe' : ''));

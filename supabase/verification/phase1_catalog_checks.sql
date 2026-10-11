@@ -1,5 +1,5 @@
 -- Phase 1 live catalogue verification.
--- Run only after migrations 001-017 have been applied from zero to the
+-- Run only after migrations 001-018 have been applied from zero to the
 -- authorized disposable project. This transaction changes no persistent data
 -- and fails closed when an expected catalogue/security property is absent.
 
@@ -13,13 +13,13 @@ declare
     'availability_rules', 'booking_slots', 'blocked_dates', 'slot_holds',
     'inventory_holds', 'bookings', 'booking_items', 'payments', 'webhook_events',
     'fitters', 'business_settings', 'audit_logs', 'vrm_cache',
-    'interest_registrations', 'rate_limits', 'email_outbox'
+    'interest_registrations', 'rate_limits', 'email_outbox', 'special_dates'
   ];
   protected_tables constant text[] := array[
     'customers', 'inventory', 'availability_rules', 'booking_slots',
     'blocked_dates', 'slot_holds', 'inventory_holds', 'bookings',
     'booking_items', 'payments', 'webhook_events', 'fitters',
-    'business_settings', 'audit_logs', 'vrm_cache', 'interest_registrations', 'rate_limits', 'email_outbox'
+    'business_settings', 'audit_logs', 'vrm_cache', 'interest_registrations', 'rate_limits', 'email_outbox', 'special_dates'
   ];
   missing text;
   table_name text;
@@ -107,7 +107,8 @@ begin
     ('webhook_events', array['provider', 'event_id']::name[]),
     ('vrm_cache', array['lookup_hash']::name[]),
     ('rate_limits', array['bucket_key']::name[]),
-    ('email_outbox', array['deduplication_key']::name[])
+    ('email_outbox', array['deduplication_key']::name[]),
+    ('special_dates', array['date']::name[])
   ) as expected(table_name, columns)
   where not exists (
     select 1
@@ -138,8 +139,8 @@ begin
     and r.relname = any(required_tables)
     and c.contype = 'u';
 
-  if actual_count <> 19 then
-    raise exception 'Expected exactly 19 canonical unique constraints, found %', actual_count;
+  if actual_count <> 20 then
+    raise exception 'Expected exactly 20 canonical unique constraints, found %', actual_count;
   end if;
 
   -- pg_get_expr canonicalizes IN clauses to = ANY(ARRAY[...]). The expression
@@ -230,8 +231,8 @@ begin
     and r.relname = any(required_tables)
     and c.contype = 'c';
 
-  if actual_count <> 60 then
-    raise exception 'Expected exactly 60 canonical check constraints, found %', actual_count;
+  if actual_count <> 66 then
+    raise exception 'Expected exactly 66 canonical check constraints, found %', actual_count;
   end if;
 
   -- Exact source/target columns and ON DELETE actions for all 14 FKs.
@@ -256,6 +257,7 @@ begin
     ('booking_items', array['booking_id']::name[], 'public', 'bookings', array['id']::name[], 'c'),
     ('booking_items', array['tyre_product_id']::name[], 'public', 'tyre_products', array['id']::name[], 'n'),
     ('payments', array['verified_by_admin_id']::name[], 'public', 'admin_profiles', array['id']::name[], 'r'),
+    ('payments', array['refunded_by_admin_id']::name[], 'public', 'admin_profiles', array['id']::name[], 'r'),
     ('payments', array['booking_id']::name[], 'public', 'bookings', array['id']::name[], 'r'),
     ('audit_logs', array['admin_user_id']::name[], 'auth', 'users', array['id']::name[], 'n'),
     ('email_outbox', array['booking_id']::name[], 'public', 'bookings', array['id']::name[], 'r')
@@ -302,8 +304,8 @@ begin
     and r.relname = any(required_tables)
     and c.contype = 'f';
 
-  if actual_count <> 17 then
-    raise exception 'Expected exactly 17 canonical foreign keys, found %', actual_count;
+  if actual_count <> 18 then
+    raise exception 'Expected exactly 18 canonical foreign keys, found %', actual_count;
   end if;
 
   -- The expected relation must be a valid, ready index on the expected table.
@@ -333,7 +335,8 @@ begin
     ('idx_email_outbox_dispatch', 'email_outbox'),
     ('idx_email_outbox_booking', 'email_outbox'),
     ('idx_bookings_bank_expiry', 'bookings'),
-    ('idx_inventory_holds_live_product', 'inventory_holds')
+    ('idx_inventory_holds_live_product', 'inventory_holds'),
+    ('idx_special_dates_date_active', 'special_dates')
   ) as expected(index_name, table_name)
   where not exists (
     select 1
@@ -406,8 +409,8 @@ begin
   from pg_policies
   where schemaname = 'public';
 
-  if actual_count <> 24 then
-    raise exception 'Expected exactly 24 public RLS policies, found %', actual_count;
+  if actual_count <> 25 then
+    raise exception 'Expected exactly 25 public RLS policies, found %', actual_count;
   end if;
 
   if not exists (
@@ -523,7 +526,9 @@ begin
     'public.admin_verify_bank_payment(uuid,uuid,uuid,integer)',
     'public.admin_extend_bank_window(uuid,uuid,uuid,integer,text,timestamptz)',
     'public.admin_reserve_phone_booking(uuid,uuid,uuid,uuid,jsonb,jsonb,text,jsonb,text)',
-    'public.admin_claim_bank_email(uuid,uuid,uuid)', 'public.finish_bank_email(uuid,integer,text)'
+    'public.admin_claim_bank_email(uuid,uuid,uuid)', 'public.finish_bank_email(uuid,integer,text)',
+    'public.owner_provision_admin(uuid,uuid,uuid,text,text)',
+    'public.admin_os_mutate(uuid,uuid,text,jsonb)', 'public.admin_os_import_products(uuid,uuid,jsonb)'
   ] loop
     if has_function_privilege('anon', table_name, 'EXECUTE')
       or has_function_privilege('authenticated', table_name, 'EXECUTE')
@@ -538,7 +543,9 @@ begin
     'public.admin_set_inventory(uuid,uuid,uuid,integer,integer)',
     'public.owner_set_admin_access(uuid,uuid,uuid,text,boolean)',
     'public.consume_rate_limit(text,integer,integer)',
-    'public.owner_import_business_data(uuid,uuid,text,jsonb)'
+    'public.owner_import_business_data(uuid,uuid,text,jsonb)',
+    'public.owner_provision_admin(uuid,uuid,uuid,text,text)',
+    'public.admin_os_mutate(uuid,uuid,text,jsonb)', 'public.admin_os_import_products(uuid,uuid,jsonb)'
   ]) signature where not exists (
     select 1 from pg_proc p where p.oid = signature::regprocedure
       and p.prosecdef and 'search_path=""' = any(p.proconfig)
@@ -547,7 +554,7 @@ begin
 
   select string_agg(name, ', ') into missing from unnest(array[
     'admin_profiles', 'customers', 'tyre_products', 'inventory',
-    'bookings', 'fitters', 'business_settings', 'email_outbox', 'payments'
+    'bookings', 'fitters', 'business_settings', 'email_outbox', 'payments', 'special_dates'
   ]) name where not exists (
     select 1 from pg_trigger t join pg_class r on r.oid = t.tgrelid
     join pg_namespace n on n.oid = r.relnamespace
@@ -563,7 +570,9 @@ begin
     ('booking_items_immutable','booking_items','public.guard_booking_items()',27),
     ('bookings_bank_terms_immutable','bookings','public.guard_bank_booking()',19),
     ('inventory_live_reservations','inventory','public.guard_inventory_holds_stock()',19),
-    ('booking_slots_live_reservations','booking_slots','public.guard_slot_capacity()',19)
+    ('booking_slots_live_reservations','booking_slots','public.guard_slot_capacity()',19),
+    ('audit_logs_immutable','audit_logs','public.guard_audit_history()',27),
+    ('audit_logs_complete','audit_logs','public.complete_admin_audit()',7)
   ) expected(name,table_name,fn,kind) where not exists (
     select 1 from pg_trigger t join pg_class r on r.oid=t.tgrelid join pg_namespace n on n.oid=r.relnamespace
     where n.nspname='public' and r.relname=expected.table_name and t.tgname=expected.name
@@ -573,6 +582,9 @@ begin
   if not exists (select 1 from pg_constraint where conrelid='public.payments'::regclass
     and conname='payments_manual_check' and contype='c' and convalidated) then
     raise exception 'Manual payment integrity check missing'; end if;
+  if not exists (select 1 from pg_constraint where conrelid='public.payments'::regclass
+    and conname='payments_manual_refund_details_check' and contype='c' and convalidated) then
+    raise exception 'Manual refund detail integrity check missing'; end if;
   if not exists (select 1 from pg_index i where i.indexrelid='public.idx_payments_manual_booking'::regclass
     and i.indisunique and i.indisvalid and i.indisready
     and pg_get_expr(i.indpred,i.indrelid)='(provider = ''manual''::text)'
@@ -588,7 +600,7 @@ end;
 $verify$;
 
 with counts(check_name, actual, expected) as (
-  select 'required_tables', count(*)::integer, 21
+  select 'required_tables', count(*)::integer, 22
   from pg_class c
   join pg_namespace n on n.oid = c.relnamespace
   where n.nspname = 'public' and c.relkind = 'r'
@@ -597,10 +609,10 @@ with counts(check_name, actual, expected) as (
       'availability_rules', 'booking_slots', 'blocked_dates', 'slot_holds',
       'inventory_holds', 'bookings', 'booking_items', 'payments', 'webhook_events',
       'fitters', 'business_settings', 'audit_logs', 'vrm_cache',
-      'interest_registrations', 'rate_limits', 'email_outbox'
+      'interest_registrations', 'rate_limits', 'email_outbox', 'special_dates'
     ])
   union all
-  select 'rls_enabled', count(*)::integer, 21
+  select 'rls_enabled', count(*)::integer, 22
   from pg_class c
   join pg_namespace n on n.oid = c.relnamespace
   where n.nspname = 'public' and c.relkind = 'r' and c.relrowsecurity
@@ -609,10 +621,10 @@ with counts(check_name, actual, expected) as (
       'availability_rules', 'booking_slots', 'blocked_dates', 'slot_holds',
       'inventory_holds', 'bookings', 'booking_items', 'payments', 'webhook_events',
       'fitters', 'business_settings', 'audit_logs', 'vrm_cache',
-      'interest_registrations', 'rate_limits', 'email_outbox'
+      'interest_registrations', 'rate_limits', 'email_outbox', 'special_dates'
     ])
   union all
-  select 'primary_keys', count(*)::integer, 21
+  select 'primary_keys', count(*)::integer, 22
   from pg_constraint c
   join pg_class r on r.oid = c.conrelid
   join pg_namespace n on n.oid = r.relnamespace
@@ -622,10 +634,10 @@ with counts(check_name, actual, expected) as (
       'availability_rules', 'booking_slots', 'blocked_dates', 'slot_holds',
       'inventory_holds', 'bookings', 'booking_items', 'payments', 'webhook_events',
       'fitters', 'business_settings', 'audit_logs', 'vrm_cache',
-      'interest_registrations', 'rate_limits', 'email_outbox'
+      'interest_registrations', 'rate_limits', 'email_outbox', 'special_dates'
     ])
   union all
-  select 'unique_constraints', count(*)::integer, 19
+  select 'unique_constraints', count(*)::integer, 20
   from pg_constraint c
   join pg_class r on r.oid = c.conrelid
   join pg_namespace n on n.oid = r.relnamespace
@@ -635,10 +647,10 @@ with counts(check_name, actual, expected) as (
       'availability_rules', 'booking_slots', 'blocked_dates', 'slot_holds',
       'inventory_holds', 'bookings', 'booking_items', 'payments', 'webhook_events',
       'fitters', 'business_settings', 'audit_logs', 'vrm_cache',
-      'interest_registrations', 'rate_limits', 'email_outbox'
+      'interest_registrations', 'rate_limits', 'email_outbox', 'special_dates'
     ])
   union all
-  select 'check_constraints', count(*)::integer, 60
+  select 'check_constraints', count(*)::integer, 66
   from pg_constraint c
   join pg_class r on r.oid = c.conrelid
   join pg_namespace n on n.oid = r.relnamespace
@@ -648,10 +660,10 @@ with counts(check_name, actual, expected) as (
       'availability_rules', 'booking_slots', 'blocked_dates', 'slot_holds',
       'inventory_holds', 'bookings', 'booking_items', 'payments', 'webhook_events',
       'fitters', 'business_settings', 'audit_logs', 'vrm_cache',
-      'interest_registrations', 'rate_limits', 'email_outbox'
+      'interest_registrations', 'rate_limits', 'email_outbox', 'special_dates'
     ])
   union all
-  select 'foreign_keys', count(*)::integer, 17
+  select 'foreign_keys', count(*)::integer, 18
   from pg_constraint c
   join pg_class r on r.oid = c.conrelid
   join pg_namespace n on n.oid = r.relnamespace
@@ -661,10 +673,10 @@ with counts(check_name, actual, expected) as (
       'availability_rules', 'booking_slots', 'blocked_dates', 'slot_holds',
       'inventory_holds', 'bookings', 'booking_items', 'payments', 'webhook_events',
       'fitters', 'business_settings', 'audit_logs', 'vrm_cache',
-      'interest_registrations', 'rate_limits', 'email_outbox'
+      'interest_registrations', 'rate_limits', 'email_outbox', 'special_dates'
     ])
   union all
-  select 'required_named_indexes', count(*)::integer, 24
+  select 'required_named_indexes', count(*)::integer, 25
   from pg_class c
   join pg_namespace n on n.oid = c.relnamespace
   join pg_index i on i.indexrelid = c.oid
@@ -680,10 +692,11 @@ with counts(check_name, actual, expected) as (
       'idx_payments_booking_id', 'idx_payments_manual_booking', 'idx_audit_logs_created_at',
       'idx_vrm_cache_lookup_expires', 'idx_rate_limits_expires_at',
       'idx_email_outbox_dispatch', 'idx_email_outbox_booking',
-      'idx_bookings_bank_expiry', 'idx_inventory_holds_live_product'
+      'idx_bookings_bank_expiry', 'idx_inventory_holds_live_product',
+      'idx_special_dates_date_active'
     ])
   union all
-  select 'required_policies', count(*)::integer, 24
+  select 'required_policies', count(*)::integer, 25
   from pg_policies
   where schemaname = 'public'
 )

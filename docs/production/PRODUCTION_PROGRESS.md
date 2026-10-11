@@ -1,5 +1,34 @@
 # G FORCE TYRES - Production recovery progress
 
+## Gate 4 - owner admin operating system (2026-10-12)
+
+Branch: gate/4-admin-os. Starting HEAD: 3dd03fa.
+Status: **PASS - locally verified; hosted owner acceptance BLOCKED**.
+Contract and boundary: [06_GATE4_ADMIN_OS.md](06_GATE4_ADMIN_OS.md).
+
+- All 12 required private routes are implemented with real database reads.
+- Products, inventory, slots, zones, fitters, bookings, settings and access use
+  protected server routes and service-only audited database transactions.
+- Cancellation, refund, reschedule, archive, capacity and status changes require
+  review/confirmation. Refund records include amount, bank reference, time and
+  actor. Audit history records before/after and is immutable.
+- Native owner acceptance passes phone booking, bank verification, fitter
+  assignment, stock/price changes, CSV import, blocked and special dates, zone,
+  reschedule, cancellation, settings, admin/viewer provisioning, role changes
+  and a recorded refund. Viewer/browser/self-lockout attempts fail; an injected
+  audit failure rolls back its stock mutation.
+- Migrations 001-018 and exact schema/security catalogue replay pass. Gate 2 and
+  Gate 3 native regression suites remain green.
+- Native PostgreSQL: Gate 4 3/3, Gate 3 17/17, Gate 2 12/12. SQL security
+  16/16 and reliability 124/124 pass. Typecheck, production build, security
+  structure and git diff check pass; lint has only four pre-existing warnings.
+- Responsive Playwright passes 217/217 at 360, 375, 390, 430, 768, 1366 and
+  1440 pixels. Evidence: [GATE4_QUALITY.json](evidence/GATE4_QUALITY.json) and
+  [GATE4_POSTGRES.json](evidence/GATE4_POSTGRES.json).
+
+No cloud mutation, real invitation/email delivery, owner-data import, push or
+deployment was performed. Those hosted/provider checks remain BLOCKED.
+
 ## Gate 3 - manual bank transfers (2026-10-11)
 
 Branch: gate/3-bank-payments. Starting HEAD: a6a9a3f43974f5374b2db5550c4b2a676c20a208.

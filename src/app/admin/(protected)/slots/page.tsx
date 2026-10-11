@@ -1,5 +1,2 @@
-import AdminDataPending from '@/components/admin/AdminDataPending';
-
-export default function AdminPage() {
-  return <AdminDataPending title="Fitting availability" />;
-}
+import AdminResourcePage from '@/components/admin/AdminResourcePage';
+export default function AdminPage(){return <AdminResourcePage title="Slots and working hours" resource="slots"/>;}

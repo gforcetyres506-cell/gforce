@@ -88,7 +88,7 @@ test('only owner can change access; last owner is preserved; role/deactivation c
   const change = (actor, role, active, target = actors.admin) => db.query('select * from public.owner_set_admin_access($1,$2,$3,$4,$5)', [actor.user, actor.session, target.user, role, active]);
   await as('service_role', null, async () => {
     await assert.rejects(change(actors.admin, 'owner', true), /Owner access required/);
-    await assert.rejects(change(actors.owner, 'viewer', false, actors.owner), /last active owner/);
+    await assert.rejects(change(actors.owner, 'viewer', false, actors.owner), /cannot lock out their current account/);
     await change(actors.owner, 'viewer', true);
     await assert.rejects(inventoryChange(actors.admin), /Operational access required/);
     await change(actors.owner, 'admin', false);

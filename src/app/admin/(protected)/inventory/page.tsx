@@ -1,5 +1,2 @@
-import AdminDataPending from '@/components/admin/AdminDataPending';
-
-export default function AdminPage() {
-  return <AdminDataPending title="Tyre inventory" />;
-}
+import AdminResourcePage from '@/components/admin/AdminResourcePage';
+export default function AdminPage(){return <AdminResourcePage title="Inventory" resource="inventory"/>;}

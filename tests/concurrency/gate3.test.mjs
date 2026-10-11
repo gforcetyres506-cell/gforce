@@ -45,7 +45,7 @@ after(async()=>{
  const slots=(await db.query('select count(*)::int n from public.booking_slots where capacity<public.slot_consumption(id)')).rows[0].n;assert.equal(inv,0);assert.equal(slots,0);
  evidence.oversold_inventory_rows=inv;evidence.oversold_slot_rows=slots;evidence.finished_at=new Date().toISOString();writeFileSync('.local-postgres/gate3-postgres-evidence.json',JSON.stringify(evidence,null,2)+'\n');await db.end();}
 });
-test('17 migrations replay and catalogue security checks pass',async()=>{const result=await db.query(readFileSync('supabase/verification/phase1_catalog_checks.sql','utf8'));assert(result.flatMap(r=>r.rows??[]).filter(r=>'result'in r).every(r=>r.result==='PASS'));});
+test('18 migrations replay and catalogue security checks pass',async()=>{const result=await db.query(readFileSync('supabase/verification/phase1_catalog_checks.sql','utf8'));assert(result.flatMap(r=>r.rows??[]).filter(r=>'result'in r).every(r=>r.result==='PASS'));});
 test('forward upgrade preserves unknown historical source and invents no legacy payment',async()=>{
  const row=(await db.query('select booking_source from public.bookings where id=$1',[legacyId])).rows[0];assert.equal(row.booking_source,null);
  assert.equal((await db.query('select count(*)::int n from public.payments where booking_id=$1',[legacyId])).rows[0].n,0);

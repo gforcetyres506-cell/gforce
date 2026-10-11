@@ -1,10 +1,10 @@
 # G FORCE TYRES - Canonical architecture
 
-Date: 2026-10-11. Current branch: gate/3-bank-payments.
-Status: native PostgreSQL booking/payment acceptance locally verified; cloud acceptance BLOCKED.
+Date: 2026-10-11. Current branch: gate/4-admin-os.
+Status: native PostgreSQL booking/payment/admin acceptance locally verified; cloud acceptance BLOCKED.
 Foundation starting HEAD: 545bac195fcabdd71e722a4412baa6dbd0dc05cd.
 
-Use only ordered SQL in supabase/migrations/001-017. The original 001-012
+Use only ordered SQL in supabase/migrations/001-018. The original 001-012
 files are unchanged. Forward migrations 013 and 014 reconcile the foundation
 and enforce the access boundary. The conflicting schema.sql was moved to
 supabase/archive/legacy-schema.sql.disabled; its Git-normalized contents are
@@ -155,3 +155,15 @@ named indexes, 24 SELECT-only policies, nine updated-at triggers and five
 reservation/payment guards. No browser write grants or new business seed rows.
 See [05_GATE3_BANK_PAYMENTS.md](05_GATE3_BANK_PAYMENTS.md) for exact behavior and
 the boundary between local proof and unverified hosted/provider operations.
+
+## Gate 4 forward extension (2026-10-12)
+
+Migration 018 adds the owner operating transactions, immutable before/after audit
+snapshots, special-date scheduling and additional policy/VAT settings. The
+canonical catalogue now contains 22 tables, 20 unique constraints, 66 checks,
+18 foreign keys, 25 required named indexes and 25 SELECT-only RLS policies.
+There are ten updated-at triggers and six business-history/resource guards.
+
+All browser roles remain database-read-only. Admin and owner mutations require a
+protected server session and service-only RPC which rechecks current role/session
+inside the same transaction. See [06_GATE4_ADMIN_OS.md](06_GATE4_ADMIN_OS.md).

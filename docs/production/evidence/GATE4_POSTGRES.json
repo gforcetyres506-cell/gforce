@@ -1,0 +1,35 @@
+{
+  "scope": "LOCAL_REAL_POSTGRESQL_ONLY",
+  "started_at": "2026-10-11T23:44:23.065Z",
+  "finished_at": "2026-10-11T23:44:24.205Z",
+  "target_attestation": "PASS: fresh runner-created loopback database; no cloud",
+  "postgresql_version": "PostgreSQL 16.15, compiled by Visual C++ build 1944, 64-bit",
+  "migration_count": 18,
+  "migration_018_sha256": "bb2e73a952a753b2187b986634e7f16739770162aac8f15a91157326612e63ad",
+  "tests": { "passed": 3, "failed": 0, "skipped": 0 },
+  "acceptance": [
+    "add zone",
+    "upload CSV",
+    "create phone booking",
+    "verify bank payment",
+    "assign fitter",
+    "change stock",
+    "change price",
+    "block date",
+    "special date",
+    "reschedule",
+    "change business settings",
+    "provision admin",
+    "provision viewer",
+    "change access role",
+    "cancel",
+    "record refund"
+  ],
+  "additional_assertions": [
+    "viewer and browser mutations denied",
+    "owner self-lockout denied",
+    "audit updates and deletes denied",
+    "injected audit failure rolled back inventory mutation",
+    "exact catalogue replay passed"
+  ]
+}

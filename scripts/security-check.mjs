@@ -24,6 +24,7 @@ const expectedMigrations = [
   '015_gate1_owner_business_data.sql',
   '016_gate2_atomic_booking.sql',
   '017_gate3_manual_bank_payments.sql',
+  '018_gate4_admin_operating_system.sql',
 ];
 
 assert.deepEqual(
@@ -37,7 +38,7 @@ const requiredTables = [
   'admin_profiles', 'customers', 'service_zones', 'tyre_products', 'inventory',
   'availability_rules', 'booking_slots', 'blocked_dates', 'slot_holds',
   'inventory_holds', 'bookings', 'booking_items', 'payments', 'webhook_events',
-  'fitters', 'business_settings', 'audit_logs', 'vrm_cache', 'interest_registrations', 'rate_limits', 'email_outbox',
+  'fitters', 'business_settings', 'audit_logs', 'vrm_cache', 'interest_registrations', 'rate_limits', 'email_outbox', 'special_dates',
 ];
 
 for (const table of requiredTables) {

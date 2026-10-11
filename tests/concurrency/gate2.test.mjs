@@ -107,7 +107,7 @@ async function race(name, slots, carts, blockQuery, blockArgs, expectedCode, suc
     return outcomes;
   } finally { await blocker.query('rollback').catch(()=>{}); await Promise.all(clients.map(c=>c.end())); await blocker.end(); }
 }
-test('all 17 ordered migrations and exact security catalogue replay on native PostgreSQL',async()=>{
+test('all 18 ordered migrations and exact security catalogue replay on native PostgreSQL',async()=>{
   const result = await db.query(readFileSync('supabase/verification/phase1_catalog_checks.sql','utf8'));
   const rows=result.flatMap(r=>r.rows??[]).filter(r=>'result' in r);
   assert(rows.length>=8); assert(rows.every(r=>r.result==='PASS')); evidence.schema='PASS';

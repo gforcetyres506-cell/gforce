@@ -1,0 +1,29 @@
+{
+  "gate": 4,
+  "scope": "LOCAL_ONLY_NO_CLOUD_MUTATION",
+  "date": "2026-10-12",
+  "checks": {
+    "gate4_native_postgresql": { "passed": 3, "failed": 0, "skipped": 0 },
+    "gate3_native_regression": { "passed": 17, "failed": 0, "skipped": 0 },
+    "gate2_native_regression": { "passed": 12, "failed": 0, "skipped": 0 },
+    "database_security": { "passed": 16, "failed": 0, "skipped": 0 },
+    "reliability": { "passed": 124, "failed": 0, "skipped": 0 },
+    "responsive_playwright": {
+      "passed": 217,
+      "failed": 0,
+      "skipped": 0,
+      "widths": [360, 375, 390, 430, 768, 1366, 1440]
+    },
+    "typecheck": "PASS",
+    "lint": "PASS_WITH_4_PRE_EXISTING_WARNINGS",
+    "production_build": "PASS",
+    "security_structure": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "hosted_acceptance": "BLOCKED",
+  "production_ready": false,
+  "notes": [
+    "No cloud database, Auth user, email recipient, push or deployment was changed.",
+    "Hosted invitation delivery and owner data remain unverified."
+  ]
+}
