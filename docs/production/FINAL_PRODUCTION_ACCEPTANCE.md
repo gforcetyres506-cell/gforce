@@ -1,13 +1,16 @@
 # G Force Tyres V1 production acceptance
 
-Date: 2026-10-12  
-Release branch: `release/v1-production`  
-Repository SHA: `d823c36` (latest verified executable baseline)  
+Date: 2026-10-12
+
+Release branch: `release/v1-production`
+
+Repository SHA: `d823c36` (latest verified executable baseline)
 Domain: **BLOCKED — no current custom-domain ownership, DNS or routing evidence**
 
 ## Decision
 
-**PRODUCTION READY: NO**  
+**PRODUCTION READY: NO**
+
 **OWNER HANDOFF READY: NO**
 
 Gate 4 is locally complete, but the first mandatory live gate cannot start. No
@@ -95,7 +98,8 @@ Three-way target identity is therefore **NOT PROVABLE**:
 | P1-09 | P1 | Backup, restore and rollback rehearsals are absent |
 | P1-10 | P1 | Client account ownership, owner training and controlled live-booking evidence are absent |
 
-P0 OPEN: **1**  
+P0 OPEN: **1**
+
 P1 OPEN: **10**
 
 ## Exact human input required to continue
