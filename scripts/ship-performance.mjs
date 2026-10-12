@@ -2,6 +2,7 @@ import { chromium, webkit } from '@playwright/test';
 import { mkdirSync, writeFileSync, readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import assert from 'node:assert/strict';
+import { boundedPerformanceEvidence } from './lib/bounded-performance-evidence.mjs';
 
 // Isolated lab only. API fixtures below never reach hosted persistence and
 // never constitute business data, hosted E2E, real-device or field-INP proof.
@@ -96,5 +97,8 @@ report.labTargets={
   note:'Lab LCP, interaction maxima and layout-shift sums only; no field percentile claim',
 };
 report.functionalStatus=report.samples.every(s=>!s.home.overflow&&!s.booking.overflow)&&report.webkit.status==='PASS'?'PASS':'FAIL';
-writeFileSync(dir+(report.paintAblation?'/SHIP_PAINT_DIAGNOSTIC.json':'/SHIP_PERFORMANCE.json'),JSON.stringify(report,null,2)+'\n');
+mkdirSync('.local-postgres',{recursive:true});
+writeFileSync('.local-postgres/ship-performance'+(report.paintAblation?'-paint':'')+'-full.json',JSON.stringify(report,null,2)+'\n');
+writeFileSync(dir+(report.paintAblation?'/SHIP_PAINT_DIAGNOSTIC.json':'/SHIP_PERFORMANCE.json'),JSON.stringify(boundedPerformanceEvidence(report),null,2)+'\n');
 console.log(JSON.stringify({samples:report.samples.length,webkit:report.webkit}));
+if(report.functionalStatus!=='PASS') process.exitCode=1;
