@@ -51,8 +51,15 @@ async function noOverflow(page: Page) {
     client: document.documentElement.clientWidth,
   }));
   expect(dimensions.scroll).toBeLessThanOrEqual(dimensions.client);
-  for (const action of await page.locator('[data-critical-action]:visible, .btn:visible, .mobile-header-cta:visible, .slot:visible').all()) {
-    await touchTarget(action);
+  // Snapshot dimensions together: hydration can replace a loading action and
+  // change the indices in a live :visible locator list between measurements.
+  const targets = await page.locator('[data-critical-action]:visible, .btn:visible, .mobile-header-cta:visible, .slot:visible').evaluateAll(nodes => nodes.map(node => {
+    const box = node.getBoundingClientRect();
+    return { label: node.textContent, width: box.width, height: box.height };
+  }));
+  for (const target of targets) {
+    expect(target.width, target.label ?? 'Touch target').toBeGreaterThanOrEqual(44);
+    expect(target.height, target.label ?? 'Touch target').toBeGreaterThanOrEqual(44);
   }
 }
 
@@ -183,7 +190,7 @@ test('all four booking steps fit, have named controls and autofill', async ({ pa
   await noOverflow(page);
   await customerAccessibility(page);
   await page.getByRole('button', { name: 'Continue to Location & Vehicle' }).click();
-  await expect(page.getByLabel('London Postcode')).toHaveAttribute('autocomplete', 'postal-code');
+  await expect(page.getByLabel('Fitting postcode', { exact: false })).toHaveAttribute('autocomplete', 'postal-code');
   await noOverflow(page);
   await customerAccessibility(page);
   await page.getByRole('button', { name: 'Choose Fitting Slot' }).click();
@@ -366,9 +373,16 @@ test('payment screen ignores browser state and never offers fake payment', async
 });
 
 test('credential-free production APIs fail closed', async ({ request }) => {
-  for (const path of ['/api/tyres', '/api/slots', '/api/manage/not-a-booking', '/api/account/me']) {
+  const reads: Array<[string, number]> = [
+    ['/api/tyres', 503], ['/api/slots', 503],
+    // Malformed tokens must fail before privileged database access.
+    ['/api/manage/not-a-booking', 404],
+    ['/api/manage/00000000-0000-4000-8000-000000000001', 503],
+    ['/api/account/me', 404],
+  ];
+  for (const [path, status] of reads) {
     const response = await request.get(path);
-    expect(response.status(), path).toBe(path === '/api/account/me' ? 404 : 503);
+    expect(response.status(), path).toBe(status);
     expect((await response.json()).ok).toBe(false);
   }
   const hold = { slot_id: '00000000-0000-4000-8000-000000000001', session_token: 'isolated-ui-test-session' };

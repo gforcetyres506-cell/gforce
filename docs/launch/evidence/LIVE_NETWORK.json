@@ -1,0 +1,375 @@
+{
+  "checkedAt": "2026-10-12T10:06:06.486Z",
+  "deployment": "Existing live deployment; branch SHA not attested; no deployment performed",
+  "redirects": [
+    {
+      "origin": "https://www.gforcetyres-mobile.co.uk",
+      "steps": [
+        {
+          "url": "https://www.gforcetyres-mobile.co.uk/",
+          "status": 200,
+          "content-type": "text/html; charset=utf-8",
+          "strict-transport-security": "max-age=63072000",
+          "access-control-allow-origin": "*"
+        }
+      ],
+      "canonicalReached": true,
+      "redirectCount": 0
+    },
+    {
+      "origin": "https://gforcetyres-mobile.co.uk",
+      "steps": [
+        {
+          "url": "https://gforcetyres-mobile.co.uk/",
+          "status": 308,
+          "content-type": "text/plain",
+          "location": "https://www.gforcetyres-mobile.co.uk/",
+          "strict-transport-security": "max-age=63072000"
+        },
+        {
+          "url": "https://www.gforcetyres-mobile.co.uk/",
+          "status": 200,
+          "content-type": "text/html; charset=utf-8",
+          "strict-transport-security": "max-age=63072000",
+          "access-control-allow-origin": "*"
+        }
+      ],
+      "canonicalReached": true,
+      "redirectCount": 1
+    },
+    {
+      "origin": "http://www.gforcetyres-mobile.co.uk",
+      "steps": [
+        {
+          "url": "http://www.gforcetyres-mobile.co.uk/",
+          "status": 308,
+          "content-type": "text/plain",
+          "location": "https://www.gforcetyres-mobile.co.uk/"
+        },
+        {
+          "url": "https://www.gforcetyres-mobile.co.uk/",
+          "status": 200,
+          "content-type": "text/html; charset=utf-8",
+          "strict-transport-security": "max-age=63072000",
+          "access-control-allow-origin": "*"
+        }
+      ],
+      "canonicalReached": true,
+      "redirectCount": 1
+    },
+    {
+      "origin": "http://gforcetyres-mobile.co.uk",
+      "steps": [
+        {
+          "url": "http://gforcetyres-mobile.co.uk/",
+          "status": 308,
+          "content-type": "text/plain",
+          "location": "https://gforcetyres-mobile.co.uk/"
+        },
+        {
+          "url": "https://gforcetyres-mobile.co.uk/",
+          "status": 308,
+          "content-type": "text/plain",
+          "location": "https://www.gforcetyres-mobile.co.uk/",
+          "strict-transport-security": "max-age=63072000"
+        },
+        {
+          "url": "https://www.gforcetyres-mobile.co.uk/",
+          "status": 200,
+          "content-type": "text/html; charset=utf-8",
+          "strict-transport-security": "max-age=63072000",
+          "access-control-allow-origin": "*"
+        }
+      ],
+      "canonicalReached": true,
+      "redirectCount": 2
+    }
+  ],
+  "certificates": [
+    {
+      "host": "www.gforcetyres-mobile.co.uk",
+      "trusted": true,
+      "authorizationError": null,
+      "subjectAltName": "DNS:www.gforcetyres-mobile.co.uk",
+      "protocol": "TLSv1.3",
+      "chain": [
+        {
+          "subject": {
+            "CN": "www.gforcetyres-mobile.co.uk"
+          },
+          "issuer": {
+            "C": "US",
+            "O": "Let's Encrypt",
+            "CN": "YR1"
+          },
+          "validFrom": "Oct 12 00:08:15 2026 GMT",
+          "validTo": "Jan 10 00:08:14 2027 GMT",
+          "fingerprint": "48:78:16:AE:21:09:27:6C:04:87:B2:00:71:F7:76:57:3F:BA:EE:41:68:17:89:83:18:21:F0:2C:1C:30:11:98"
+        },
+        {
+          "subject": {
+            "C": "US",
+            "O": "Let's Encrypt",
+            "CN": "YR1"
+          },
+          "issuer": {
+            "C": "US",
+            "O": "ISRG",
+            "CN": "Root YR"
+          },
+          "validFrom": "Sep  3 00:00:00 2025 GMT",
+          "validTo": "Sep  2 23:59:59 2028 GMT",
+          "fingerprint": "13:94:96:34:D9:9C:D6:FD:6A:A8:0B:C0:34:FE:FA:CC:EB:19:69:FE:EF:98:65:86:71:3E:CD:BB:05:75:8D:3F"
+        },
+        {
+          "subject": {
+            "C": "US",
+            "O": "ISRG",
+            "CN": "Root YR"
+          },
+          "issuer": {
+            "C": "US",
+            "O": "Internet Security Research Group",
+            "CN": "ISRG Root X1"
+          },
+          "validFrom": "May 13 00:00:00 2026 GMT",
+          "validTo": "Sep  2 23:59:59 2032 GMT",
+          "fingerprint": "07:26:39:D0:B1:40:D5:BF:FA:E1:6A:D9:C3:F6:CC:60:86:04:06:21:F5:1E:E6:1A:6D:46:A8:91:5C:07:CF:76"
+        },
+        {
+          "subject": {
+            "C": "US",
+            "O": "Internet Security Research Group",
+            "CN": "ISRG Root X1"
+          },
+          "issuer": {
+            "C": "US",
+            "O": "Internet Security Research Group",
+            "CN": "ISRG Root X1"
+          },
+          "validFrom": "Jun  4 11:04:38 2015 GMT",
+          "validTo": "Jun  4 11:04:38 2035 GMT",
+          "fingerprint": "96:BC:EC:06:26:49:76:F3:74:60:77:9A:CF:28:C5:A7:CF:E8:A3:C0:AA:E1:1A:8F:FC:EE:05:C0:BD:DF:08:C6"
+        }
+      ]
+    },
+    {
+      "host": "gforcetyres-mobile.co.uk",
+      "trusted": true,
+      "authorizationError": null,
+      "subjectAltName": "DNS:gforcetyres-mobile.co.uk",
+      "protocol": "TLSv1.3",
+      "chain": [
+        {
+          "subject": {
+            "CN": "gforcetyres-mobile.co.uk"
+          },
+          "issuer": {
+            "C": "US",
+            "O": "Let's Encrypt",
+            "CN": "YR2"
+          },
+          "validFrom": "Oct 12 00:08:15 2026 GMT",
+          "validTo": "Jan 10 00:08:14 2027 GMT",
+          "fingerprint": "E8:F5:03:17:5E:5D:36:F1:73:E6:46:F9:35:55:CC:B4:AB:4B:09:FE:C1:94:A5:43:D3:84:86:B6:2A:89:F5:C2"
+        },
+        {
+          "subject": {
+            "C": "US",
+            "O": "Let's Encrypt",
+            "CN": "YR2"
+          },
+          "issuer": {
+            "C": "US",
+            "O": "ISRG",
+            "CN": "Root YR"
+          },
+          "validFrom": "Sep  3 00:00:00 2025 GMT",
+          "validTo": "Sep  2 23:59:59 2028 GMT",
+          "fingerprint": "23:8B:85:A0:09:9C:65:B9:70:47:7D:57:24:F1:A1:D4:75:CE:50:58:CF:FE:4E:FA:87:33:89:9B:DB:86:3C:47"
+        },
+        {
+          "subject": {
+            "C": "US",
+            "O": "ISRG",
+            "CN": "Root YR"
+          },
+          "issuer": {
+            "C": "US",
+            "O": "Internet Security Research Group",
+            "CN": "ISRG Root X1"
+          },
+          "validFrom": "May 13 00:00:00 2026 GMT",
+          "validTo": "Sep  2 23:59:59 2032 GMT",
+          "fingerprint": "07:26:39:D0:B1:40:D5:BF:FA:E1:6A:D9:C3:F6:CC:60:86:04:06:21:F5:1E:E6:1A:6D:46:A8:91:5C:07:CF:76"
+        },
+        {
+          "subject": {
+            "C": "US",
+            "O": "Internet Security Research Group",
+            "CN": "ISRG Root X1"
+          },
+          "issuer": {
+            "C": "US",
+            "O": "Internet Security Research Group",
+            "CN": "ISRG Root X1"
+          },
+          "validFrom": "Jun  4 11:04:38 2015 GMT",
+          "validTo": "Jun  4 11:04:38 2035 GMT",
+          "fingerprint": "96:BC:EC:06:26:49:76:F3:74:60:77:9A:CF:28:C5:A7:CF:E8:A3:C0:AA:E1:1A:8F:FC:EE:05:C0:BD:DF:08:C6"
+        }
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "path": "/",
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "strict-transport-security": "max-age=63072000",
+        "access-control-allow-origin": "*"
+      },
+      "title": "G Force Tyres — Mobile Tyre Fitting",
+      "canonicals": [],
+      "mixedContentResourceCount": 0,
+      "localhostLinkCount": 0,
+      "selfCertifiedGdprClaim": false,
+      "draftLanguage": false
+    },
+    {
+      "path": "/robots.txt",
+      "status": 404,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "strict-transport-security": "max-age=63072000",
+        "access-control-allow-origin": "*"
+      },
+      "title": "404: This page could not be found.",
+      "canonicals": [],
+      "mixedContentResourceCount": 0,
+      "localhostLinkCount": 0,
+      "selfCertifiedGdprClaim": false,
+      "draftLanguage": false
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 404,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "strict-transport-security": "max-age=63072000",
+        "access-control-allow-origin": "*"
+      },
+      "title": "404: This page could not be found.",
+      "canonicals": [],
+      "mixedContentResourceCount": 0,
+      "localhostLinkCount": 0,
+      "selfCertifiedGdprClaim": false,
+      "draftLanguage": false
+    },
+    {
+      "path": "/tyres",
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "strict-transport-security": "max-age=63072000"
+      },
+      "title": "G Force Tyres — Mobile Tyre Fitting",
+      "canonicals": [],
+      "mixedContentResourceCount": 0,
+      "localhostLinkCount": 0,
+      "selfCertifiedGdprClaim": false,
+      "draftLanguage": false
+    },
+    {
+      "path": "/terms",
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "strict-transport-security": "max-age=63072000",
+        "access-control-allow-origin": "*"
+      },
+      "title": "G Force Tyres — Mobile Tyre Fitting",
+      "canonicals": [],
+      "mixedContentResourceCount": 0,
+      "localhostLinkCount": 0,
+      "selfCertifiedGdprClaim": false,
+      "draftLanguage": true
+    },
+    {
+      "path": "/privacy",
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "strict-transport-security": "max-age=63072000",
+        "access-control-allow-origin": "*"
+      },
+      "title": "G Force Tyres — Mobile Tyre Fitting",
+      "canonicals": [],
+      "mixedContentResourceCount": 0,
+      "localhostLinkCount": 0,
+      "selfCertifiedGdprClaim": true,
+      "draftLanguage": false
+    },
+    {
+      "path": "/cancellation",
+      "status": 200,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "strict-transport-security": "max-age=63072000",
+        "access-control-allow-origin": "*"
+      },
+      "title": "G Force Tyres — Mobile Tyre Fitting",
+      "canonicals": [],
+      "mixedContentResourceCount": 0,
+      "localhostLinkCount": 0,
+      "selfCertifiedGdprClaim": false,
+      "draftLanguage": true
+    },
+    {
+      "path": "/contact",
+      "status": 404,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "strict-transport-security": "max-age=63072000",
+        "access-control-allow-origin": "*"
+      },
+      "title": "404: This page could not be found.",
+      "canonicals": [],
+      "mixedContentResourceCount": 0,
+      "localhostLinkCount": 0,
+      "selfCertifiedGdprClaim": false,
+      "draftLanguage": false
+    },
+    {
+      "path": "/how-it-works",
+      "status": 404,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "strict-transport-security": "max-age=63072000",
+        "access-control-allow-origin": "*"
+      },
+      "title": "404: This page could not be found.",
+      "canonicals": [],
+      "mixedContentResourceCount": 0,
+      "localhostLinkCount": 0,
+      "selfCertifiedGdprClaim": false,
+      "draftLanguage": false
+    },
+    {
+      "path": "/mobile-tyre-fitting",
+      "status": 404,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "strict-transport-security": "max-age=63072000",
+        "access-control-allow-origin": "*"
+      },
+      "title": "404: This page could not be found.",
+      "canonicals": [],
+      "mixedContentResourceCount": 0,
+      "localhostLinkCount": 0,
+      "selfCertifiedGdprClaim": false,
+      "draftLanguage": false
+    }
+  ]
+}

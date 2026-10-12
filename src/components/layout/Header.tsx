@@ -9,8 +9,8 @@ import { ContactActions } from '@/components/layout/BusinessContact';
 
 const NAV = [
   { href: '/#tyre-finder', label: 'Find tyres' },
-  { href: '/#how', label: 'How it works' },
-  { href: '/#coverage', label: 'Fitting locations' },
+  { href: '/how-it-works', label: 'How it works' },
+  { href: '/coverage', label: 'Fitting locations' },
   { href: '/tyres', label: 'Tyres' },
 ];
 

@@ -4,6 +4,7 @@ import { forbidden, redirect } from 'next/navigation';
 import { NextResponse } from 'next/server';
 import type { SupabaseClient, User } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/server';
+import { getRequestOrigin } from '@/lib/request-origin';
 import { permits, type AdminPermission, type AdminRole } from './permissions';
 
 export type { AdminRole } from './permissions';
@@ -102,7 +103,7 @@ export function adminErrorResponse(error: unknown): NextResponse {
 export function requireSameOrigin(request: Request): void {
   const origin = request.headers.get('origin');
   if (request.headers.get('sec-fetch-site') === 'cross-site' ||
-    (origin && origin !== new URL(request.url).origin)) {
+    (origin && origin !== getRequestOrigin(request))) {
     throw new AdminAccessError(403, 'Cross-origin request denied.');
   }
 }

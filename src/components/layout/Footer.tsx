@@ -19,7 +19,7 @@ export default function Footer() {
               <BrandLogo sizes="220px" className="w-[220px]" />
             </Link>
             <p className="max-w-[28ch] text-sm text-ink-2 mb-4">
-              A focused, location-first booking journey for mobile tyre fitting.
+              G Force Tyres Mobile. Check your postcode and tyre size for mobile tyre fitting.
             </p>
             <Link href="/#tyre-finder" className="text-xs font-semibold text-brand hover:underline">
               Start tyre search &rarr;
@@ -32,8 +32,11 @@ export default function Footer() {
             <ul className="space-y-2 text-sm text-ink-2">
               <li><Link href="/#tyre-finder" className="hover:text-ink-1">Find Your Tyre Size</Link></li>
               <li><Link href="/tyres" className="hover:text-ink-1">Browse Tyres</Link></li>
-              <li><Link href="/#how" className="hover:text-ink-1">How It Works</Link></li>
-              <li><Link href="/#coverage" className="hover:text-ink-1">Fitting Locations</Link></li>
+              <li><Link href="/mobile-tyre-fitting" className="hover:text-ink-1">Mobile Tyre Fitting</Link></li>
+              <li><Link href="/how-it-works" className="hover:text-ink-1">How It Works</Link></li>
+              <li><Link href="/coverage" className="hover:text-ink-1">Fitting Locations</Link></li>
+              <li><Link href="/guides/tyre-size" className="hover:text-ink-1">Tyre Size Guide</Link></li>
+              <li><Link href="/contact" className="hover:text-ink-1">Contact Us</Link></li>
             </ul>
           </div>
 
@@ -41,7 +44,7 @@ export default function Footer() {
             <div className="label mb-4">Search options</div>
             <ul className="space-y-2 text-sm text-ink-2">
               <li>Postcode service check</li>
-              <li>Vehicle registration lookup</li>
+              <li>Tyre sidewall markings</li>
               <li>Manual tyre-size entry</li>
             </ul>
           </div>
@@ -58,7 +61,7 @@ export default function Footer() {
 
         <div className="mt-12 border-t border-line pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-ink-3">
           <div>
-            © {new Date().getFullYear()} G Force Tyres. Mobile tyre fitting.
+            © {new Date().getFullYear()} G Force Tyres Mobile. Mobile tyre fitting.
           </div>
           <div className="flex items-center gap-4">
             <span>Location-first booking</span>

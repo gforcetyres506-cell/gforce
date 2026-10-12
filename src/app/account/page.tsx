@@ -1,3 +1,3 @@
 import { redirect } from 'next/navigation';
 
-export default function Page() { redirect('/find-tyres'); }
+export default function Page() { redirect('/#tyre-finder'); }

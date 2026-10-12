@@ -143,7 +143,7 @@ export default async function TyresPage({ searchParams, phoneBooking = false }: 
           {tyres.map((t) => (
             <article key={t.id} className="card-tyre flex flex-col justify-between group">
               <div>
-                {t.image_url && <Image src={t.image_url} alt={t.brand + ' ' + t.model} width={320} height={200} unoptimized className="w-full h-44 object-contain mb-4" />}
+                {t.image_url && <Image src={t.image_url} alt={t.brand + ' ' + t.model} width={320} height={200} sizes="(max-width: 767px) 90vw, 320px" className="w-full h-44 object-contain mb-4" />}
                 <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <div className="text-xs font-bold uppercase tracking-wider text-brand">{t.brand}</div>

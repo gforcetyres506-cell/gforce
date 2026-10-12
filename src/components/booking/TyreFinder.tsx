@@ -137,7 +137,7 @@ export default function TyreFinder({ cataloguePath = '/tyres' }: { cataloguePath
                 <MapPin size={16} className="text-brand" /> Start your tyre search
               </div>
               <p className="mt-1 text-xs text-ink-3">
-                Check the fitting area, then search by registration or tyre size.
+                Check the fitting area, then enter your tyre size.
               </p>
             </div>
             <span className="finder-step-pill">Step 1 of 3</span>

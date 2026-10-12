@@ -4,30 +4,29 @@ import './globals.css';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { BusinessContactProvider, MobileContactBar } from '@/components/layout/BusinessContact';
-import { createBusinessContact } from '@/lib/business-contact';
+import { headers } from 'next/headers';
+import { SecurityNonceProvider } from '@/components/SecurityNonce';
+import { SITE_NAME, SITE_ORIGIN } from '@/lib/site';
+import { getBusinessFacts } from '@/lib/business-entity';
 
 const displayFont = Bebas_Neue({ weight: '400', subsets: ['latin'], variable: '--font-brand-display', display: 'swap' });
 const bodyFont = Inter({ subsets: ['latin'], variable: '--font-brand-body', display: 'swap' });
 
 export const metadata: Metadata = {
-  applicationName: 'G Force Tyres Mobile',
+  metadataBase: new URL(SITE_ORIGIN),
+  applicationName: SITE_NAME,
   title: {
-    default: 'G Force Tyres — Mobile Tyre Fitting',
-    template: '%s | G Force Tyres',
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
   },
   description:
-    'Find tyres for your vehicle and arrange mobile tyre fitting with G Force Tyres.',
+    'Check your postcode and tyre size with G Force Tyres Mobile.',
   icons: {
     icon: [{ url: '/icon.png', type: 'image/png', sizes: '512x512' }],
     apple: [{ url: '/apple-icon.png', type: 'image/png', sizes: '180x180' }],
   },
-  openGraph: {
-    title: 'G Force Tyres — Mobile Tyre Fitting',
-    description: 'Find tyres for your vehicle and arrange mobile tyre fitting with G Force Tyres.',
-    type: 'website',
-    locale: 'en_GB',
-  },
-  robots: { index: true, follow: true },
+  // Indexable pages opt in with their own canonical and social metadata.
+  robots: { index: false, follow: true },
 };
 
 export const viewport = {
@@ -36,8 +35,10 @@ export const viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const contact = createBusinessContact(process.env.BUSINESS_PHONE, process.env.BUSINESS_WHATSAPP);
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  // Nonces require request-time rendering. Never cache nonce-bearing HTML.
+  const nonce = (await headers()).get('x-nonce') ?? undefined;
+  const { contact } = getBusinessFacts();
   const hasContact = Boolean(contact.phone || contact.whatsapp);
   return (
     <html lang="en-GB" className={`${displayFont.variable} ${bodyFont.variable}`}>
@@ -48,12 +49,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
-        <BusinessContactProvider contact={contact}>
+        <SecurityNonceProvider nonce={nonce}><BusinessContactProvider contact={contact}>
           <Header />
           <main id="main" className="min-w-0">{children}</main>
           <Footer />
           <MobileContactBar />
-        </BusinessContactProvider>
+        </BusinessContactProvider></SecurityNonceProvider>
       </body>
     </html>
   );
