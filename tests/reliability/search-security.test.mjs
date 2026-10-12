@@ -25,6 +25,10 @@ test('production policy permits only configured providers and nonce scripts', ()
   assert.doesNotMatch(csp.split(';').find(s => s.trim().startsWith('script-src')), /unsafe-inline/);
   for (const rule of ["frame-ancestors 'none'", "object-src 'none'", "base-uri 'self'", "form-action 'self'", 'upgrade-insecure-requests']) assert(csp.includes(rule));
   assert(!contentSecurityPolicy('test', true, 'javascript:alert(1)').includes('javascript:'));
+  const loopback = contentSecurityPolicy('test', true, undefined, false);
+  assert(!loopback.includes('upgrade-insecure-requests'));
+  assert(!loopback.includes('unsafe-eval'));
+  assert(loopback.includes("'nonce-test' 'strict-dynamic'"));
   for (const path of ['/manage/private', '/api/admin/os', '/admin/login', '/booking/pay', '/confirmation/reference', '/tyres']) assert(isUtilityPath(path));
   assert.equal(isUtilityPath('/mobile-tyre-fitting'), false);
 });

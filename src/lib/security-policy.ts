@@ -1,6 +1,6 @@
 // Per-response nonces authorize Next.js hydration without unsafe-inline scripts.
 // Styles need inline support for React/Next image sizing and the Turnstile widget.
-export function contentSecurityPolicy(nonce: string, production: boolean, supabaseUrl?: string): string {
+export function contentSecurityPolicy(nonce: string, production: boolean, supabaseUrl?: string, upgradeInsecureRequests = production): string {
   const connect = ["'self'", 'https://challenges.cloudflare.com'];
   if (supabaseUrl) {
     try {
@@ -17,7 +17,7 @@ export function contentSecurityPolicy(nonce: string, production: boolean, supaba
     "font-src 'self'", `connect-src ${connect.join(' ')}${production ? '' : ' ws://localhost:* ws://127.0.0.1:*'}`,
     "frame-src https://challenges.cloudflare.com", "frame-ancestors 'none'",
     "object-src 'none'", "base-uri 'self'", "form-action 'self'",
-    ...(production ? ['upgrade-insecure-requests'] : []),
+    ...(upgradeInsecureRequests ? ['upgrade-insecure-requests'] : []),
   ].join('; ');
 }
 

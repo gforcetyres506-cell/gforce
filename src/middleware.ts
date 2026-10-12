@@ -21,7 +21,10 @@ export async function middleware(request: NextRequest) {
   }
   const production = process.env.NODE_ENV === 'production';
   const nonce = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(24))));
-  const csp = contentSecurityPolicy(nonce, production, process.env.NEXT_PUBLIC_SUPABASE_URL);
+  // WebKit upgrades loopback assets too, but the isolated HTTP test server has
+  // no TLS listener. Keep all script protections and HTTPS upgrades elsewhere.
+  const localHttp = protocol === 'http' && ['localhost', '127.0.0.1', '[::1]'].includes(host);
+  const csp = contentSecurityPolicy(nonce, production, process.env.NEXT_PUBLIC_SUPABASE_URL, production && !localHttp);
   const requestHeaders = new Headers(request.headers);
   // Always overwrite caller-supplied nonce/policy values.
   requestHeaders.set('x-nonce', nonce);
