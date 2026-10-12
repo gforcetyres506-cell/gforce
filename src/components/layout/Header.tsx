@@ -99,7 +99,7 @@ export default function Header() {
             <Link href="/#tyre-finder" onClick={() => setOpen(false)} className="btn btn-primary mt-4 w-full" data-critical-action>Start tyre search</Link>
             <ContactActions className="mt-3" onAction={() => setOpen(false)} />
           </nav>
-          <p className="container-g border-t border-line py-6 text-sm text-ink-2">Search by registration or enter the tyre size from your sidewall.</p>
+          <p className="container-g border-t border-line py-6 text-sm text-ink-2">Enter the tyre size from your sidewall.</p>
         </div>
       )}
     </>

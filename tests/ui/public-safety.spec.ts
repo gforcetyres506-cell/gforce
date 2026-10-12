@@ -248,12 +248,12 @@ test('missing context redirects to finder and unknown tyre never selects another
   await noOverflow(page);
 });
 
-test('unavailable vehicle lookup switches to empty manual size fields', async ({ page }) => {
+test('accepted postcode goes directly to manual size entry without registration lookup', async ({ page }) => {
   await page.goto('/');
   await page.getByLabel('Fitting postcode').fill('E14 8PX');
   await page.getByRole('button', { name: 'Check area' }).click();
-  await page.getByLabel('Enter the vehicle registration').fill('AB21ABC');
-  await page.getByRole('button', { name: 'Find matching size' }).click();
+  await expect(page.getByLabel('Enter the vehicle registration')).toHaveCount(0);
+  await expect(page.getByText('Postcode accepted. Enter the size from your tyre sidewall.')).toBeVisible();
   for (const label of ['Width', 'Profile', 'Rim']) await expect(page.getByLabel(label, { exact: true })).toHaveValue('');
   await expect(page.getByRole('button', { name: 'Show Available Tyres' })).toBeDisabled();
   await expect(page.locator('main')).not.toContainText('BMW');
@@ -405,36 +405,18 @@ test('credential-free production APIs fail closed', async ({ request }) => {
 });
 
 for (const axle of ['front','rear','both'] as const) {
-  test('sidewall confirmation is mandatory for staggered ' + axle, async ({ page }) => {
-    await page.route('**/api/vrm/lookup', async (route) => {
-      expect(route.request().postDataJSON().turnstileToken).toBe('ui-token');
-      await route.fulfill({ contentType:'application/json',body:JSON.stringify({ok:true,data:{zone,vehicle:{
-        registration:'AB21ABC',make:'Test only',model:'Staggered fixture',source:'oneauto',isStaggered:true,
-        front:{width:225,profile:45,rim:18},rear:{width:255,profile:40,rim:18}
-      }}}) });
-    });
-    await page.goto('/');
-    await page.getByLabel('Fitting postcode').fill('E14 8PX');
-    await page.getByRole('button',{name:'Check area'}).click();
-    await page.getByLabel('Enter the vehicle registration').fill('AB21ABC');
-    await page.getByRole('button',{name:'Find matching size'}).click();
-    const confirm=page.getByRole('button',{name:'YES, THESE MATCH — VIEW TYRES'});
-    await expect(confirm).toBeDisabled();
-    const choice=page.getByRole('button',{name:axle === 'both' ? /Both axles/ : new RegExp(axle+' axle','i')});
-    await touchTarget(choice); await choice.click();
-    await expect(confirm).toBeDisabled();
-    const physical=page.getByRole('checkbox',{name:/I checked the physical sidewalls/});
-    await physical.check(); await expect(confirm).toBeEnabled();
-    await page.getByRole('button',{name:/Front axle/i}).click();
-    await expect(physical).not.toBeChecked();
-    await choice.click(); await physical.check();
+  test('manual booking preserves deliberate tyre selection for ' + axle, async ({ page }) => {
+    await page.goto(journey + '&axle=' + axle + '&rw=255&rp=40&rr=18');
+    await expect(page.getByRole('heading', { name: tyre.model })).toBeVisible();
+    if (axle === 'both') {
+      await expect(page.getByRole('checkbox')).toBeChecked();
+      await expect(page.getByRole('button', { name: 'Continue to Location & Vehicle' })).toBeDisabled();
+      await page.getByLabel('Select Rear Tyre Model').selectOption(rear.id);
+    } else {
+      await expect(page.getByRole('checkbox')).not.toBeChecked();
+    }
+    await expect(page.getByRole('button', { name: 'Continue to Location & Vehicle' })).toBeEnabled();
     await noOverflow(page); await customerAccessibility(page);
-    await confirm.click();
-    await expect(page).toHaveURL(/\/tyres\?/);
-    const params=new URL(page.url()).searchParams;
-    expect(params.get('axle')).toBe(axle); expect(params.get('sidewall')).toBe('confirmed');
-    expect(params.get('w')).toBe(axle === 'rear' ? '255':'225');
-    expect(params.get('rw')).toBe(axle === 'both' ? '255':null);
   });
 }
 test('both axles require a deliberate matching rear product',async ({page})=>{
