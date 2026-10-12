@@ -87,5 +87,14 @@ try {
 } catch {report.webkit={status:'BLOCKED',reason:'WebKit finder smoke did not complete; inspect cross-browser acceptance separately'};}
 report.fieldINP='BLOCKED: lab events cannot establish real-user p75 INP';
 report.paintAblation=process.argv.includes('--light-paint');
+const mobile=report.samples.filter(s=>s.throttled);
+report.labTargets={
+  throttledSamples:mobile.length,
+  homeLcpMs:mobile.map(s=>s.home.lcpMs),
+  maxInteractionMs:mobile.map(s=>Math.max(s.home.maxInteractionMs,s.booking.maxInteractionMs)),
+  maxLayoutShiftSum:Math.max(0,...report.samples.flatMap(s=>[s.home.layoutShiftSum,s.booking.layoutShiftSum])),
+  note:'Lab LCP, interaction maxima and layout-shift sums only; no field percentile claim',
+};
+report.functionalStatus=report.samples.every(s=>!s.home.overflow&&!s.booking.overflow)&&report.webkit.status==='PASS'?'PASS':'FAIL';
 writeFileSync(dir+(report.paintAblation?'/SHIP_PAINT_DIAGNOSTIC.json':'/SHIP_PERFORMANCE.json'),JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify({samples:report.samples.length,webkit:report.webkit}));

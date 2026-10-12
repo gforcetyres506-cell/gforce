@@ -53,9 +53,11 @@ async function noOverflow(page: Page) {
   expect(dimensions.scroll).toBeLessThanOrEqual(dimensions.client);
   // Snapshot dimensions together: hydration can replace a loading action and
   // change the indices in a live :visible locator list between measurements.
-  const targets = await page.locator('[data-critical-action]:visible, .btn:visible, .mobile-header-cta:visible, .slot:visible').evaluateAll(nodes => nodes.map(node => {
+  const targets = await page.locator('[data-critical-action], .btn, .mobile-header-cta, .slot').evaluateAll(nodes => nodes.flatMap(node => {
     const box = node.getBoundingClientRect();
-    return { label: node.textContent, width: box.width, height: box.height };
+    // Resolve visibility and size in one task, before contacts can switch.
+    if (!box.width || !box.height || getComputedStyle(node).visibility === 'hidden') return [];
+    return [{ label: node.textContent, width: box.width, height: box.height }];
   }));
   for (const target of targets) {
     expect(target.width, target.label ?? 'Touch target').toBeGreaterThanOrEqual(44);
