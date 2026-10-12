@@ -1,0 +1,80 @@
+{
+  "checkedAt": "2026-10-12T11:41:23.991Z",
+  "scope": "Read-only public HTTP/TLS/SEO checks; no DB/provider/application acceptance",
+  "origin": "https://www.gforcetyres-mobile.co.uk",
+  "status": "FAIL",
+  "checks": [
+    {
+      "path": "/",
+      "status": 200,
+      "latencyMs": 1406,
+      "canonical": false,
+      "securityHeaders": false,
+      "publicContent": false,
+      "pass": false
+    },
+    {
+      "path": "/mobile-tyre-fitting",
+      "status": 404,
+      "latencyMs": 120,
+      "canonical": false,
+      "securityHeaders": false,
+      "publicContent": false,
+      "pass": false
+    },
+    {
+      "path": "/how-it-works",
+      "status": 404,
+      "latencyMs": 693,
+      "canonical": false,
+      "securityHeaders": false,
+      "publicContent": false,
+      "pass": false
+    },
+    {
+      "path": "/coverage",
+      "status": 404,
+      "latencyMs": 91,
+      "canonical": false,
+      "securityHeaders": false,
+      "publicContent": false,
+      "pass": false
+    },
+    {
+      "path": "/contact",
+      "status": 404,
+      "latencyMs": 75,
+      "canonical": false,
+      "securityHeaders": false,
+      "publicContent": false,
+      "pass": false
+    },
+    {
+      "path": "/guides/tyre-size",
+      "status": 404,
+      "latencyMs": 67,
+      "canonical": false,
+      "securityHeaders": false,
+      "publicContent": false,
+      "pass": false
+    },
+    {
+      "path": "/robots.txt",
+      "status": 404,
+      "latencyMs": 101,
+      "canonical": null,
+      "securityHeaders": false,
+      "publicContent": false,
+      "pass": false
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 404,
+      "latencyMs": 83,
+      "canonical": null,
+      "securityHeaders": false,
+      "publicContent": false,
+      "pass": false
+    }
+  ]
+}

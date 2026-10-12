@@ -1,0 +1,4048 @@
+{
+  "scope": "Local production build with isolated browser API fixtures; no hosted acceptance",
+  "fullRun": {
+    "total": 504,
+    "passed": 496,
+    "failed": 8
+  },
+  "repairRun": {
+    "total": 28,
+    "passed": 28
+  },
+  "distinctCasesPassed": 504,
+  "note": "Two test-only repairs: WebKit clipboard permission/fallback, same-task visible touch-target measurement. No application change between full run and retest.",
+  "cases": [
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "owner dashboard renders only returned database metrics without overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "bank instructions show full amount and no paid claim; verified receipt changes customer status",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "booking cancellation is never one click and viewers have no mutation controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "contact configuration has no invented defaults",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "unconfigured bank instructions block payment without invented account details",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff component requires confirmation, cancels safely, and submits exact bank receipt assertion",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual viewer component has no mutation, email or phone-booking controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "owner bank settings start empty and report configuration required",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff controls copy instructions, email without a delivery claim and explicitly extend",
+      "initialStatus": "PASS",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "public pages: metadata, contact configuration and no overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "phone wizard uses actual shared customer journey and the protected phone endpoint",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "finder, contact locations and mobile navigation are accessible",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "search pages emit unique canonical metadata and parseable honest JSON-LD",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "robots and XML sitemap expose only canonical public pages",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "all four booking steps fit, have named controls and autofill",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "private routes have noindex, no canonical and deny unauthorised API access",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "error and empty states offer only configured contact actions",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "nonce policy protects hydration and blocks injected scripts",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "social image and approved logo icons are real image responses",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "catalogue fails closed without database configuration",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "missing context redirects to finder and unknown tyre never selects another",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "owner dashboard renders only returned database metrics without overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "booking cancellation is never one click and viewers have no mutation controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "accepted postcode goes directly to manual size entry without registration lookup",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: network",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "bank instructions show full amount and no paid claim; verified receipt changes customer status",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: database",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "unconfigured bank instructions block payment without invented account details",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff component requires confirmation, cancels safely, and submits exact bank receipt assertion",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: malformed result",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual viewer component has no mutation, email or phone-booking controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "owner bank settings start empty and report configuration required",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: slot conflict",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff controls copy instructions, email without a delivery claim and explicitly extend",
+      "initialStatus": "PASS",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "checkout retries keep the same key and slot selection creates no premature hold",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "phone wizard uses actual shared customer journey and the protected phone endpoint",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "contact configuration has no invented defaults",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "confirmed atomic reservation shows bank deadline and rechecks expiry without a paid claim",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "public pages: metadata, contact configuration and no overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pricing outage blocks the journey without invented totals",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pending bookings have no paid step or fictional fitter",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "payment screen ignores browser state and never offers fake payment",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "credential-free production APIs fail closed",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "finder, contact locations and mobile navigation are accessible",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for front",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for rear",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for both",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "both axles require a deliberate matching rear product",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "all four booking steps fit, have named controls and autofill",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "error and empty states offer only configured contact actions",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "catalogue fails closed without database configuration",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "missing context redirects to finder and unknown tyre never selects another",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "accepted postcode goes directly to manual size entry without registration lookup",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: network",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "search pages emit unique canonical metadata and parseable honest JSON-LD",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "robots and XML sitemap expose only canonical public pages",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: database",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: malformed result",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "private routes have noindex, no canonical and deny unauthorised API access",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: slot conflict",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "nonce policy protects hydration and blocks injected scripts",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "social image and approved logo icons are real image responses",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "checkout retries keep the same key and slot selection creates no premature hold",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "owner dashboard renders only returned database metrics without overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "booking cancellation is never one click and viewers have no mutation controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "bank instructions show full amount and no paid claim; verified receipt changes customer status",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "confirmed atomic reservation shows bank deadline and rechecks expiry without a paid claim",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "unconfigured bank instructions block payment without invented account details",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pricing outage blocks the journey without invented totals",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff component requires confirmation, cancels safely, and submits exact bank receipt assertion",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pending bookings have no paid step or fictional fitter",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "payment screen ignores browser state and never offers fake payment",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual viewer component has no mutation, email or phone-booking controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "credential-free production APIs fail closed",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "owner bank settings start empty and report configuration required",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff controls copy instructions, email without a delivery claim and explicitly extend",
+      "initialStatus": "PASS",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for front",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "phone wizard uses actual shared customer journey and the protected phone endpoint",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "contact configuration has no invented defaults",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for rear",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "public pages: metadata, contact configuration and no overflow",
+      "initialStatus": "FAIL",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for both",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "both axles require a deliberate matching rear product",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "finder, contact locations and mobile navigation are accessible",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "search pages emit unique canonical metadata and parseable honest JSON-LD",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "all four booking steps fit, have named controls and autofill",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "robots and XML sitemap expose only canonical public pages",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "error and empty states offer only configured contact actions",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "private routes have noindex, no canonical and deny unauthorised API access",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "nonce policy protects hydration and blocks injected scripts",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "social image and approved logo icons are real image responses",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "catalogue fails closed without database configuration",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "missing context redirects to finder and unknown tyre never selects another",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "accepted postcode goes directly to manual size entry without registration lookup",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "owner dashboard renders only returned database metrics without overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "booking cancellation is never one click and viewers have no mutation controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: network",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: database",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "bank instructions show full amount and no paid claim; verified receipt changes customer status",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "unconfigured bank instructions block payment without invented account details",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: malformed result",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff component requires confirmation, cancels safely, and submits exact bank receipt assertion",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: slot conflict",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual viewer component has no mutation, email or phone-booking controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "owner bank settings start empty and report configuration required",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "checkout retries keep the same key and slot selection creates no premature hold",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff controls copy instructions, email without a delivery claim and explicitly extend",
+      "initialStatus": "PASS",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "phone wizard uses actual shared customer journey and the protected phone endpoint",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "contact configuration has no invented defaults",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "confirmed atomic reservation shows bank deadline and rechecks expiry without a paid claim",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pricing outage blocks the journey without invented totals",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "public pages: metadata, contact configuration and no overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pending bookings have no paid step or fictional fitter",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "payment screen ignores browser state and never offers fake payment",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "credential-free production APIs fail closed",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for front",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "finder, contact locations and mobile navigation are accessible",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for rear",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for both",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "both axles require a deliberate matching rear product",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "all four booking steps fit, have named controls and autofill",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "error and empty states offer only configured contact actions",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "catalogue fails closed without database configuration",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "missing context redirects to finder and unknown tyre never selects another",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "accepted postcode goes directly to manual size entry without registration lookup",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: network",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "search pages emit unique canonical metadata and parseable honest JSON-LD",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "robots and XML sitemap expose only canonical public pages",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: database",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "private routes have noindex, no canonical and deny unauthorised API access",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: malformed result",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "nonce policy protects hydration and blocks injected scripts",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "social image and approved logo icons are real image responses",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: slot conflict",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "checkout retries keep the same key and slot selection creates no premature hold",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "owner dashboard renders only returned database metrics without overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "booking cancellation is never one click and viewers have no mutation controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "bank instructions show full amount and no paid claim; verified receipt changes customer status",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "confirmed atomic reservation shows bank deadline and rechecks expiry without a paid claim",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "unconfigured bank instructions block payment without invented account details",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pricing outage blocks the journey without invented totals",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff component requires confirmation, cancels safely, and submits exact bank receipt assertion",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pending bookings have no paid step or fictional fitter",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual viewer component has no mutation, email or phone-booking controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "payment screen ignores browser state and never offers fake payment",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "credential-free production APIs fail closed",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "owner bank settings start empty and report configuration required",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff controls copy instructions, email without a delivery claim and explicitly extend",
+      "initialStatus": "PASS",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for front",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "phone wizard uses actual shared customer journey and the protected phone endpoint",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "contact configuration has no invented defaults",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for rear",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for both",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "both axles require a deliberate matching rear product",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "public pages: metadata, contact configuration and no overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "finder, contact locations and mobile navigation are accessible",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "search pages emit unique canonical metadata and parseable honest JSON-LD",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "robots and XML sitemap expose only canonical public pages",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "all four booking steps fit, have named controls and autofill",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "private routes have noindex, no canonical and deny unauthorised API access",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "error and empty states offer only configured contact actions",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "nonce policy protects hydration and blocks injected scripts",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "social image and approved logo icons are real image responses",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "catalogue fails closed without database configuration",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "missing context redirects to finder and unknown tyre never selects another",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "owner dashboard renders only returned database metrics without overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "accepted postcode goes directly to manual size entry without registration lookup",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "booking cancellation is never one click and viewers have no mutation controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: network",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "bank instructions show full amount and no paid claim; verified receipt changes customer status",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: database",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "unconfigured bank instructions block payment without invented account details",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: malformed result",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff component requires confirmation, cancels safely, and submits exact bank receipt assertion",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual viewer component has no mutation, email or phone-booking controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: slot conflict",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "owner bank settings start empty and report configuration required",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "checkout retries keep the same key and slot selection creates no premature hold",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff controls copy instructions, email without a delivery claim and explicitly extend",
+      "initialStatus": "PASS",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "phone wizard uses actual shared customer journey and the protected phone endpoint",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "contact configuration has no invented defaults",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "confirmed atomic reservation shows bank deadline and rechecks expiry without a paid claim",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pricing outage blocks the journey without invented totals",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pending bookings have no paid step or fictional fitter",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "payment screen ignores browser state and never offers fake payment",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "public pages: metadata, contact configuration and no overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "credential-free production APIs fail closed",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for front",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "finder, contact locations and mobile navigation are accessible",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for rear",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for both",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "both axles require a deliberate matching rear product",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "all four booking steps fit, have named controls and autofill",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "error and empty states offer only configured contact actions",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "catalogue fails closed without database configuration",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "missing context redirects to finder and unknown tyre never selects another",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "accepted postcode goes directly to manual size entry without registration lookup",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "search pages emit unique canonical metadata and parseable honest JSON-LD",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "robots and XML sitemap expose only canonical public pages",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: network",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: database",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "private routes have noindex, no canonical and deny unauthorised API access",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: malformed result",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "nonce policy protects hydration and blocks injected scripts",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "social image and approved logo icons are real image responses",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: slot conflict",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "checkout retries keep the same key and slot selection creates no premature hold",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "owner dashboard renders only returned database metrics without overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "booking cancellation is never one click and viewers have no mutation controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "bank instructions show full amount and no paid claim; verified receipt changes customer status",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "unconfigured bank instructions block payment without invented account details",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "confirmed atomic reservation shows bank deadline and rechecks expiry without a paid claim",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff component requires confirmation, cancels safely, and submits exact bank receipt assertion",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pricing outage blocks the journey without invented totals",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual viewer component has no mutation, email or phone-booking controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pending bookings have no paid step or fictional fitter",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "owner bank settings start empty and report configuration required",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "payment screen ignores browser state and never offers fake payment",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "credential-free production APIs fail closed",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff controls copy instructions, email without a delivery claim and explicitly extend",
+      "initialStatus": "PASS",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "phone wizard uses actual shared customer journey and the protected phone endpoint",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for front",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "contact configuration has no invented defaults",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for rear",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for both",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "public pages: metadata, contact configuration and no overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "both axles require a deliberate matching rear product",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "finder, contact locations and mobile navigation are accessible",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "search pages emit unique canonical metadata and parseable honest JSON-LD",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "all four booking steps fit, have named controls and autofill",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "robots and XML sitemap expose only canonical public pages",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "private routes have noindex, no canonical and deny unauthorised API access",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "error and empty states offer only configured contact actions",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "nonce policy protects hydration and blocks injected scripts",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "social image and approved logo icons are real image responses",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "catalogue fails closed without database configuration",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "missing context redirects to finder and unknown tyre never selects another",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "accepted postcode goes directly to manual size entry without registration lookup",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "owner dashboard renders only returned database metrics without overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: network",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "booking cancellation is never one click and viewers have no mutation controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: database",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: malformed result",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "bank instructions show full amount and no paid claim; verified receipt changes customer status",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: slot conflict",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "unconfigured bank instructions block payment without invented account details",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "checkout retries keep the same key and slot selection creates no premature hold",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff component requires confirmation, cancels safely, and submits exact bank receipt assertion",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual viewer component has no mutation, email or phone-booking controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "owner bank settings start empty and report configuration required",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff controls copy instructions, email without a delivery claim and explicitly extend",
+      "initialStatus": "FAIL",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "confirmed atomic reservation shows bank deadline and rechecks expiry without a paid claim",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pricing outage blocks the journey without invented totals",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pending bookings have no paid step or fictional fitter",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "payment screen ignores browser state and never offers fake payment",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "phone wizard uses actual shared customer journey and the protected phone endpoint",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "credential-free production APIs fail closed",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "contact configuration has no invented defaults",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for front",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for rear",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for both",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "public pages: metadata, contact configuration and no overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "chromium-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "both axles require a deliberate matching rear product",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "finder, contact locations and mobile navigation are accessible",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "search pages emit unique canonical metadata and parseable honest JSON-LD",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "robots and XML sitemap expose only canonical public pages",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "private routes have noindex, no canonical and deny unauthorised API access",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "all four booking steps fit, have named controls and autofill",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "nonce policy protects hydration and blocks injected scripts",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "social image and approved logo icons are real image responses",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "error and empty states offer only configured contact actions",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "owner dashboard renders only returned database metrics without overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "catalogue fails closed without database configuration",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "booking cancellation is never one click and viewers have no mutation controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "missing context redirects to finder and unknown tyre never selects another",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "bank instructions show full amount and no paid claim; verified receipt changes customer status",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "accepted postcode goes directly to manual size entry without registration lookup",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "unconfigured bank instructions block payment without invented account details",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff component requires confirmation, cancels safely, and submits exact bank receipt assertion",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual viewer component has no mutation, email or phone-booking controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: network",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "owner bank settings start empty and report configuration required",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff controls copy instructions, email without a delivery claim and explicitly extend",
+      "initialStatus": "FAIL",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: database",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "phone wizard uses actual shared customer journey and the protected phone endpoint",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: malformed result",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "contact configuration has no invented defaults",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: slot conflict",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "public pages: metadata, contact configuration and no overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "checkout retries keep the same key and slot selection creates no premature hold",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "finder, contact locations and mobile navigation are accessible",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "confirmed atomic reservation shows bank deadline and rechecks expiry without a paid claim",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pricing outage blocks the journey without invented totals",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pending bookings have no paid step or fictional fitter",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "payment screen ignores browser state and never offers fake payment",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "credential-free production APIs fail closed",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "all four booking steps fit, have named controls and autofill",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for front",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "error and empty states offer only configured contact actions",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for rear",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "catalogue fails closed without database configuration",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for both",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-360",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "both axles require a deliberate matching rear product",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "missing context redirects to finder and unknown tyre never selects another",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "accepted postcode goes directly to manual size entry without registration lookup",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: network",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: database",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "search pages emit unique canonical metadata and parseable honest JSON-LD",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "robots and XML sitemap expose only canonical public pages",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: malformed result",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "private routes have noindex, no canonical and deny unauthorised API access",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "nonce policy protects hydration and blocks injected scripts",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: slot conflict",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "social image and approved logo icons are real image responses",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "owner dashboard renders only returned database metrics without overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "checkout retries keep the same key and slot selection creates no premature hold",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "booking cancellation is never one click and viewers have no mutation controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "bank instructions show full amount and no paid claim; verified receipt changes customer status",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "unconfigured bank instructions block payment without invented account details",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "confirmed atomic reservation shows bank deadline and rechecks expiry without a paid claim",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff component requires confirmation, cancels safely, and submits exact bank receipt assertion",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual viewer component has no mutation, email or phone-booking controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "owner bank settings start empty and report configuration required",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pricing outage blocks the journey without invented totals",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff controls copy instructions, email without a delivery claim and explicitly extend",
+      "initialStatus": "FAIL",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pending bookings have no paid step or fictional fitter",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "payment screen ignores browser state and never offers fake payment",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "credential-free production APIs fail closed",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "phone wizard uses actual shared customer journey and the protected phone endpoint",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "contact configuration has no invented defaults",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for front",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for rear",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for both",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "public pages: metadata, contact configuration and no overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-375",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "both axles require a deliberate matching rear product",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "finder, contact locations and mobile navigation are accessible",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "search pages emit unique canonical metadata and parseable honest JSON-LD",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "robots and XML sitemap expose only canonical public pages",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "all four booking steps fit, have named controls and autofill",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "private routes have noindex, no canonical and deny unauthorised API access",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "nonce policy protects hydration and blocks injected scripts",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "social image and approved logo icons are real image responses",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "error and empty states offer only configured contact actions",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "owner dashboard renders only returned database metrics without overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "catalogue fails closed without database configuration",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "booking cancellation is never one click and viewers have no mutation controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "missing context redirects to finder and unknown tyre never selects another",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "accepted postcode goes directly to manual size entry without registration lookup",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "bank instructions show full amount and no paid claim; verified receipt changes customer status",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "unconfigured bank instructions block payment without invented account details",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: network",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff component requires confirmation, cancels safely, and submits exact bank receipt assertion",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual viewer component has no mutation, email or phone-booking controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "owner bank settings start empty and report configuration required",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff controls copy instructions, email without a delivery claim and explicitly extend",
+      "initialStatus": "FAIL",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: database",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: malformed result",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "phone wizard uses actual shared customer journey and the protected phone endpoint",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "contact configuration has no invented defaults",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: slot conflict",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "checkout retries keep the same key and slot selection creates no premature hold",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "public pages: metadata, contact configuration and no overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "finder, contact locations and mobile navigation are accessible",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "confirmed atomic reservation shows bank deadline and rechecks expiry without a paid claim",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pricing outage blocks the journey without invented totals",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pending bookings have no paid step or fictional fitter",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "payment screen ignores browser state and never offers fake payment",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "credential-free production APIs fail closed",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "all four booking steps fit, have named controls and autofill",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for front",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for rear",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "error and empty states offer only configured contact actions",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "catalogue fails closed without database configuration",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for both",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-390",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "both axles require a deliberate matching rear product",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "missing context redirects to finder and unknown tyre never selects another",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "accepted postcode goes directly to manual size entry without registration lookup",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: network",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: database",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "search pages emit unique canonical metadata and parseable honest JSON-LD",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "robots and XML sitemap expose only canonical public pages",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: malformed result",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "private routes have noindex, no canonical and deny unauthorised API access",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "nonce policy protects hydration and blocks injected scripts",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "social image and approved logo icons are real image responses",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: slot conflict",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "owner dashboard renders only returned database metrics without overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "checkout retries keep the same key and slot selection creates no premature hold",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "booking cancellation is never one click and viewers have no mutation controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "bank instructions show full amount and no paid claim; verified receipt changes customer status",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "unconfigured bank instructions block payment without invented account details",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "confirmed atomic reservation shows bank deadline and rechecks expiry without a paid claim",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff component requires confirmation, cancels safely, and submits exact bank receipt assertion",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual viewer component has no mutation, email or phone-booking controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pricing outage blocks the journey without invented totals",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "owner bank settings start empty and report configuration required",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff controls copy instructions, email without a delivery claim and explicitly extend",
+      "initialStatus": "FAIL",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pending bookings have no paid step or fictional fitter",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "payment screen ignores browser state and never offers fake payment",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "credential-free production APIs fail closed",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "phone wizard uses actual shared customer journey and the protected phone endpoint",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for front",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "contact configuration has no invented defaults",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for rear",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for both",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "public pages: metadata, contact configuration and no overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-430",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "both axles require a deliberate matching rear product",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "finder, contact locations and mobile navigation are accessible",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "search pages emit unique canonical metadata and parseable honest JSON-LD",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "robots and XML sitemap expose only canonical public pages",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "all four booking steps fit, have named controls and autofill",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "private routes have noindex, no canonical and deny unauthorised API access",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "error and empty states offer only configured contact actions",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "nonce policy protects hydration and blocks injected scripts",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "social image and approved logo icons are real image responses",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "catalogue fails closed without database configuration",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "owner dashboard renders only returned database metrics without overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "booking cancellation is never one click and viewers have no mutation controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "missing context redirects to finder and unknown tyre never selects another",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "accepted postcode goes directly to manual size entry without registration lookup",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "bank instructions show full amount and no paid claim; verified receipt changes customer status",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: network",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "unconfigured bank instructions block payment without invented account details",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff component requires confirmation, cancels safely, and submits exact bank receipt assertion",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: database",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual viewer component has no mutation, email or phone-booking controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "owner bank settings start empty and report configuration required",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff controls copy instructions, email without a delivery claim and explicitly extend",
+      "initialStatus": "FAIL",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: malformed result",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: slot conflict",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "phone wizard uses actual shared customer journey and the protected phone endpoint",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "contact configuration has no invented defaults",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "checkout retries keep the same key and slot selection creates no premature hold",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "public pages: metadata, contact configuration and no overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "confirmed atomic reservation shows bank deadline and rechecks expiry without a paid claim",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pricing outage blocks the journey without invented totals",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "finder, contact locations and mobile navigation are accessible",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pending bookings have no paid step or fictional fitter",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "payment screen ignores browser state and never offers fake payment",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "credential-free production APIs fail closed",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for front",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for rear",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "all four booking steps fit, have named controls and autofill",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for both",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-768",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "both axles require a deliberate matching rear product",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "error and empty states offer only configured contact actions",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "catalogue fails closed without database configuration",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "missing context redirects to finder and unknown tyre never selects another",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "accepted postcode goes directly to manual size entry without registration lookup",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: network",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "search pages emit unique canonical metadata and parseable honest JSON-LD",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "robots and XML sitemap expose only canonical public pages",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: database",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "private routes have noindex, no canonical and deny unauthorised API access",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "nonce policy protects hydration and blocks injected scripts",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: malformed result",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "social image and approved logo icons are real image responses",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "owner dashboard renders only returned database metrics without overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: slot conflict",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\admin-os.spec.ts",
+      "test": "booking cancellation is never one click and viewers have no mutation controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "checkout retries keep the same key and slot selection creates no premature hold",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "bank instructions show full amount and no paid claim; verified receipt changes customer status",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "unconfigured bank instructions block payment without invented account details",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff component requires confirmation, cancels safely, and submits exact bank receipt assertion",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual viewer component has no mutation, email or phone-booking controls",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "confirmed atomic reservation shows bank deadline and rechecks expiry without a paid claim",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "owner bank settings start empty and report configuration required",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "actual staff controls copy instructions, email without a delivery claim and explicitly extend",
+      "initialStatus": "FAIL",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pricing outage blocks the journey without invented totals",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pending bookings have no paid step or fictional fitter",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "payment screen ignores browser state and never offers fake payment",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "credential-free production APIs fail closed",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\bank-payments.spec.ts",
+      "test": "phone wizard uses actual shared customer journey and the protected phone endpoint",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "contact configuration has no invented defaults",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for front",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for rear",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "public pages: metadata, contact configuration and no overflow",
+      "initialStatus": "PASS",
+      "targetedRetest": true
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for both",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1366",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "both axles require a deliberate matching rear product",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "finder, contact locations and mobile navigation are accessible",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "all four booking steps fit, have named controls and autofill",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "search pages emit unique canonical metadata and parseable honest JSON-LD",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "robots and XML sitemap expose only canonical public pages",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "error and empty states offer only configured contact actions",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "private routes have noindex, no canonical and deny unauthorised API access",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "nonce policy protects hydration and blocks injected scripts",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "catalogue fails closed without database configuration",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\search-security.spec.ts",
+      "test": "social image and approved logo icons are real image responses",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "missing context redirects to finder and unknown tyre never selects another",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "accepted postcode goes directly to manual size entry without registration lookup",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: network",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: database",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: malformed result",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "atomic checkout failure is truthful: slot conflict",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "checkout retries keep the same key and slot selection creates no premature hold",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "confirmed atomic reservation shows bank deadline and rechecks expiry without a paid claim",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pricing outage blocks the journey without invented totals",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "pending bookings have no paid step or fictional fitter",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "payment screen ignores browser state and never offers fake payment",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "credential-free production APIs fail closed",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for front",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for rear",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "manual booking preserves deliberate tyre selection for both",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    },
+    {
+      "status": "PASS",
+      "project": "webkit-1440",
+      "file": "tests\\ui\\public-safety.spec.ts",
+      "test": "both axles require a deliberate matching rear product",
+      "initialStatus": "PASS",
+      "targetedRetest": false
+    }
+  ]
+}

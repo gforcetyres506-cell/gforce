@@ -1,0 +1,133 @@
+{
+  "checkedAt": "2026-10-12T12:21:11.240Z",
+  "applicationSourceSha": "7a44b6daa9e98470557ab182ac033839e4ec91e0",
+  "buildId": "eDua2wev4Rs43OEC9SbBt",
+  "scope": "LOCAL only; no hosted Auth/DB/provider/owner acceptance",
+  "typecheck": "PASS",
+  "build": "PASS: fresh production build used for full run; exact application source unchanged for targeted retest",
+  "lint": {
+    "errors": 0,
+    "warnings": 3,
+    "note": "Existing unused 3D-module warnings"
+  },
+  "securityStructure": "PASS",
+  "reliability": {
+    "passed": 129,
+    "total": 129
+  },
+  "databaseSecurity": {
+    "passed": 16,
+    "total": 16,
+    "migrations": 18
+  },
+  "nativeBooking": {
+    "passed": 12,
+    "total": 12,
+    "raceContenders": 20,
+    "slot": {
+      "success": 1,
+      "conflict": 19
+    },
+    "stock": {
+      "success": 1,
+      "outOfStock": 19
+    }
+  },
+  "nativeBank": {
+    "passed": 17,
+    "total": 17
+  },
+  "nativeAdmin": {
+    "passed": 3,
+    "total": 3
+  },
+  "restore": {
+    "checkedAt": "2026-10-12T11:40:26.326Z",
+    "status": "PASS",
+    "scope": "LOCAL native PostgreSQL only; fresh loopback cluster; Gate 4 audited fixtures; minimal Auth stand-in; no hosted backup, Storage or provider acceptance",
+    "migrations": 18,
+    "tables": 24,
+    "rows": 85,
+    "catalogueChecks": 8,
+    "exactDataHashesMatch": true,
+    "backupSha256": "80c383cf066a5adecbb59d154196117f155e70b98c6149116525ceeddf532fb3",
+    "backupMs": 515,
+    "restoreAndVerificationMs": 2143,
+    "hostedRestore": "BLOCKED: authorized disposable credentials and provider backup unavailable",
+    "productionRTO": "UNKNOWN: local timings are not a production recovery guarantee",
+    "productionRPO": "UNKNOWN: provider backup retention/schedule not attested"
+  },
+  "ui": {
+    "distinctCasesPassed": 504,
+    "fullRunPassed": 496,
+    "fullRunFailed": 8,
+    "targetedRepairPassed": 28,
+    "targetedRepairTotal": 28,
+    "widths": [
+      360,
+      375,
+      390,
+      430,
+      768,
+      1366,
+      1440
+    ],
+    "browsers": [
+      "Chromium",
+      "WebKit"
+    ],
+    "evidence": "SHIP_UI_CASES.json",
+    "singleClean504CaseRun": false
+  },
+  "dependencies": {
+    "runtime": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "all": {
+      "info": 0,
+      "low": 0,
+      "moderate": 2,
+      "high": 7,
+      "critical": 0,
+      "total": 9
+    },
+    "developmentRisk": "P2 reviewed, not remediated; see DEPENDENCY_REVIEW.md"
+  },
+  "secretScan": {
+    "checkedAt": "2026-10-12T12:24:14.790Z",
+    "builtBrowserFiles": 96,
+    "sourceMaps": 0,
+    "configuredSecretNamesChecked": [],
+    "findings": [],
+    "releaseHistoryPatternCount": 0,
+    "status": "PASS",
+    "scope": "Tracked working files, available private env values, built browser assets and task release history only. Not remote environment/account attestation or a full historical secret audit."
+  },
+  "hostedAcceptance": "BLOCKED",
+  "productionReady": false,
+  "indexingReady": false,
+  "shipped": false,
+  "toolsAndTestCommit": "14ac0ac15082517283fa5260a60272ab32e0b70e",
+  "performance": {
+    "throttledSamples": 3,
+    "homeLcpMs": [
+      2376,
+      2628,
+      2260
+    ],
+    "maxInteractionMs": [
+      296,
+      368,
+      288
+    ],
+    "maxLayoutShiftSum": 0.047784294238683134,
+    "note": "Lab LCP, interaction maxima and layout-shift sums only; no field percentile claim"
+  },
+  "performanceAcceptance": "BLOCKED: throttled target misses and no accepted hosted/physical/field evidence",
+  "profileHarnessSha256": "1a34971d1f9366350307aca0b323aa690c1230f44b89a6f5bb572f856835b8c9"
+}

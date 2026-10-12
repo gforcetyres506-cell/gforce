@@ -68,10 +68,22 @@ Stock includes operational allocations; never subtract reservations a second tim
 
 Public contact buttons currently use `BUSINESS_PHONE` / `BUSINESS_WHATSAPP` in
 Vercel, separate from stored operational contact settings. The owner must update
-both and redeploy to publish matching contact buttons. Public legal pages and
+both and redeploy to publish matching contact buttons. In the client-owned G Force
+Vercel project, open **Settings → Environment Variables**, edit those two Production
+values, save, then redeploy the accepted main deployment from **Deployments**.
+These variables are deployment configuration. Confirm the resulting deployment's
+SHA and check the visible telephone/WhatsApp destinations against the approved
+numbers. This is a post-acceptance operating procedure, not authorization to
+promote an unaccepted release. Public legal pages and
 additional entity facts need the approved release content published as well;
 saving an admin policy field alone does not replace those pages. This distinction
 must be demonstrated during owner acceptance; it is not automatic synchronisation.
+
+For CSV, use the exact header printed on Products, in the same order. Use real
+rows only, integer pence/counts and the displayed season/tier values; review errors
+before retrying. The batch commits all rows or none. Do not edit reserved stock in
+an import or treat a CSV as a backup. Prefer a small reviewed batch before a large
+catalogue change and confirm the resulting products/inventory and Audit entries.
 
 If a save times out, refresh and inspect the persisted record/Audit before retrying.
 Never repeat a money transfer because a web request failed. Escalate according to

@@ -1,0 +1,11 @@
+{
+  "checkedAt": "2026-10-12T12:07:12.561Z",
+  "scope": "Local production build; HTTP loopback vs forwarded canonical HTTPS; no provider/DB acceptance",
+  "loopbackStatus": 200,
+  "canonicalProxyStatus": 200,
+  "loopbackNoHTTPSUpgrade": true,
+  "canonicalHTTPSUpgrade": true,
+  "strictScriptsBoth": true,
+  "hsts": "max-age=31536000; includeSubDomains",
+  "status": "PASS"
+}

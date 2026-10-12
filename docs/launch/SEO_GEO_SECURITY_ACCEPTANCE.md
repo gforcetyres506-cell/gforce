@@ -1,5 +1,11 @@
 # G Force Tyres Mobile search, security and trust acceptance
 
+Historical local hardening snapshot. The later autonomous ship request explicitly
+authorizes branch pushes/PR preparation and makes OneAuto optional for V1. Use
+`../production/FINAL_AUTONOMOUS_SHIP_REPORT.md` for the current decisions and blocker
+counts. The register below retains the earlier snapshot rather than claiming new
+hosted acceptance. OneAuto and a correct two-hop HTTP-apex redirect do not block V1.
+
 Date: **12 October 2026 (Asia/Dhaka)**. Decision: **INDEXING READY: NO. PRODUCTION READY: NO.**
 
 Repository: `https://github.com/gforcetyres506-cell/gforce`.
