@@ -19,6 +19,12 @@ const expectedMigrations = [
   '010_operations.sql',
   '011_rls.sql',
   '012_indexes.sql',
+  '013_gate0_canonical_foundation.sql',
+  '014_gate0_access_boundary.sql',
+  '015_gate1_owner_business_data.sql',
+  '016_gate2_atomic_booking.sql',
+  '017_gate3_manual_bank_payments.sql',
+  '018_gate4_admin_operating_system.sql',
 ];
 
 assert.deepEqual(
@@ -32,13 +38,13 @@ const requiredTables = [
   'admin_profiles', 'customers', 'service_zones', 'tyre_products', 'inventory',
   'availability_rules', 'booking_slots', 'blocked_dates', 'slot_holds',
   'inventory_holds', 'bookings', 'booking_items', 'payments', 'webhook_events',
-  'fitters', 'business_settings', 'audit_logs', 'vrm_cache', 'interest_registrations',
+  'fitters', 'business_settings', 'audit_logs', 'vrm_cache', 'interest_registrations', 'rate_limits', 'email_outbox', 'special_dates',
 ];
 
 for (const table of requiredTables) {
   assert.match(allSql, new RegExp(`create table if not exists public\\.${table}\\b`, 'i'));
   assert.match(
-    read('supabase/migrations/011_rls.sql'),
+    allSql,
     new RegExp(`alter table public\\.${table} enable row level security`, 'i'),
   );
 }
@@ -55,7 +61,8 @@ assert.doesNotMatch(login, /1-Click Demo Login|admin@gforcetyres|automatic redir
 assert.match(login, /\/api\/admin\/login/);
 
 const mockConfirmation = read('src/app/api/checkout/confirm-mock/route.ts');
-assert.match(mockConfirmation, /if \(!isMockDataEnabled\(\)\)/);
+assert.match(mockConfirmation, /status: 404/);
+assert.doesNotMatch(mockConfirmation, /confirmBookingPaid|createServiceClient|ok: true/);
 
 const unsafeConfig = spawnSync(
   process.execPath,

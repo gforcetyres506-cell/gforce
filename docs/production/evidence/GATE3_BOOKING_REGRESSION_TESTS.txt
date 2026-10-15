@@ -1,0 +1,27 @@
+> gforce-tyres@1.0.0 test:concurrency
+> node scripts/gate2-local-postgres.mjs
+
+✔ all 17 ordered migrations and exact security catalogue replay on native PostgreSQL (357.3815ms)
+RACE PASS {"name":"slot","independent_connections":20,"simultaneous_lock_waiters":20,"successes":1,"failures":19,"failure_code":"P2002"}
+✔ capacity=1: 20 simultaneous sessions produce exactly 1 success and 19 conflicts (438.9105ms)
+RACE PASS {"name":"inventory","independent_connections":20,"simultaneous_lock_waiters":20,"successes":1,"failures":19,"failure_code":"P2003"}
+✔ stock=2, qty=2: 20 independent slots produce exactly 1 success and 19 out_of_stock (402.8956ms)
+RACE PASS {"name":"multi","independent_connections":20,"simultaneous_lock_waiters":20,"successes":1,"failures":19,"failure_code":"P2003"}
+✔ reverse-order multi-item carts serialize without deadlocks, partial reservations or negative inventory (526.6574ms)
+RACE PASS {"name":"retry","independent_connections":20,"simultaneous_lock_waiters":20,"successes":20,"failures":0,"failure_code":null}
+✔ concurrent retries create exactly one booking, customer and pair of holds (381.6617ms)
+✔ prices and rounded integer-pence totals come from locked database rows; items/terms are immutable (15.4524ms)
+✔ failure after customer/booking/hold inserts rolls back every write (7.5348ms)
+✔ multi-item shortage and duplicate quantities cannot leak partial holds (7.9531ms)
+✔ unconfigured bank window and uncovered postcode reject before any persistent reservation (4.7547ms)
+✔ anonymous and authenticated browsers cannot execute reservation or expiry RPCs (1.6867ms)
+✔ operational capacity changes cannot shrink a slot below live bookings (8.6452ms)
+✔ real unpaid deadline releases both resources before cleanup; next checkout persists EXPIRED (60044.7499ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 62311.4502

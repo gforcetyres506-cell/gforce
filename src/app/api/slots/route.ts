@@ -1,32 +1,20 @@
 import { NextResponse } from 'next/server';
-import { getSlots, generateSlots } from '@/lib/db';
+import { getSlots } from '@/lib/db';
+import { z } from 'zod';
 
 export const runtime = 'nodejs';
-
-/**
- * GET /api/slots?date=YYYY-MM-DD
- * Returns all active booking slots and their current remaining capacity.
- */
+const date = z.string().date();
+const rangeSchema = z.object({ from: date.optional(), to: date.optional() }).strict()
+  .refine(v => !v.from || !v.to || v.from <= v.to);
+/** Read-only availability. Empty schedules are never populated on a GET. */
 export async function GET(req: Request) {
   try {
-    const { searchParams } = new URL(req.url);
-    const date = searchParams.get('date') ?? undefined;
-
-    let slots = await getSlots(date);
-
-    // If no slots exist for the next 14 days, auto-generate them
-    if (slots.length === 0 && !date) {
-      const todayStr = new Date().toISOString().split('T')[0];
-      await generateSlots(todayStr, 14);
-      slots = await getSlots(date);
-    }
-
-    return NextResponse.json({ ok: true, data: slots });
-  } catch (err) {
-    console.error('[api/slots] Error fetching slots:', err);
-    return NextResponse.json(
-      { ok: false, error: 'server_error', message: 'Could not fetch availability.' },
-      { status: 500 },
-    );
+    const params = new URL(req.url).searchParams;
+    const parsed = rangeSchema.safeParse(Object.fromEntries(params));
+    if (!parsed.success) return NextResponse.json({ ok: false, error: 'invalid_dates', message: 'Check the fitting dates.' }, { status: 400 });
+    const data = await getSlots(parsed.data.from, parsed.data.to);
+    return NextResponse.json({ ok: true, data }, { headers: { 'Cache-Control': 'no-store' } });
+  } catch {
+    return NextResponse.json({ ok: false, error: 'service_unavailable', message: 'Fitting availability unavailable. Please try again later.' }, { status: 503 });
   }
 }

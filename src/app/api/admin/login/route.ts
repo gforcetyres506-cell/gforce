@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
+import { authorizeAdminClient, requireSameOrigin, AdminAccessError } from '@/lib/auth/admin';
 
 export const runtime = 'nodejs';
 
@@ -20,23 +21,16 @@ export async function POST(request: Request) {
   if (!parsed.success) return denied();
 
   try {
+    requireSameOrigin(request);
     const supabase = await createClient();
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword(parsed.data);
     if (authError || !authData.user) return denied();
 
-    const { data: profile, error: profileError } = await supabase
-      .from('admin_profiles')
-      .select('role,active')
-      .eq('user_id', authData.user.id)
-      .maybeSingle();
-
-    if (
-      profileError ||
-      !profile ||
-      !profile.active ||
-      !['owner', 'admin'].includes(profile.role)
-    ) {
-      await supabase.auth.signOut();
+    try {
+      await authorizeAdminClient(supabase, 'read');
+    } catch (error) {
+      await supabase.auth.signOut({ scope: 'local' });
+      if (error instanceof AdminAccessError && error.status === 503) throw error;
       return denied();
     }
 

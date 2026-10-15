@@ -10,7 +10,7 @@
 // Catalogue
 // ─────────────────────────────────────────────────────────────
 
-export type TyreTier = 'budget' | 'mid' | 'premium';
+export type TyreTier = 'budget' | 'standard' | 'premium';
 export type TyreSeason = 'summer' | 'all-season' | 'winter';
 
 export interface Tyre {
@@ -27,12 +27,12 @@ export interface Tyre {
   is_xl: boolean;
   season: TyreSeason;
   tier: TyreTier;
-  cost_price: number;
   sell_price: number;
   stock: number;
   wet_grip: string | null;
   fuel_economy: string | null;
   noise_db: number | null;
+  image_url: string | null;
   active: boolean;
   created_at: string;
 }
@@ -86,7 +86,7 @@ export interface VRMResult {
   rear?: VehicleTyreSpec;
   isStaggered: boolean;
   /** Where the data came from — surfaced in dev, not to customers. */
-  source: 'cache' | 'oneauto' | 'local';
+  source: 'oneauto';
 }
 
 export type VRMErrorCode =
@@ -123,6 +123,9 @@ export interface SlotHold {
 }
 
 export type BookingStatus =
+  | 'CONFIRMED'
+  | 'AWAITING_BANK_PAYMENT'
+  | 'EXPIRED'
   | 'pending_payment'
   | 'confirmed'
   | 'tyres_reserved'
@@ -194,6 +197,9 @@ export interface Booking {
   stripe_payment_intent_id: string | null;
   stripe_charge_id: string | null;
   deposit_paid_at: string | null;
+  bank_payment_expires_at?: string | null;
+  booking_source?: 'online' | 'phone' | null;
+  bank_payment?: import('@/lib/bank-payments').BankPayment | null;
 
   created_at: string;
   updated_at: string;

@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-10-12T11:40:26.326Z",
+  "status": "PASS",
+  "scope": "LOCAL native PostgreSQL only; fresh loopback cluster; Gate 4 audited fixtures; minimal Auth stand-in; no hosted backup, Storage or provider acceptance",
+  "migrations": 18,
+  "tables": 24,
+  "rows": 85,
+  "catalogueChecks": 8,
+  "exactDataHashesMatch": true,
+  "backupSha256": "80c383cf066a5adecbb59d154196117f155e70b98c6149116525ceeddf532fb3",
+  "backupMs": 515,
+  "restoreAndVerificationMs": 2143,
+  "hostedRestore": "BLOCKED: authorized disposable credentials and provider backup unavailable",
+  "productionRTO": "UNKNOWN: local timings are not a production recovery guarantee",
+  "productionRPO": "UNKNOWN: provider backup retention/schedule not attested"
+}

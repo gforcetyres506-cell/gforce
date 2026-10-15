@@ -3,4 +3,7 @@
 node_modules
 next-env.d.ts
 coverage
+playwright-report
+test-results
 graphify-out
+.local-postgres

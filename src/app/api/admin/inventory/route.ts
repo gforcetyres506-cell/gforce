@@ -1,133 +1,44 @@
 import { NextResponse } from 'next/server';
-import { adminErrorResponse, requireAdmin } from '@/lib/auth/admin';
-import { getAllTyresAdmin, updateTyreStock, updateTyrePrice, createTyre, recordAudit } from '@/lib/db';
+import { adminErrorResponse, requireAdmin, requireSameOrigin } from '@/lib/auth/admin';
+import { getAllTyresAdmin } from '@/lib/db';
+import { createAdminClient } from '@/lib/supabase/admin';
+import { z } from 'zod';
 
 export const runtime = 'nodejs';
-
-/**
- * GET /api/admin/inventory
- * List all tyres in inventory with full stock and pricing details.
- */
 export async function GET() {
+  try { await requireAdmin('read'); } catch (error) { return adminErrorResponse(error); }
   try {
-    await requireAdmin();
-  } catch (error) {
-    return adminErrorResponse(error);
-  }
-
-  try {
-    const tyres = await getAllTyresAdmin();
-    return NextResponse.json({ ok: true, data: tyres });
-  } catch (err) {
-    console.error('[admin/inventory/get] error:', err);
-    return NextResponse.json({ ok: false, error: 'server_error', message: 'Failed to fetch inventory.' }, { status: 500 });
+    return NextResponse.json({ ok: true, data: await getAllTyresAdmin() });
+  } catch {
+    return NextResponse.json({ ok: false, error: 'service_unavailable', message: 'Inventory unavailable.' }, { status: 503 });
   }
 }
-
-/**
- * PATCH /api/admin/inventory
- * Update tyre stock quantity or selling price.
- */
-export async function PATCH(req: Request) {
-  let admin;
-  try {
-    admin = await requireAdmin();
-  } catch (error) {
-    return adminErrorResponse(error);
-  }
-
-  try {
-    const body = await req.json();
-    const { id, stock, sellPrice } = body;
-
-    if (!id) {
-      return NextResponse.json({ ok: false, error: 'missing_id', message: 'Tyre ID is required.' }, { status: 400 });
-    }
-
-    if (stock !== undefined) {
-      await updateTyreStock(id, Math.max(0, Number(stock)));
-      await recordAudit(admin.profile.name, 'STOCK_UPDATED', 'tyre_inventory', id, { newStock: stock });
-    }
-
-    if (sellPrice !== undefined) {
-      await updateTyrePrice(id, Number(sellPrice));
-      await recordAudit(admin.profile.name, 'PRICE_UPDATED', 'tyre_inventory', id, { newSellPrice: sellPrice });
-    }
-
-    return NextResponse.json({ ok: true, message: 'Tyre updated successfully.' });
-  } catch (err) {
-    console.error('[admin/inventory/patch] error:', err);
-    return NextResponse.json({ ok: false, error: 'server_error', message: 'Failed to update tyre.' }, { status: 500 });
-  }
+async function unavailable() {
+  try { await requireAdmin(); } catch (error) { return adminErrorResponse(error); }
+  return NextResponse.json({ ok: false, error: 'service_unavailable',
+    message: 'Inventory changes are unavailable until persistent admin workflows are verified. No change has been made.',
+  }, { status: 503 });
 }
+export const POST = unavailable;
+const changeSchema = z.object({
+  tyre_product_id: z.string().uuid(), stock_qty: z.number().int().nonnegative().max(2147483647).optional(),
+  selling_price_pence: z.number().int().positive().max(2147483647).optional(),
+}).strict().refine((v) => v.stock_qty !== undefined || v.selling_price_pence !== undefined);
 
-/**
- * POST /api/admin/inventory
- * Add a new tyre product to inventory.
- */
-export async function POST(req: Request) {
-  let admin;
+export async function PATCH(request: Request) {
   try {
-    admin = await requireAdmin();
-  } catch (error) {
-    return adminErrorResponse(error);
-  }
-
-  try {
-    const body = await req.json();
-    const {
-      brand,
-      model,
-      width,
-      profile,
-      rim,
-      load_index,
-      speed_rating,
-      is_run_flat,
-      is_xl,
-      season,
-      tier,
-      cost_price,
-      sell_price,
-      stock,
-      wet_grip,
-      fuel_economy,
-      noise_db,
-    } = body;
-
-    if (!brand || !model || !width || !profile || !rim || sell_price === undefined) {
-      return NextResponse.json({ ok: false, error: 'invalid_tyre', message: 'Missing required tyre specifications.' }, { status: 400 });
-    }
-
-    const sku = `${brand.slice(0, 4).toUpperCase()}-${model.slice(0, 3).toUpperCase()}-${width}${profile}${rim}`;
-
-    const created = await createTyre({
-      brand,
-      model,
-      sku,
-      width: Number(width),
-      profile: Number(profile),
-      rim: Number(rim),
-      load_index: load_index || '95',
-      speed_rating: speed_rating || 'Y',
-      is_run_flat: Boolean(is_run_flat),
-      is_xl: Boolean(is_xl),
-      season: season || 'summer',
-      tier: tier || 'premium',
-      cost_price: Number(cost_price) || 8000,
-      sell_price: Number(sell_price),
-      stock: Number(stock) || 0,
-      wet_grip: wet_grip || 'A',
-      fuel_economy: fuel_economy || 'C',
-      noise_db: noise_db ? Number(noise_db) : 71,
-      active: true,
+    const actor = await requireAdmin();
+    requireSameOrigin(request);
+    const parsed = changeSchema.safeParse(await request.json().catch(() => null));
+    if (!parsed.success) return NextResponse.json({ ok: false, error: 'invalid_request' }, { status: 400 });
+    const { data, error } = await createAdminClient().rpc('admin_set_inventory', {
+      p_actor_user_id: actor.user.id, p_session_id: actor.sessionId,
+      p_tyre_product_id: parsed.data.tyre_product_id,
+      p_stock_qty: parsed.data.stock_qty ?? null, p_selling_price_pence: parsed.data.selling_price_pence ?? null,
     });
-
-    await recordAudit(admin.profile.name, 'TYRE_CREATED', 'tyre_inventory', created?.id, { sku });
-
-    return NextResponse.json({ ok: true, data: created });
-  } catch (err) {
-    console.error('[admin/inventory/post] error:', err);
-    return NextResponse.json({ ok: false, error: 'server_error', message: 'Failed to create tyre.' }, { status: 500 });
-  }
+    if (error || !data) return NextResponse.json({ ok: false, error: 'change_rejected' },
+      { status: error?.code === '42501' ? 403 : error?.code === '23514' ? 409 : 503 });
+    return NextResponse.json({ ok: true, data: { tyre_product_id: data.tyre_product_id,
+      stock_qty: data.stock_qty, reserved_qty: data.reserved_qty, selling_price_pence: data.selling_price_pence } });
+  } catch (error) { return adminErrorResponse(error); }
 }

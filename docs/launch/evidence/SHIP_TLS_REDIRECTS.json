@@ -1,0 +1,43 @@
+{
+  "checkedAt": "2026-10-12T12:09:43.835Z",
+  "hosts": [
+    {
+      "host": "www.gforcetyres-mobile.co.uk",
+      "status": 200,
+      "location": null,
+      "trusted": true,
+      "protocol": "TLSv1.3",
+      "validFrom": "Oct 12 00:08:15 2026 GMT",
+      "validTo": "Jan 10 00:08:14 2027 GMT"
+    },
+    {
+      "host": "gforcetyres-mobile.co.uk",
+      "status": 308,
+      "location": "https://www.gforcetyres-mobile.co.uk/",
+      "trusted": true,
+      "protocol": "TLSv1.3",
+      "validFrom": "Oct 12 00:08:15 2026 GMT",
+      "validTo": "Jan 10 00:08:14 2027 GMT"
+    }
+  ],
+  "redirects": [
+    {
+      "url": "http://gforcetyres-mobile.co.uk/coverage?utm_source=release-check",
+      "status": 308,
+      "location": "https://gforcetyres-mobile.co.uk/coverage?utm_source=release-check"
+    },
+    {
+      "url": "https://gforcetyres-mobile.co.uk/coverage?utm_source=release-check",
+      "status": 308,
+      "location": "https://www.gforcetyres-mobile.co.uk/coverage?utm_source=release-check"
+    },
+    {
+      "url": "https://www.gforcetyres-mobile.co.uk/coverage?utm_source=release-check",
+      "status": 404,
+      "location": null
+    }
+  ],
+  "tlsStatus": "PASS",
+  "redirectRouting": "PASS",
+  "scope": "Public direct TLS and redirect routing only; final route may remain 404 on old deployment; no production SHA or Instagram acceptance"
+}

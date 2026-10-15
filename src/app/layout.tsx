@@ -1,27 +1,32 @@
 import type { Metadata } from 'next';
+import { Bebas_Neue, Inter } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import { BusinessContactProvider, MobileContactBar } from '@/components/layout/BusinessContact';
+import { headers } from 'next/headers';
+import { SecurityNonceProvider } from '@/components/SecurityNonce';
+import { SITE_NAME, SITE_ORIGIN } from '@/lib/site';
+import { getBusinessFacts } from '@/lib/business-entity';
+
+const displayFont = Bebas_Neue({ weight: '400', subsets: ['latin'], variable: '--font-brand-display', display: 'swap' });
+const bodyFont = Inter({ subsets: ['latin'], variable: '--font-brand-body', display: 'swap' });
 
 export const metadata: Metadata = {
-  applicationName: 'G Force Tyres Mobile',
+  metadataBase: new URL(SITE_ORIGIN),
+  applicationName: SITE_NAME,
   title: {
-    default: 'G Force Tyres — Mobile Tyre Fitting',
-    template: '%s | G Force Tyres',
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
   },
   description:
-    'Check your fitting postcode, identify the right tyre size and continue into one focused booking journey.',
+    'Check your postcode and tyre size with G Force Tyres Mobile.',
   icons: {
     icon: [{ url: '/icon.png', type: 'image/png', sizes: '512x512' }],
     apple: [{ url: '/apple-icon.png', type: 'image/png', sizes: '180x180' }],
   },
-  openGraph: {
-    title: 'G Force Tyres — Mobile Tyre Fitting',
-    description: 'A location-first way to identify your tyre size and continue to booking.',
-    type: 'website',
-    locale: 'en_GB',
-  },
-  robots: { index: true, follow: true },
+  // Indexable pages opt in with their own canonical and social metadata.
+  robots: { index: false, follow: true },
 };
 
 export const viewport = {
@@ -30,19 +35,26 @@ export const viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  // Nonces require request-time rendering. Never cache nonce-bearing HTML.
+  const nonce = (await headers()).get('x-nonce') ?? undefined;
+  const { contact } = getBusinessFacts();
+  const hasContact = Boolean(contact.phone || contact.whatsapp);
   return (
-    <html lang="en-GB">
-      <body>
+    <html lang="en-GB" className={`${displayFont.variable} ${bodyFont.variable}`}>
+      <body className={hasContact ? 'has-contact-bar' : undefined}>
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-brand focus:text-ink-inverse focus:px-4 focus:py-2"
         >
           Skip to content
         </a>
-        <Header />
-        <main id="main">{children}</main>
-        <Footer />
+        <SecurityNonceProvider nonce={nonce}><BusinessContactProvider contact={contact}>
+          <Header />
+          <main id="main" className="min-w-0">{children}</main>
+          <Footer />
+          <MobileContactBar />
+        </BusinessContactProvider></SecurityNonceProvider>
       </body>
     </html>
   );

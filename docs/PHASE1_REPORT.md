@@ -1,5 +1,8 @@
 # Phase 1 Report
 
+> Gate 0 update (2026-10-10): current architecture, five-role acceptance and live status are in [production/02_GATE0_ACCEPTANCE.md](production/02_GATE0_ACCEPTANCE.md). This historical checklist does not certify cloud acceptance. Use the gated runner and exact authorized disposable target; no production reset is authorized.
+
+
 Status: **LOCAL CODE FOUNDATION COMPLETE; LIVE ACCEPTANCE BLOCKED.**
 
 The code foundation is implemented and the local build gate passes. Phase 1

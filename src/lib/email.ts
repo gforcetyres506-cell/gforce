@@ -1,4 +1,6 @@
+import 'server-only';
 import { Resend } from 'resend';
+import { SITE_NAME, SITE_ORIGIN } from './site';
 import { formatPrice, formatSlotTime } from './utils';
 import type { BookingWithDetails } from '@/types';
 
@@ -11,8 +13,8 @@ function getResend(): Resend | null {
   return cached;
 }
 
-const FROM = process.env.EMAIL_FROM ?? 'G Force Tyres <onboarding@resend.dev>';
-const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+const FROM = process.env.EMAIL_FROM;
+const SITE = SITE_ORIGIN;
 
 /**
  * Email is best-effort. A failed send must NEVER fail a paid booking —
@@ -21,14 +23,14 @@ const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
  */
 async function send(to: string, subject: string, html: string): Promise<void> {
   const resend = getResend();
-  if (!resend) {
-    console.warn('[email] RESEND_API_KEY not set — skipped:', subject);
+  if (!resend || !FROM || /onboarding@resend\.dev/i.test(FROM)) {
+    console.warn('[email] approved sender configuration unavailable');
     return;
   }
   try {
     await resend.emails.send({ from: FROM, to, subject, html });
-  } catch (err) {
-    console.error('[email] send failed:', subject, err);
+  } catch {
+    console.error('[email] provider send failed');
   }
 }
 
@@ -45,7 +47,7 @@ function shell(heading: string, body: string): string {
     ${body}
   </td></tr>
   <tr><td style="padding:20px 32px;border-top:1px solid #2A2A2A;color:#6B6B6B;font-size:12px;">
-    G Force Tyres · Mobile tyre fitting across London
+    ${SITE_NAME} · Mobile tyre fitting
   </td></tr>
 </table>
 </td></tr></table></body></html>`;
@@ -53,9 +55,13 @@ function shell(heading: string, body: string): string {
 
 function row(label: string, value: string): string {
   return `<tr>
-    <td style="padding:8px 0;color:#A3A3A3;font-size:14px;">${label}</td>
+    <td style="padding:8px 0;color:#A3A3A3;font-size:14px;">${escapeHtml(label)}</td>
     <td style="padding:8px 0;color:#F5F5F5;font-size:14px;text-align:right;font-weight:600;">${value}</td>
   </tr>`;
+}
+
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 }
 
 function bookingTable(b: BookingWithDetails): string {
@@ -70,10 +76,10 @@ function bookingTable(b: BookingWithDetails): string {
     .join('');
 
   return `<table width="100%" cellpadding="0" cellspacing="0" style="margin:20px 0;">
-    ${row('Reference', `<span style="font-family:monospace;color:#38BDF8;">${b.booking_ref}</span>`)}
+    ${row('Reference', `<span style="font-family:monospace;color:#38BDF8;">${escapeHtml(b.booking_ref)}</span>`)}
     ${row('Appointment', when)}
-    ${b.fitting_address ? row('Address', `${b.fitting_address}, ${b.fitting_postcode ?? ''}`) : ''}
-    ${b.vehicle_reg ? row('Vehicle', `${b.vehicle_reg} ${b.vehicle_make ?? ''} ${b.vehicle_model ?? ''}`) : ''}
+    ${b.fitting_address ? row('Address', escapeHtml(`${b.fitting_address}, ${b.fitting_postcode ?? ''}`)) : ''}
+    ${b.vehicle_reg ? row('Vehicle', escapeHtml(`${b.vehicle_reg} ${b.vehicle_make ?? ''} ${b.vehicle_model ?? ''}`)) : ''}
     <tr><td colspan="2" style="padding-top:12px;border-top:1px solid #2A2A2A;"></td></tr>
     ${items}
     ${row('Mobile fitting', formatPrice(b.fitting_fee))}
@@ -100,8 +106,8 @@ export async function sendBookingConfirmed(b: BookingWithDetails): Promise<void>
     shell(
       'Your fitting is booked',
       `<p style="color:#A3A3A3;font-size:15px;line-height:1.6;margin:0 0 8px;">
-         Thanks${b.customer.name ? `, ${b.customer.name.split(' ')[0]}` : ''}. Your deposit is received
-         and your slot is reserved. Our fitter will call ahead on the day.
+         Thanks${b.customer.name ? `, ${escapeHtml(b.customer.name.split(' ')[0])}` : ''}. Your deposit is received
+         and your slot is reserved. Check your private management link for the recorded details.
        </p>
        ${bookingTable(b)}
        <p style="margin:24px 0 0;">${manageButton(b.manage_token)}</p>`
@@ -134,10 +140,10 @@ export async function sendCancellation(b: BookingWithDetails, refundPence: numbe
     shell(
       'Your booking is cancelled',
       `<p style="color:#A3A3A3;font-size:15px;line-height:1.6;">
-         Booking <strong style="color:#F5F5F5;">${b.booking_ref}</strong> has been cancelled.
+         Booking <strong style="color:#F5F5F5;">${escapeHtml(b.booking_ref)}</strong> has been cancelled.
          ${refundPence > 0
-           ? `A refund of <strong style="color:#22C55E;">${formatPrice(refundPence)}</strong> is on its way and will reach your account in 5–10 working days.`
-           : 'No refund is due under our cancellation policy.'}
+           ? `Recorded refund amount: <strong style="color:#22C55E;">${formatPrice(refundPence)}</strong>. Contact us to check payment status and timing.`
+           : 'Contact us for the applicable cancellation and refund information.'}
        </p>`
     )
   );
@@ -151,8 +157,8 @@ export async function sendJobCompleted(b: BookingWithDetails): Promise<void> {
     shell(
       'Fitting complete',
       `<p style="color:#A3A3A3;font-size:15px;line-height:1.6;">
-         Your tyres are fitted and you are good to go. Check your pressures after
-         a couple of hundred miles, and torque-check the wheel nuts within 50 miles.
+         Your fitting has been recorded as complete. Follow the vehicle and tyre
+         manufacturers’ instructions and the fitter’s guidance for aftercare.
        </p>
        ${bookingTable(b)}`
     )

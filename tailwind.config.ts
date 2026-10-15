@@ -38,6 +38,9 @@ const config: Config = {
         ok: 'var(--success)',
         warn: 'var(--warning)',
         bad: 'var(--danger)',
+        danger: 'var(--danger)',
+        warning: 'var(--warning)',
+        info: 'var(--info)',
       },
       fontFamily: {
         display: ['var(--font-display)'],

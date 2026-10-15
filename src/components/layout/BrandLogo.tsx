@@ -15,8 +15,7 @@ export default function BrandLogo({
   return (
     <Image
       src="/brand/g-force-tyres-logo.webp"
-      alt=""
-      aria-hidden="true"
+      alt="G Force Tyres Mobile"
       width={1914}
       height={822}
       priority={priority}

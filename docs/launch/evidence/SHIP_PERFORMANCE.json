@@ -1,0 +1,3461 @@
+{
+  "checkedAt": "2026-10-15T13:18:24.548Z",
+  "sourceSha": "ddabc27c710f0313c68eec0ddfe8a21324e0c591",
+  "buildId": "dukeoedzHX9wKRQ3L7Ud1",
+  "scope": "LOOPBACK LAB ONLY; reduced-motion narrow Chromium viewports, trusted keyboard/click events, browser API fixtures; no submissions, external DB/provider calls, physical device or field INP proof",
+  "samples": [
+    {
+      "width": 360,
+      "attempt": 0,
+      "throttled": false,
+      "home": {
+        "lcpMs": 544,
+        "layoutShiftSum": 0.030066677758487655,
+        "maxInteractionMs": 72,
+        "events": [
+          {
+            "name": "keydown",
+            "start": 2808.9000000059605,
+            "duration": 72,
+            "interactionId": 2016,
+            "inputDelay": 1.0999999940395355,
+            "processing": 1.5999999940395355,
+            "presentation": 69.30000001192093,
+            "target": "width"
+          },
+          {
+            "name": "keyup",
+            "start": 2812.699999988079,
+            "duration": 64,
+            "interactionId": 2016,
+            "inputDelay": 0.4000000059604645,
+            "processing": 0.09999999403953552,
+            "presentation": 63.5,
+            "target": "width"
+          },
+          {
+            "name": "keydown",
+            "start": 3630.199999988079,
+            "duration": 64,
+            "interactionId": 2079,
+            "inputDelay": 0.4000000059604645,
+            "processing": 0.09999999403953552,
+            "presentation": 63.5,
+            "target": "width"
+          },
+          {
+            "name": "keypress",
+            "start": 3630.199999988079,
+            "duration": 64,
+            "interactionId": 2079,
+            "inputDelay": 0.5,
+            "processing": 26.200000017881393,
+            "presentation": 37.29999998211861,
+            "target": "width"
+          },
+          {
+            "name": "keydown",
+            "start": 1046.5999999940395,
+            "duration": 56,
+            "interactionId": 1939,
+            "inputDelay": 5.200000017881393,
+            "processing": 5.5999999940395355,
+            "presentation": 45.19999998807907,
+            "target": "pc"
+          },
+          {
+            "name": "keypress",
+            "start": 1046.5999999940395,
+            "duration": 56,
+            "interactionId": 1939,
+            "inputDelay": 10.900000005960464,
+            "processing": 15.099999994039536,
+            "presentation": 30,
+            "target": "pc"
+          }
+        ],
+        "longTasks": [
+          {
+            "start": 375.59999999403954,
+            "duration": 73
+          }
+        ],
+        "frames": [
+          {
+            "start": 112.80000001192093,
+            "duration": 215.69999998807907,
+            "renderStart": 180,
+            "styleAndLayoutStart": 180,
+            "scripts": []
+          },
+          {
+            "start": 375.59999999403954,
+            "duration": 81.2000000178814,
+            "renderStart": 456.69999998807907,
+            "styleAndLayoutStart": 456.80000001192093,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/webpack-93740523c455a293.js",
+                "fn": "",
+                "invoker": "http://127.0.0.1:3111/_next/static/chunks/webpack-93740523c455a293.js",
+                "duration": 71.30000001192093,
+                "forcedLayout": 0
+              },
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/1255-852914124fd1f142.js",
+                "fn": "S",
+                "invoker": "#document.onDOMContentLoaded",
+                "duration": 6.199999988079071,
+                "forcedLayout": 0
+              }
+            ]
+          }
+        ],
+        "shifts": [
+          {
+            "start": 496.59999999403954,
+            "value": 0.00012020640432098765
+          },
+          {
+            "start": 516.9000000059605,
+            "value": 0.029946471354166667
+          }
+        ],
+        "actions": [
+          {
+            "name": "finder keyboard",
+            "start": 989.1999999880791,
+            "end": 1986.5999999940395
+          },
+          {
+            "name": "menu open",
+            "start": 1989.699999988079,
+            "end": 2286.5
+          },
+          {
+            "name": "menu close",
+            "start": 2289.0999999940395,
+            "end": 2519.800000011921
+          },
+          {
+            "name": "manual open",
+            "start": 2523.0999999940395,
+            "end": 2782.5999999940395
+          },
+          {
+            "name": "manual Width",
+            "start": 2787.800000011921,
+            "end": 3887.800000011921
+          },
+          {
+            "name": "manual Profile",
+            "start": 3889.5,
+            "end": 4502.5
+          },
+          {
+            "name": "manual Rim",
+            "start": 4504.199999988079,
+            "end": 5185.0999999940395
+          }
+        ],
+        "overflow": false,
+        "originalEntryCounts": {
+          "events": 115,
+          "frames": 2,
+          "longTasks": 1
+        },
+        "eventCountsByName": {
+          "keydown": 26,
+          "keypress": 5,
+          "beforeinput": 2,
+          "input": 2,
+          "keyup": 4,
+          "pointerdown": 3,
+          "mousedown": 3,
+          "pointerup": 3,
+          "mouseup": 3,
+          "click": 3,
+          "pointerout": 5,
+          "pointerleave": 13,
+          "pointerover": 7,
+          "pointerenter": 24,
+          "mouseout": 5,
+          "mouseover": 7
+        }
+      },
+      "booking": {
+        "lcpMs": 184,
+        "layoutShiftSum": 0.04766467121056241,
+        "maxInteractionMs": 32,
+        "events": [
+          {
+            "name": "pointerdown",
+            "start": 1518.199999988079,
+            "duration": 32,
+            "interactionId": 3647,
+            "inputDelay": 0.800000011920929,
+            "processing": 1.199999988079071,
+            "presentation": 30
+          },
+          {
+            "name": "mousedown",
+            "start": 1518.199999988079,
+            "duration": 32,
+            "interactionId": 0,
+            "inputDelay": 2,
+            "processing": 0.20000001788139343,
+            "presentation": 29.799999982118607
+          },
+          {
+            "name": "pointerup",
+            "start": 1518.300000011921,
+            "duration": 32,
+            "interactionId": 3647,
+            "inputDelay": 2.699999988079071,
+            "processing": 0.09999999403953552,
+            "presentation": 29.200000017881393
+          },
+          {
+            "name": "mouseup",
+            "start": 1518.300000011921,
+            "duration": 32,
+            "interactionId": 0,
+            "inputDelay": 2.7999999821186066,
+            "processing": 0,
+            "presentation": 29.200000017881393
+          },
+          {
+            "name": "click",
+            "start": 1518.300000011921,
+            "duration": 32,
+            "interactionId": 3647,
+            "inputDelay": 2.899999976158142,
+            "processing": 19.400000005960464,
+            "presentation": 9.700000017881393
+          },
+          {
+            "name": "pointerover",
+            "start": 1518.300000011921,
+            "duration": 32,
+            "interactionId": 0,
+            "inputDelay": 22.299999982118607,
+            "processing": 0,
+            "presentation": 9.700000017881393,
+            "target": "DIV"
+          }
+        ],
+        "longTasks": [
+          {
+            "start": 339.30000001192093,
+            "duration": 56
+          }
+        ],
+        "frames": [
+          {
+            "start": 195.69999998807907,
+            "duration": 78.10000002384186,
+            "renderStart": 272.59999999403954,
+            "styleAndLayoutStart": 273,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "",
+                "invoker": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "duration": 48.599999994039536,
+                "forcedLayout": 0
+              },
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/app/booking/page-38072427fa74f701.js",
+                "fn": "",
+                "invoker": "http://127.0.0.1:3111/_next/static/chunks/app/booking/page-38072427fa74f701.js",
+                "duration": 21.5,
+                "forcedLayout": 0
+              }
+            ]
+          },
+          {
+            "start": 339.30000001192093,
+            "duration": 72.39999997615814,
+            "renderStart": 396.90000000596046,
+            "styleAndLayoutStart": 396.90000000596046,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/1255-852914124fd1f142.js",
+                "fn": "w",
+                "invoker": "MessagePort.onmessage",
+                "duration": 56.19999998807907,
+                "forcedLayout": 0
+              }
+            ]
+          },
+          {
+            "start": 94.69999998807907,
+            "duration": 64.40000000596046,
+            "renderStart": 134.09999999403954,
+            "styleAndLayoutStart": 134.80000001192093,
+            "scripts": []
+          }
+        ],
+        "shifts": [
+          {
+            "start": 194.80000001192093,
+            "value": 0.03272845721879287
+          },
+          {
+            "start": 411.69999998807907,
+            "value": 0.010095915637860081
+          },
+          {
+            "start": 427.69999998807907,
+            "value": 0.004840298353909465
+          }
+        ],
+        "actions": [
+          {
+            "name": "quantity increase",
+            "start": 979.3000000119209,
+            "end": 1222.800000011921
+          },
+          {
+            "name": "booking step 2",
+            "start": 1223.800000011921,
+            "end": 1488.699999988079
+          },
+          {
+            "name": "booking step 3",
+            "start": 1491.5999999940395,
+            "end": 1771
+          },
+          {
+            "name": "slot selection",
+            "start": 1773.0999999940395,
+            "end": 2040.9000000059605
+          },
+          {
+            "name": "booking step 4",
+            "start": 2044.199999988079,
+            "end": 2321.5999999940395
+          },
+          {
+            "name": "customer keyboard",
+            "start": 2322.5,
+            "end": 3370
+          }
+        ],
+        "overflow": false,
+        "originalEntryCounts": {
+          "events": 96,
+          "frames": 3,
+          "longTasks": 1
+        },
+        "eventCountsByName": {
+          "pointerover": 8,
+          "pointerenter": 28,
+          "mouseover": 8,
+          "pointerdown": 5,
+          "mousedown": 5,
+          "pointerup": 5,
+          "mouseup": 5,
+          "click": 5,
+          "pointerout": 4,
+          "pointerleave": 12,
+          "mouseout": 4,
+          "keydown": 3,
+          "keypress": 3,
+          "beforeinput": 1
+        }
+      }
+    },
+    {
+      "width": 375,
+      "attempt": 0,
+      "throttled": false,
+      "home": {
+        "lcpMs": 280,
+        "layoutShiftSum": 0.013978387654320988,
+        "maxInteractionMs": 56,
+        "events": [
+          {
+            "name": "keydown",
+            "start": 808.5,
+            "duration": 56,
+            "interactionId": 9650,
+            "inputDelay": 1.699999988079071,
+            "processing": 1.5999999940395355,
+            "presentation": 52.70000001788139,
+            "target": "pc"
+          },
+          {
+            "name": "keypress",
+            "start": 808.5,
+            "duration": 56,
+            "interactionId": 9650,
+            "inputDelay": 3.399999976158142,
+            "processing": 5.9000000059604645,
+            "presentation": 46.70000001788139,
+            "target": "pc"
+          },
+          {
+            "name": "beforeinput",
+            "start": 812.5999999940395,
+            "duration": 48,
+            "interactionId": 0,
+            "inputDelay": 0,
+            "processing": 0,
+            "presentation": 48,
+            "target": "pc"
+          },
+          {
+            "name": "input",
+            "start": 814.0999999940395,
+            "duration": 48,
+            "interactionId": 0,
+            "inputDelay": 1.699999988079071,
+            "processing": 1.9000000059604645,
+            "presentation": 44.400000005960464,
+            "target": "pc"
+          },
+          {
+            "name": "keyup",
+            "start": 1516.7999999821186,
+            "duration": 48,
+            "interactionId": 9699,
+            "inputDelay": 0.5,
+            "processing": 0.09999999403953552,
+            "presentation": 47.400000005960464,
+            "target": "BUTTON"
+          },
+          {
+            "name": "pointerdown",
+            "start": 2012.5999999940395,
+            "duration": 48,
+            "interactionId": 9713,
+            "inputDelay": 0.9000000059604645,
+            "processing": 0.699999988079071,
+            "presentation": 46.400000005960464
+          }
+        ],
+        "longTasks": [
+          {
+            "start": 105.69999998807907,
+            "duration": 75
+          }
+        ],
+        "frames": [
+          {
+            "start": 70.69999998807907,
+            "duration": 107.69999998807907,
+            "renderStart": 105.69999998807907,
+            "styleAndLayoutStart": 106.2999999821186,
+            "scripts": []
+          },
+          {
+            "start": 187.19999998807907,
+            "duration": 52.099999994039536,
+            "renderStart": 235.7999999821186,
+            "styleAndLayoutStart": 235.89999997615814,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/1255-852914124fd1f142.js",
+                "fn": "",
+                "invoker": "http://127.0.0.1:3111/_next/static/chunks/1255-852914124fd1f142.js",
+                "duration": 43.5,
+                "forcedLayout": 0
+              }
+            ]
+          }
+        ],
+        "shifts": [
+          {
+            "start": 289.7999999821186,
+            "value": 0.0004693598765432099
+          },
+          {
+            "start": 299.2999999821186,
+            "value": 0.013509027777777778
+          }
+        ],
+        "actions": [
+          {
+            "name": "finder keyboard",
+            "start": 772.5,
+            "end": 1730.0999999940395
+          },
+          {
+            "name": "menu open",
+            "start": 1731.8999999761581,
+            "end": 1976.8999999761581
+          },
+          {
+            "name": "menu close",
+            "start": 1979.2999999821186,
+            "end": 2230
+          },
+          {
+            "name": "manual open",
+            "start": 2232.699999988079,
+            "end": 2479.5
+          },
+          {
+            "name": "manual Width",
+            "start": 2481.199999988079,
+            "end": 3396.0999999940395
+          },
+          {
+            "name": "manual Profile",
+            "start": 3399.0999999940395,
+            "end": 3979.0999999940395
+          },
+          {
+            "name": "manual Rim",
+            "start": 3982.0999999940395,
+            "end": 4662.5
+          }
+        ],
+        "overflow": false,
+        "originalEntryCounts": {
+          "events": 109,
+          "frames": 2,
+          "longTasks": 1
+        },
+        "eventCountsByName": {
+          "keydown": 12,
+          "keypress": 6,
+          "beforeinput": 3,
+          "input": 3,
+          "keyup": 4,
+          "pointerover": 7,
+          "pointerenter": 32,
+          "mouseover": 7,
+          "pointerdown": 3,
+          "mousedown": 3,
+          "pointerup": 3,
+          "mouseup": 3,
+          "click": 3,
+          "pointerout": 4,
+          "pointerleave": 12,
+          "mouseout": 4
+        }
+      },
+      "booking": {
+        "lcpMs": 164,
+        "layoutShiftSum": 0.047784294238683134,
+        "maxInteractionMs": 32,
+        "events": [
+          {
+            "name": "pointerout",
+            "start": 1271,
+            "duration": 32,
+            "interactionId": 0,
+            "inputDelay": 1.199999988079071,
+            "processing": 0.20000001788139343,
+            "presentation": 30.599999994039536
+          },
+          {
+            "name": "pointerleave",
+            "start": 1271,
+            "duration": 32,
+            "interactionId": 0,
+            "inputDelay": 1.4000000059604645,
+            "processing": 0,
+            "presentation": 30.599999994039536
+          },
+          {
+            "name": "pointerleave",
+            "start": 1271,
+            "duration": 32,
+            "interactionId": 0,
+            "inputDelay": 1.4000000059604645,
+            "processing": 0,
+            "presentation": 30.599999994039536
+          },
+          {
+            "name": "pointerleave",
+            "start": 1271,
+            "duration": 32,
+            "interactionId": 0,
+            "inputDelay": 1.4000000059604645,
+            "processing": 0,
+            "presentation": 30.599999994039536
+          },
+          {
+            "name": "pointerleave",
+            "start": 1271,
+            "duration": 32,
+            "interactionId": 0,
+            "inputDelay": 1.4000000059604645,
+            "processing": 0,
+            "presentation": 30.599999994039536
+          },
+          {
+            "name": "pointerleave",
+            "start": 1271,
+            "duration": 32,
+            "interactionId": 0,
+            "inputDelay": 1.4000000059604645,
+            "processing": 0,
+            "presentation": 30.599999994039536
+          }
+        ],
+        "longTasks": [],
+        "frames": [
+          {
+            "start": 151.80000001192093,
+            "duration": 92.39999997615814,
+            "renderStart": 211.69999998807907,
+            "styleAndLayoutStart": 211.69999998807907,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/1255-852914124fd1f142.js",
+                "fn": "",
+                "invoker": "http://127.0.0.1:3111/_next/static/chunks/1255-852914124fd1f142.js",
+                "duration": 48.900000005960464,
+                "forcedLayout": 0
+              }
+            ]
+          },
+          {
+            "start": 70.30000001192093,
+            "duration": 78.69999998807907,
+            "renderStart": 107.69999998807907,
+            "styleAndLayoutStart": 108.59999999403954,
+            "scripts": []
+          }
+        ],
+        "shifts": [
+          {
+            "start": 244.09999999403954,
+            "value": 0.03271355349794239
+          },
+          {
+            "start": 348.40000000596046,
+            "value": 0.010186572839506174
+          },
+          {
+            "start": 365.5,
+            "value": 0.004884167901234568
+          }
+        ],
+        "actions": [
+          {
+            "name": "quantity increase",
+            "start": 954,
+            "end": 1233.4000000059605
+          },
+          {
+            "name": "booking step 2",
+            "start": 1235.9000000059605,
+            "end": 1501.9000000059605
+          },
+          {
+            "name": "booking step 3",
+            "start": 1503.699999988079,
+            "end": 1749.5999999940395
+          },
+          {
+            "name": "slot selection",
+            "start": 1752.300000011921,
+            "end": 2016.800000011921
+          },
+          {
+            "name": "booking step 4",
+            "start": 2019.0999999940395,
+            "end": 2266.5999999940395
+          },
+          {
+            "name": "customer keyboard",
+            "start": 2268.0999999940395,
+            "end": 3301.699999988079
+          }
+        ],
+        "overflow": false,
+        "originalEntryCounts": {
+          "events": 94,
+          "frames": 2,
+          "longTasks": 0
+        },
+        "eventCountsByName": {
+          "pointerover": 8,
+          "pointerenter": 28,
+          "mouseover": 8,
+          "pointerdown": 5,
+          "mousedown": 5,
+          "pointerup": 5,
+          "mouseup": 5,
+          "click": 5,
+          "pointerout": 4,
+          "pointerleave": 13,
+          "mouseout": 4,
+          "keydown": 1,
+          "keypress": 1,
+          "beforeinput": 1,
+          "input": 1
+        }
+      }
+    },
+    {
+      "width": 390,
+      "attempt": 0,
+      "throttled": true,
+      "home": {
+        "lcpMs": 1984,
+        "layoutShiftSum": 0.04460654261633428,
+        "maxInteractionMs": 304,
+        "events": [
+          {
+            "name": "pointerover",
+            "start": 3789.100000023842,
+            "duration": 304,
+            "interactionId": 0,
+            "inputDelay": 2.0999999940395355,
+            "processing": 10.199999988079071,
+            "presentation": 291.7000000178814,
+            "target": "line"
+          },
+          {
+            "name": "pointerenter",
+            "start": 3789.100000023842,
+            "duration": 304,
+            "interactionId": 0,
+            "inputDelay": 12.299999982118607,
+            "processing": 0,
+            "presentation": 291.7000000178814
+          },
+          {
+            "name": "pointerenter",
+            "start": 3789.100000023842,
+            "duration": 304,
+            "interactionId": 0,
+            "inputDelay": 12.299999982118607,
+            "processing": 0,
+            "presentation": 291.7000000178814
+          },
+          {
+            "name": "pointerenter",
+            "start": 3789.100000023842,
+            "duration": 304,
+            "interactionId": 0,
+            "inputDelay": 12.299999982118607,
+            "processing": 0,
+            "presentation": 291.7000000178814
+          },
+          {
+            "name": "pointerenter",
+            "start": 3789.100000023842,
+            "duration": 304,
+            "interactionId": 0,
+            "inputDelay": 12.299999982118607,
+            "processing": 0.20000001788139343,
+            "presentation": 291.5
+          },
+          {
+            "name": "pointerenter",
+            "start": 3789.100000023842,
+            "duration": 304,
+            "interactionId": 0,
+            "inputDelay": 12.5,
+            "processing": 0,
+            "presentation": 291.5
+          }
+        ],
+        "longTasks": [
+          {
+            "start": 1344.1000000238419,
+            "duration": 349
+          },
+          {
+            "start": 3832.300000011921,
+            "duration": 166
+          },
+          {
+            "start": 5245.4000000059605,
+            "duration": 138
+          },
+          {
+            "start": 8469.300000011921,
+            "duration": 123
+          },
+          {
+            "start": 7203.700000017881,
+            "duration": 108
+          }
+        ],
+        "frames": [
+          {
+            "start": 234.5,
+            "duration": 954.5,
+            "renderStart": 677.1000000238419,
+            "styleAndLayoutStart": 677.3000000119209,
+            "scripts": []
+          },
+          {
+            "start": 1314.6000000238419,
+            "duration": 402.89999997615814,
+            "renderStart": 1696.6000000238419,
+            "styleAndLayoutStart": 1697,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "",
+                "invoker": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "duration": 345.90000000596046,
+                "forcedLayout": 0
+              },
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/webpack-93740523c455a293.js",
+                "fn": "",
+                "invoker": "http://127.0.0.1:3111/_next/static/chunks/webpack-93740523c455a293.js",
+                "duration": 14.800000011920929,
+                "forcedLayout": 0
+              }
+            ]
+          },
+          {
+            "start": 3789.5,
+            "duration": 222.5,
+            "renderStart": 3999.800000011921,
+            "styleAndLayoutStart": 4011.100000023842,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "ci",
+                "invoker": "#document.onclick",
+                "duration": 152.90000000596046,
+                "forcedLayout": 55.8
+              },
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "cs",
+                "invoker": "#document.onpointerover",
+                "duration": 5.5999999940395355,
+                "forcedLayout": 0
+              }
+            ]
+          },
+          {
+            "start": 5220.800000011921,
+            "duration": 184.59999999403954,
+            "renderStart": 5385.800000011921,
+            "styleAndLayoutStart": 5405.200000017881,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "ci",
+                "invoker": "#document.onclick",
+                "duration": 28.299999982118607,
+                "forcedLayout": 1
+              },
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "cs",
+                "invoker": "#document.onmouseout",
+                "duration": 5.800000011920929,
+                "forcedLayout": 0
+              }
+            ]
+          },
+          {
+            "start": 1776,
+            "duration": 167.10000002384186,
+            "renderStart": 1807.1000000238419,
+            "styleAndLayoutStart": 1807.1000000238419,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/1255-852914124fd1f142.js",
+                "fn": "w",
+                "invoker": "MessagePort.onmessage",
+                "duration": 10.599999994039536,
+                "forcedLayout": 0
+              }
+            ]
+          }
+        ],
+        "shifts": [
+          {
+            "start": 1772,
+            "value": 0.031013799857549852
+          },
+          {
+            "start": 1943,
+            "value": 0.0004513075735992403
+          },
+          {
+            "start": 1975.5,
+            "value": 0.013141435185185187
+          }
+        ],
+        "actions": [
+          {
+            "name": "finder keyboard",
+            "start": 2322.800000011921,
+            "end": 3607.100000023842
+          },
+          {
+            "name": "menu open",
+            "start": 3613.7000000178814,
+            "end": 4504.4000000059605
+          },
+          {
+            "name": "menu close",
+            "start": 4563.9000000059605,
+            "end": 5124.100000023842
+          },
+          {
+            "name": "manual open",
+            "start": 5134.600000023842,
+            "end": 5694.100000023842
+          },
+          {
+            "name": "manual Width",
+            "start": 5717.700000017881,
+            "end": 7579.100000023842
+          },
+          {
+            "name": "manual Profile",
+            "start": 7589.200000017881,
+            "end": 8857.600000023842
+          },
+          {
+            "name": "manual Rim",
+            "start": 8859.300000011921,
+            "end": 9851.40000000596
+          }
+        ],
+        "overflow": false,
+        "originalEntryCounts": {
+          "events": 140,
+          "frames": 15,
+          "longTasks": 12
+        },
+        "eventCountsByName": {
+          "keydown": 31,
+          "keypress": 10,
+          "beforeinput": 7,
+          "input": 7,
+          "keyup": 4,
+          "pointerover": 7,
+          "pointerenter": 32,
+          "mouseover": 7,
+          "pointerdown": 3,
+          "mousedown": 3,
+          "pointerup": 3,
+          "mouseup": 3,
+          "click": 3,
+          "pointerout": 4,
+          "pointerleave": 12,
+          "mouseout": 4
+        }
+      },
+      "booking": {
+        "lcpMs": 908,
+        "layoutShiftSum": 0.017570622625830958,
+        "maxInteractionMs": 336,
+        "events": [
+          {
+            "name": "pointerout",
+            "start": 3930.5,
+            "duration": 336,
+            "interactionId": 0,
+            "inputDelay": 28.099999994039536,
+            "processing": 0.9000000059604645,
+            "presentation": 307,
+            "target": "DIV"
+          },
+          {
+            "name": "pointerleave",
+            "start": 3930.5,
+            "duration": 336,
+            "interactionId": 0,
+            "inputDelay": 29,
+            "processing": 0,
+            "presentation": 307
+          },
+          {
+            "name": "pointerleave",
+            "start": 3930.5,
+            "duration": 336,
+            "interactionId": 0,
+            "inputDelay": 29,
+            "processing": 0,
+            "presentation": 307
+          },
+          {
+            "name": "pointerover",
+            "start": 3930.5,
+            "duration": 336,
+            "interactionId": 0,
+            "inputDelay": 29,
+            "processing": 0.09999999403953552,
+            "presentation": 306.90000000596046
+          },
+          {
+            "name": "pointerenter",
+            "start": 3930.5,
+            "duration": 336,
+            "interactionId": 0,
+            "inputDelay": 29.099999994039536,
+            "processing": 0,
+            "presentation": 306.90000000596046
+          },
+          {
+            "name": "pointerenter",
+            "start": 3930.5,
+            "duration": 336,
+            "interactionId": 0,
+            "inputDelay": 29.099999994039536,
+            "processing": 0,
+            "presentation": 306.90000000596046
+          }
+        ],
+        "longTasks": [
+          {
+            "start": 1546.699999988079,
+            "duration": 406
+          },
+          {
+            "start": 3946.4000000059605,
+            "duration": 268
+          },
+          {
+            "start": 3013.9000000059605,
+            "duration": 132
+          },
+          {
+            "start": 4520.699999988079,
+            "duration": 105
+          },
+          {
+            "start": 5326.9000000059605,
+            "duration": 103
+          }
+        ],
+        "frames": [
+          {
+            "start": 1546.699999988079,
+            "duration": 726.6000000238419,
+            "renderStart": 1966.4000000059605,
+            "styleAndLayoutStart": 1966.5,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "",
+                "invoker": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "duration": 400.30000001192093,
+                "forcedLayout": 0
+              },
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "cc",
+                "invoker": "#document.onload",
+                "duration": 6,
+                "forcedLayout": 0
+              }
+            ]
+          },
+          {
+            "start": 297.69999998807907,
+            "duration": 585.2000000178814,
+            "renderStart": 681.1999999880791,
+            "styleAndLayoutStart": 681.3000000119209,
+            "scripts": []
+          },
+          {
+            "start": 3946.4000000059605,
+            "duration": 294.69999998807907,
+            "renderStart": 4217.9000000059605,
+            "styleAndLayoutStart": 4240.9000000059605,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "ci",
+                "invoker": "#document.onclick",
+                "duration": 32.39999997615814,
+                "forcedLayout": 12
+              }
+            ]
+          },
+          {
+            "start": 3013.9000000059605,
+            "duration": 184.19999998807907,
+            "renderStart": 3146.5999999940395,
+            "styleAndLayoutStart": 3146.699999988079,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/1255-852914124fd1f142.js",
+                "fn": "w",
+                "invoker": "MessagePort.onmessage",
+                "duration": 131.7999999821186,
+                "forcedLayout": 0
+              }
+            ]
+          },
+          {
+            "start": 5322.5,
+            "duration": 126.40000000596046,
+            "renderStart": 5430.800000011921,
+            "styleAndLayoutStart": 5445.4000000059605,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "ci",
+                "invoker": "#document.onclick",
+                "duration": 40.400000005960464,
+                "forcedLayout": 4.1
+              }
+            ]
+          }
+        ],
+        "shifts": [
+          {
+            "start": 2273.199999988079,
+            "value": 0.00011095975783475783
+          },
+          {
+            "start": 3198.0999999940395,
+            "value": 0.012104230769230768
+          },
+          {
+            "start": 3329.699999988079,
+            "value": 0.005355432098765432
+          }
+        ],
+        "actions": [
+          {
+            "name": "quantity increase",
+            "start": 3346.300000011921,
+            "end": 3876.5999999940395
+          },
+          {
+            "name": "booking step 2",
+            "start": 3878.699999988079,
+            "end": 4485.5
+          },
+          {
+            "name": "booking step 3",
+            "start": 4487.5,
+            "end": 4873.0999999940395
+          },
+          {
+            "name": "slot selection",
+            "start": 4875.4000000059605,
+            "end": 5268
+          },
+          {
+            "name": "booking step 4",
+            "start": 5271.699999988079,
+            "end": 5686.5
+          },
+          {
+            "name": "customer keyboard",
+            "start": 5689.4000000059605,
+            "end": 7067.300000011921
+          }
+        ],
+        "overflow": false,
+        "originalEntryCounts": {
+          "events": 163,
+          "frames": 14,
+          "longTasks": 8
+        },
+        "eventCountsByName": {
+          "pointerover": 13,
+          "pointerenter": 41,
+          "mouseover": 13,
+          "pointerdown": 5,
+          "mousedown": 5,
+          "pointerup": 5,
+          "mouseup": 5,
+          "click": 5,
+          "pointerout": 9,
+          "pointerleave": 20,
+          "mouseout": 9,
+          "keydown": 8,
+          "keypress": 8,
+          "beforeinput": 8,
+          "input": 8,
+          "keyup": 1
+        }
+      }
+    },
+    {
+      "width": 390,
+      "attempt": 1,
+      "throttled": true,
+      "home": {
+        "lcpMs": 2336,
+        "layoutShiftSum": 0.04460654261633428,
+        "maxInteractionMs": 168,
+        "events": [
+          {
+            "name": "keydown",
+            "start": 7478.9000000059605,
+            "duration": 168,
+            "interactionId": 8022,
+            "inputDelay": 1.199999988079071,
+            "processing": 1.5,
+            "presentation": 165.30000001192093,
+            "target": "profile"
+          },
+          {
+            "name": "keypress",
+            "start": 7478.9000000059605,
+            "duration": 168,
+            "interactionId": 8022,
+            "inputDelay": 2.800000011920929,
+            "processing": 150.39999997615814,
+            "presentation": 14.800000011920929,
+            "target": "profile"
+          },
+          {
+            "name": "keydown",
+            "start": 8832.40000000596,
+            "duration": 160,
+            "interactionId": 8071,
+            "inputDelay": 1.0999999940395355,
+            "processing": 1.7000000178813934,
+            "presentation": 157.19999998807907,
+            "target": "rim"
+          },
+          {
+            "name": "keypress",
+            "start": 8832.40000000596,
+            "duration": 160,
+            "interactionId": 8071,
+            "inputDelay": 3,
+            "processing": 133.30000001192093,
+            "presentation": 23.69999998807907,
+            "target": "rim"
+          },
+          {
+            "name": "pointerout",
+            "start": 4663.200000017881,
+            "duration": 144,
+            "interactionId": 0,
+            "inputDelay": 1.899999976158142,
+            "processing": 1,
+            "presentation": 141.10000002384186,
+            "target": "line"
+          },
+          {
+            "name": "pointerleave",
+            "start": 4663.200000017881,
+            "duration": 144,
+            "interactionId": 0,
+            "inputDelay": 2.899999976158142,
+            "processing": 0,
+            "presentation": 141.10000002384186
+          }
+        ],
+        "longTasks": [
+          {
+            "start": 2009.0999999940395,
+            "duration": 261
+          },
+          {
+            "start": 1589.2000000178814,
+            "duration": 237
+          },
+          {
+            "start": 7479.200000017881,
+            "duration": 153
+          },
+          {
+            "start": 8832.90000000596,
+            "duration": 136
+          },
+          {
+            "start": 6239.5999999940395,
+            "duration": 127
+          }
+        ],
+        "frames": [
+          {
+            "start": 317.40000000596046,
+            "duration": 1184.699999988079,
+            "renderStart": 684.3000000119209,
+            "styleAndLayoutStart": 684.5999999940395,
+            "scripts": []
+          },
+          {
+            "start": 2009.0999999940395,
+            "duration": 266.7000000178814,
+            "renderStart": 2272.300000011921,
+            "styleAndLayoutStart": 2273.5999999940395,
+            "scripts": []
+          },
+          {
+            "start": 1588.9000000059605,
+            "duration": 259.19999998807907,
+            "renderStart": 1830.0999999940395,
+            "styleAndLayoutStart": 1830.2000000178814,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/webpack-93740523c455a293.js",
+                "fn": "",
+                "invoker": "http://127.0.0.1:3111/_next/static/chunks/webpack-93740523c455a293.js",
+                "duration": 233.69999998807907,
+                "forcedLayout": 0
+              }
+            ]
+          },
+          {
+            "start": 7479.200000017881,
+            "duration": 157.7999999821186,
+            "renderStart": 7634.300000011921,
+            "styleAndLayoutStart": 7634.300000011921,
+            "scripts": []
+          },
+          {
+            "start": 8832.90000000596,
+            "duration": 142,
+            "renderStart": 8970.300000011921,
+            "styleAndLayoutStart": 8970.700000017881,
+            "scripts": []
+          }
+        ],
+        "shifts": [
+          {
+            "start": 1897.5,
+            "value": 0.031013799857549852
+          },
+          {
+            "start": 2275.800000011921,
+            "value": 0.0004513075735992403
+          },
+          {
+            "start": 2313.300000011921,
+            "value": 0.013141435185185187
+          }
+        ],
+        "actions": [
+          {
+            "name": "finder keyboard",
+            "start": 2549.800000011921,
+            "end": 3872.300000011921
+          },
+          {
+            "name": "menu open",
+            "start": 3875.4000000059605,
+            "end": 4316.0999999940395
+          },
+          {
+            "name": "menu close",
+            "start": 4317.700000017881,
+            "end": 4603.9000000059605
+          },
+          {
+            "name": "manual open",
+            "start": 4606.300000011921,
+            "end": 4990.5
+          },
+          {
+            "name": "manual Width",
+            "start": 4993.4000000059605,
+            "end": 6636.300000011921
+          },
+          {
+            "name": "manual Profile",
+            "start": 6648.0999999940395,
+            "end": 7894.5
+          },
+          {
+            "name": "manual Rim",
+            "start": 7898.0999999940395,
+            "end": 9265.59999999404
+          }
+        ],
+        "overflow": false,
+        "originalEntryCounts": {
+          "events": 142,
+          "frames": 15,
+          "longTasks": 10
+        },
+        "eventCountsByName": {
+          "keydown": 31,
+          "keypress": 10,
+          "beforeinput": 7,
+          "input": 7,
+          "keyup": 6,
+          "pointerover": 7,
+          "pointerenter": 32,
+          "mouseover": 7,
+          "pointerdown": 3,
+          "mousedown": 3,
+          "pointerup": 3,
+          "mouseup": 3,
+          "click": 3,
+          "pointerout": 4,
+          "pointerleave": 12,
+          "mouseout": 4
+        }
+      },
+      "booking": {
+        "lcpMs": 1148,
+        "layoutShiftSum": 0.017570622625830958,
+        "maxInteractionMs": 152,
+        "events": [
+          {
+            "name": "pointerout",
+            "start": 4596.299999982119,
+            "duration": 152,
+            "interactionId": 0,
+            "inputDelay": 3.5,
+            "processing": 1.300000011920929,
+            "presentation": 147.19999998807907
+          },
+          {
+            "name": "pointerleave",
+            "start": 4596.299999982119,
+            "duration": 152,
+            "interactionId": 0,
+            "inputDelay": 4.800000011920929,
+            "processing": 0,
+            "presentation": 147.19999998807907
+          },
+          {
+            "name": "pointerleave",
+            "start": 4596.299999982119,
+            "duration": 152,
+            "interactionId": 0,
+            "inputDelay": 4.800000011920929,
+            "processing": 0,
+            "presentation": 147.19999998807907
+          },
+          {
+            "name": "pointerleave",
+            "start": 4596.299999982119,
+            "duration": 152,
+            "interactionId": 0,
+            "inputDelay": 4.800000011920929,
+            "processing": 0,
+            "presentation": 147.19999998807907
+          },
+          {
+            "name": "pointerleave",
+            "start": 4596.299999982119,
+            "duration": 152,
+            "interactionId": 0,
+            "inputDelay": 4.800000011920929,
+            "processing": 0,
+            "presentation": 147.19999998807907
+          },
+          {
+            "name": "pointerleave",
+            "start": 4596.299999982119,
+            "duration": 152,
+            "interactionId": 0,
+            "inputDelay": 4.800000011920929,
+            "processing": 0,
+            "presentation": 147.19999998807907
+          }
+        ],
+        "longTasks": [
+          {
+            "start": 1598.199999988079,
+            "duration": 405
+          },
+          {
+            "start": 2720.399999976158,
+            "duration": 228
+          },
+          {
+            "start": 2003.5999999940395,
+            "duration": 190
+          },
+          {
+            "start": 4596.5999999940395,
+            "duration": 131
+          },
+          {
+            "start": 4992.399999976158,
+            "duration": 121
+          }
+        ],
+        "frames": [
+          {
+            "start": 356.2999999821186,
+            "duration": 763.5,
+            "renderStart": 710.3999999761581,
+            "styleAndLayoutStart": 711.0999999940395,
+            "scripts": []
+          },
+          {
+            "start": 1598.199999988079,
+            "duration": 606.0999999940395,
+            "renderStart": 2198.899999976158,
+            "styleAndLayoutStart": 2201.5,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "",
+                "invoker": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "duration": 399.5,
+                "forcedLayout": 0
+              },
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "cc",
+                "invoker": "#document.onload",
+                "duration": 5.800000011920929,
+                "forcedLayout": 0
+              }
+            ]
+          },
+          {
+            "start": 2720.399999976158,
+            "duration": 362.90000000596046,
+            "renderStart": 2949.7999999821186,
+            "styleAndLayoutStart": 2950,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/1255-852914124fd1f142.js",
+                "fn": "w",
+                "invoker": "MessagePort.onmessage",
+                "duration": 227.19999998807907,
+                "forcedLayout": 0
+              }
+            ]
+          },
+          {
+            "start": 3739.699999988079,
+            "duration": 161.80000001192093,
+            "renderStart": 3900.5999999940395,
+            "styleAndLayoutStart": 3900.5999999940395,
+            "scripts": []
+          },
+          {
+            "start": 4587.799999982119,
+            "duration": 147.59999999403954,
+            "renderStart": 4728.699999988079,
+            "styleAndLayoutStart": 4735.399999976158,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "ci",
+                "invoker": "#document.onclick",
+                "duration": 30.099999994039536,
+                "forcedLayout": 6.4
+              }
+            ]
+          }
+        ],
+        "shifts": [
+          {
+            "start": 2204.2999999821186,
+            "value": 0.00011095975783475783
+          },
+          {
+            "start": 3083.2999999821186,
+            "value": 0.012104230769230768
+          },
+          {
+            "start": 3190.199999988079,
+            "value": 0.005355432098765432
+          }
+        ],
+        "actions": [
+          {
+            "name": "quantity increase",
+            "start": 4060.0999999940395,
+            "end": 4531.899999976158
+          },
+          {
+            "name": "booking step 2",
+            "start": 4534.5,
+            "end": 4957.799999982119
+          },
+          {
+            "name": "booking step 3",
+            "start": 4960.5999999940395,
+            "end": 5345.799999982119
+          },
+          {
+            "name": "slot selection",
+            "start": 5347.699999988079,
+            "end": 5711.799999982119
+          },
+          {
+            "name": "booking step 4",
+            "start": 5714.399999976158,
+            "end": 6092.5999999940395
+          },
+          {
+            "name": "customer keyboard",
+            "start": 6095.5,
+            "end": 7413.5
+          }
+        ],
+        "overflow": false,
+        "originalEntryCounts": {
+          "events": 151,
+          "frames": 12,
+          "longTasks": 9
+        },
+        "eventCountsByName": {
+          "pointerover": 12,
+          "pointerenter": 37,
+          "mouseover": 12,
+          "pointerdown": 5,
+          "mousedown": 5,
+          "pointerup": 5,
+          "mouseup": 5,
+          "click": 5,
+          "pointerout": 8,
+          "pointerleave": 16,
+          "mouseout": 8,
+          "keydown": 8,
+          "keypress": 8,
+          "beforeinput": 8,
+          "input": 8,
+          "keyup": 1
+        }
+      }
+    },
+    {
+      "width": 390,
+      "attempt": 2,
+      "throttled": true,
+      "home": {
+        "lcpMs": 1580,
+        "layoutShiftSum": 0.04460654261633428,
+        "maxInteractionMs": 128,
+        "events": [
+          {
+            "name": "pointerout",
+            "start": 4113.5,
+            "duration": 128,
+            "interactionId": 0,
+            "inputDelay": 1.699999988079071,
+            "processing": 1,
+            "presentation": 125.30000001192093,
+            "target": "line"
+          },
+          {
+            "name": "pointerleave",
+            "start": 4113.5,
+            "duration": 128,
+            "interactionId": 0,
+            "inputDelay": 2.699999988079071,
+            "processing": 0,
+            "presentation": 125.30000001192093
+          },
+          {
+            "name": "pointerleave",
+            "start": 4113.5,
+            "duration": 128,
+            "interactionId": 0,
+            "inputDelay": 2.699999988079071,
+            "processing": 0,
+            "presentation": 125.30000001192093
+          },
+          {
+            "name": "pointerleave",
+            "start": 4113.5,
+            "duration": 128,
+            "interactionId": 0,
+            "inputDelay": 2.699999988079071,
+            "processing": 0,
+            "presentation": 125.30000001192093
+          },
+          {
+            "name": "pointerleave",
+            "start": 4113.5,
+            "duration": 128,
+            "interactionId": 0,
+            "inputDelay": 2.699999988079071,
+            "processing": 0,
+            "presentation": 125.30000001192093
+          },
+          {
+            "name": "pointerleave",
+            "start": 4113.5,
+            "duration": 128,
+            "interactionId": 0,
+            "inputDelay": 2.699999988079071,
+            "processing": 0,
+            "presentation": 125.30000001192093
+          }
+        ],
+        "longTasks": [
+          {
+            "start": 1273.8999999761581,
+            "duration": 227
+          },
+          {
+            "start": 1634.8999999761581,
+            "duration": 127
+          },
+          {
+            "start": 4113.799999982119,
+            "duration": 75
+          },
+          {
+            "start": 6081.0999999940395,
+            "duration": 66
+          },
+          {
+            "start": 3417.5999999940395,
+            "duration": 62
+          }
+        ],
+        "frames": [
+          {
+            "start": 220.39999997615814,
+            "duration": 924.1000000238419,
+            "renderStart": 647.5,
+            "styleAndLayoutStart": 647.5999999940395,
+            "scripts": []
+          },
+          {
+            "start": 1268,
+            "duration": 260.89999997615814,
+            "renderStart": 1505.3999999761581,
+            "styleAndLayoutStart": 1505.5,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "",
+                "invoker": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "duration": 224,
+                "forcedLayout": 0
+              }
+            ]
+          },
+          {
+            "start": 1634.8999999761581,
+            "duration": 138.2000000178814,
+            "renderStart": 1766.699999988079,
+            "styleAndLayoutStart": 1768.0999999940395,
+            "scripts": []
+          },
+          {
+            "start": 4113.799999982119,
+            "duration": 79,
+            "renderStart": 4189.899999976158,
+            "styleAndLayoutStart": 4192.5,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "ci",
+                "invoker": "#document.onclick",
+                "duration": 16,
+                "forcedLayout": 1
+              }
+            ]
+          },
+          {
+            "start": 6081.0999999940395,
+            "duration": 69.19999998807907,
+            "renderStart": 6148.5,
+            "styleAndLayoutStart": 6148.5,
+            "scripts": []
+          }
+        ],
+        "shifts": [
+          {
+            "start": 1574.0999999940395,
+            "value": 0.031013799857549852
+          },
+          {
+            "start": 1772.8999999761581,
+            "value": 0.0004513075735992403
+          },
+          {
+            "start": 1795.0999999940395,
+            "value": 0.013141435185185187
+          }
+        ],
+        "actions": [
+          {
+            "name": "finder keyboard",
+            "start": 2172.399999976158,
+            "end": 3333.5999999940395
+          },
+          {
+            "name": "menu open",
+            "start": 3337.0999999940395,
+            "end": 3748.0999999940395
+          },
+          {
+            "name": "menu close",
+            "start": 3749.899999976158,
+            "end": 4056.5999999940395
+          },
+          {
+            "name": "manual open",
+            "start": 4061.5,
+            "end": 4420.0999999940395
+          },
+          {
+            "name": "manual Width",
+            "start": 4422.0999999940395,
+            "end": 5603.799999982119
+          },
+          {
+            "name": "manual Profile",
+            "start": 5606.799999982119,
+            "end": 6401.5
+          },
+          {
+            "name": "manual Rim",
+            "start": 6403.699999988079,
+            "end": 7283.799999982119
+          }
+        ],
+        "overflow": false,
+        "originalEntryCounts": {
+          "events": 138,
+          "frames": 9,
+          "longTasks": 7
+        },
+        "eventCountsByName": {
+          "keydown": 31,
+          "keypress": 10,
+          "beforeinput": 7,
+          "input": 5,
+          "keyup": 4,
+          "pointerover": 7,
+          "pointerenter": 32,
+          "mouseover": 7,
+          "pointerdown": 3,
+          "mousedown": 3,
+          "pointerup": 3,
+          "mouseup": 3,
+          "click": 3,
+          "pointerout": 4,
+          "pointerleave": 12,
+          "mouseout": 4
+        }
+      },
+      "booking": {
+        "lcpMs": 936,
+        "layoutShiftSum": 0.017570622625830958,
+        "maxInteractionMs": 136,
+        "events": [
+          {
+            "name": "pointerout",
+            "start": 4289.800000011921,
+            "duration": 136,
+            "interactionId": 0,
+            "inputDelay": 2.2999999821186066,
+            "processing": 1.0999999940395355,
+            "presentation": 132.60000002384186
+          },
+          {
+            "name": "pointerover",
+            "start": 4289.800000011921,
+            "duration": 136,
+            "interactionId": 0,
+            "inputDelay": 3.399999976158142,
+            "processing": 0.6000000238418579,
+            "presentation": 132
+          },
+          {
+            "name": "pointerenter",
+            "start": 4289.800000011921,
+            "duration": 136,
+            "interactionId": 0,
+            "inputDelay": 4,
+            "processing": 0,
+            "presentation": 132
+          },
+          {
+            "name": "mouseout",
+            "start": 4289.800000011921,
+            "duration": 136,
+            "interactionId": 0,
+            "inputDelay": 4,
+            "processing": 0.5,
+            "presentation": 131.5
+          },
+          {
+            "name": "mouseover",
+            "start": 4289.800000011921,
+            "duration": 136,
+            "interactionId": 0,
+            "inputDelay": 4.5,
+            "processing": 0,
+            "presentation": 131.5
+          },
+          {
+            "name": "pointerdown",
+            "start": 4289.9000000059605,
+            "duration": 136,
+            "interactionId": 8757,
+            "inputDelay": 7.199999988079071,
+            "processing": 5.0999999940395355,
+            "presentation": 123.7000000178814
+          }
+        ],
+        "longTasks": [
+          {
+            "start": 1559.300000011921,
+            "duration": 376
+          },
+          {
+            "start": 1936.199999988079,
+            "duration": 188
+          },
+          {
+            "start": 2523.699999988079,
+            "duration": 118
+          },
+          {
+            "start": 3906.199999988079,
+            "duration": 107
+          },
+          {
+            "start": 4290.199999988079,
+            "duration": 98
+          }
+        ],
+        "frames": [
+          {
+            "start": 307,
+            "duration": 605,
+            "renderStart": 694.3000000119209,
+            "styleAndLayoutStart": 695.8000000119209,
+            "scripts": []
+          },
+          {
+            "start": 1559.300000011921,
+            "duration": 576.6999999880791,
+            "renderStart": 2129.699999988079,
+            "styleAndLayoutStart": 2133.9000000059605,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "",
+                "invoker": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "duration": 368.2999999821186,
+                "forcedLayout": 0
+              },
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "cc",
+                "invoker": "#document.onload",
+                "duration": 8.199999988079071,
+                "forcedLayout": 0
+              }
+            ]
+          },
+          {
+            "start": 2523.699999988079,
+            "duration": 173.90000000596046,
+            "renderStart": 2642.199999988079,
+            "styleAndLayoutStart": 2642.4000000059605,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/1255-852914124fd1f142.js",
+                "fn": "w",
+                "invoker": "MessagePort.onmessage",
+                "duration": 118,
+                "forcedLayout": 0
+              }
+            ]
+          },
+          {
+            "start": 3899.800000011921,
+            "duration": 121.7999999821186,
+            "renderStart": 4014.9000000059605,
+            "styleAndLayoutStart": 4021.5,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "ci",
+                "invoker": "#document.onclick",
+                "duration": 27.5,
+                "forcedLayout": 10.6
+              }
+            ]
+          },
+          {
+            "start": 4290.0999999940395,
+            "duration": 111.2000000178814,
+            "renderStart": 4388.800000011921,
+            "styleAndLayoutStart": 4400.800000011921,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "ci",
+                "invoker": "#document.onclick",
+                "duration": 46.5,
+                "forcedLayout": 5.6
+              }
+            ]
+          }
+        ],
+        "shifts": [
+          {
+            "start": 2135.9000000059605,
+            "value": 0.00011095975783475783
+          },
+          {
+            "start": 2695.699999988079,
+            "value": 0.012104230769230768
+          },
+          {
+            "start": 2770.5,
+            "value": 0.005355432098765432
+          }
+        ],
+        "actions": [
+          {
+            "name": "quantity increase",
+            "start": 3453.5999999940395,
+            "end": 3864.9000000059605
+          },
+          {
+            "name": "booking step 2",
+            "start": 3867.699999988079,
+            "end": 4248.300000011921
+          },
+          {
+            "name": "booking step 3",
+            "start": 4250.300000011921,
+            "end": 4653.5
+          },
+          {
+            "name": "slot selection",
+            "start": 4656.699999988079,
+            "end": 5013.5999999940395
+          },
+          {
+            "name": "booking step 4",
+            "start": 5016.5999999940395,
+            "end": 5413.9000000059605
+          },
+          {
+            "name": "customer keyboard",
+            "start": 5415.9000000059605,
+            "end": 6630
+          }
+        ],
+        "overflow": false,
+        "originalEntryCounts": {
+          "events": 150,
+          "frames": 9,
+          "longTasks": 8
+        },
+        "eventCountsByName": {
+          "pointerover": 12,
+          "pointerenter": 37,
+          "mouseover": 12,
+          "pointerdown": 5,
+          "mousedown": 5,
+          "pointerup": 5,
+          "mouseup": 5,
+          "click": 5,
+          "pointerout": 8,
+          "pointerleave": 16,
+          "mouseout": 8,
+          "keydown": 8,
+          "keypress": 8,
+          "beforeinput": 8,
+          "input": 8
+        }
+      }
+    },
+    {
+      "width": 430,
+      "attempt": 0,
+      "throttled": false,
+      "home": {
+        "lcpMs": 292,
+        "layoutShiftSum": 0.012570513745334482,
+        "maxInteractionMs": 48,
+        "events": [
+          {
+            "name": "pointerover",
+            "start": 1753.699999988079,
+            "duration": 48,
+            "interactionId": 0,
+            "inputDelay": 0.5,
+            "processing": 0.4000000059604645,
+            "presentation": 47.099999994039536,
+            "target": "line"
+          },
+          {
+            "name": "pointerenter",
+            "start": 1753.699999988079,
+            "duration": 48,
+            "interactionId": 0,
+            "inputDelay": 0.9000000059604645,
+            "processing": 0,
+            "presentation": 47.099999994039536
+          },
+          {
+            "name": "pointerenter",
+            "start": 1753.699999988079,
+            "duration": 48,
+            "interactionId": 0,
+            "inputDelay": 0.9000000059604645,
+            "processing": 0,
+            "presentation": 47.099999994039536
+          },
+          {
+            "name": "pointerenter",
+            "start": 1753.699999988079,
+            "duration": 48,
+            "interactionId": 0,
+            "inputDelay": 0.9000000059604645,
+            "processing": 0,
+            "presentation": 47.099999994039536
+          },
+          {
+            "name": "pointerenter",
+            "start": 1753.699999988079,
+            "duration": 48,
+            "interactionId": 0,
+            "inputDelay": 0.9000000059604645,
+            "processing": 0,
+            "presentation": 47.099999994039536
+          },
+          {
+            "name": "pointerenter",
+            "start": 1753.699999988079,
+            "duration": 48,
+            "interactionId": 0,
+            "inputDelay": 0.9000000059604645,
+            "processing": 0,
+            "presentation": 47.099999994039536
+          }
+        ],
+        "longTasks": [
+          {
+            "start": 72.30000001192093,
+            "duration": 97
+          }
+        ],
+        "frames": [
+          {
+            "start": 39.5,
+            "duration": 128.40000000596046,
+            "renderStart": 72.30000001192093,
+            "styleAndLayoutStart": 72.5,
+            "scripts": []
+          },
+          {
+            "start": 175,
+            "duration": 54.900000005960464,
+            "renderStart": 224.90000000596046,
+            "styleAndLayoutStart": 224.90000000596046,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "",
+                "invoker": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "duration": 45,
+                "forcedLayout": 0
+              }
+            ]
+          }
+        ],
+        "shifts": [
+          {
+            "start": 282.5,
+            "value": 0.0004093254737295435
+          },
+          {
+            "start": 297.59999999403954,
+            "value": 0.012161188271604938
+          }
+        ],
+        "actions": [
+          {
+            "name": "finder keyboard",
+            "start": 765.8000000119209,
+            "end": 1725.300000011921
+          },
+          {
+            "name": "menu open",
+            "start": 1726.800000011921,
+            "end": 1976
+          },
+          {
+            "name": "menu close",
+            "start": 1978.199999988079,
+            "end": 2224.5999999940395
+          },
+          {
+            "name": "manual open",
+            "start": 2226.699999988079,
+            "end": 2476.699999988079
+          },
+          {
+            "name": "manual Width",
+            "start": 2480,
+            "end": 3374.5999999940395
+          },
+          {
+            "name": "manual Profile",
+            "start": 3378.699999988079,
+            "end": 3990.199999988079
+          },
+          {
+            "name": "manual Rim",
+            "start": 3992.9000000059605,
+            "end": 4673.300000011921
+          }
+        ],
+        "overflow": false,
+        "originalEntryCounts": {
+          "events": 96,
+          "frames": 2,
+          "longTasks": 1
+        },
+        "eventCountsByName": {
+          "keydown": 6,
+          "keypress": 4,
+          "beforeinput": 1,
+          "input": 1,
+          "keyup": 3,
+          "pointerover": 7,
+          "pointerenter": 32,
+          "mouseover": 7,
+          "pointerdown": 3,
+          "mousedown": 3,
+          "pointerup": 3,
+          "mouseup": 3,
+          "click": 3,
+          "pointerout": 4,
+          "pointerleave": 12,
+          "mouseout": 4
+        }
+      },
+      "booking": {
+        "lcpMs": 132,
+        "layoutShiftSum": 0.029141232235142117,
+        "maxInteractionMs": 32,
+        "events": [
+          {
+            "name": "pointerout",
+            "start": 1143,
+            "duration": 32,
+            "interactionId": 0,
+            "inputDelay": 1.4000000059604645,
+            "processing": 0.5,
+            "presentation": 30.099999994039536
+          },
+          {
+            "name": "pointerleave",
+            "start": 1143,
+            "duration": 32,
+            "interactionId": 0,
+            "inputDelay": 1.9000000059604645,
+            "processing": 0,
+            "presentation": 30.099999994039536
+          },
+          {
+            "name": "pointerleave",
+            "start": 1143,
+            "duration": 32,
+            "interactionId": 0,
+            "inputDelay": 1.9000000059604645,
+            "processing": 0,
+            "presentation": 30.099999994039536
+          },
+          {
+            "name": "pointerleave",
+            "start": 1143,
+            "duration": 32,
+            "interactionId": 0,
+            "inputDelay": 1.9000000059604645,
+            "processing": 0,
+            "presentation": 30.099999994039536
+          },
+          {
+            "name": "pointerleave",
+            "start": 1143,
+            "duration": 32,
+            "interactionId": 0,
+            "inputDelay": 1.9000000059604645,
+            "processing": 0,
+            "presentation": 30.099999994039536
+          },
+          {
+            "name": "pointerleave",
+            "start": 1143,
+            "duration": 32,
+            "interactionId": 0,
+            "inputDelay": 1.9000000059604645,
+            "processing": 0,
+            "presentation": 30.099999994039536
+          }
+        ],
+        "longTasks": [
+          {
+            "start": 102.59999999403954,
+            "duration": 50
+          }
+        ],
+        "frames": [
+          {
+            "start": 102.59999999403954,
+            "duration": 101.19999998807907,
+            "renderStart": 169.90000000596046,
+            "styleAndLayoutStart": 170,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "",
+                "invoker": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "duration": 49.900000005960464,
+                "forcedLayout": 0
+              },
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/479-12a0e5319109f95f.js",
+                "fn": "",
+                "invoker": "http://127.0.0.1:3111/_next/static/chunks/479-12a0e5319109f95f.js",
+                "duration": 9.699999988079071,
+                "forcedLayout": 0
+              }
+            ]
+          },
+          {
+            "start": 38.19999998807907,
+            "duration": 54.80000001192093,
+            "renderStart": 61.900000005960464,
+            "styleAndLayoutStart": 62.400000005960464,
+            "scripts": []
+          }
+        ],
+        "shifts": [
+          {
+            "start": 203.7999999821186,
+            "value": 0.006387045650301465
+          },
+          {
+            "start": 285.69999998807907,
+            "value": 0.017326443260120585
+          },
+          {
+            "start": 305.90000000596046,
+            "value": 0.005427743324720069
+          }
+        ],
+        "actions": [
+          {
+            "name": "quantity increase",
+            "start": 849.2999999821186,
+            "end": 1110.5999999940395
+          },
+          {
+            "name": "booking step 2",
+            "start": 1112.5999999940395,
+            "end": 1376.4000000059605
+          },
+          {
+            "name": "booking step 3",
+            "start": 1378.5,
+            "end": 1641.5999999940395
+          },
+          {
+            "name": "slot selection",
+            "start": 1644.7999999821186,
+            "end": 1909.2999999821186
+          },
+          {
+            "name": "booking step 4",
+            "start": 1911.9000000059605,
+            "end": 2169.699999988079
+          },
+          {
+            "name": "customer keyboard",
+            "start": 2173.5999999940395,
+            "end": 3224.7999999821186
+          }
+        ],
+        "overflow": false,
+        "originalEntryCounts": {
+          "events": 97,
+          "frames": 2,
+          "longTasks": 1
+        },
+        "eventCountsByName": {
+          "pointerover": 9,
+          "pointerenter": 27,
+          "mouseover": 9,
+          "pointerdown": 5,
+          "mousedown": 5,
+          "pointerup": 5,
+          "mouseup": 5,
+          "click": 5,
+          "pointerout": 5,
+          "pointerleave": 13,
+          "mouseout": 5,
+          "keydown": 1,
+          "keypress": 1,
+          "beforeinput": 1,
+          "input": 1
+        }
+      }
+    },
+    {
+      "width": 768,
+      "attempt": 0,
+      "throttled": false,
+      "home": {
+        "lcpMs": 260,
+        "layoutShiftSum": 0.000056005256558641976,
+        "maxInteractionMs": 72,
+        "events": [
+          {
+            "name": "keydown",
+            "start": 724.5999999940395,
+            "duration": 72,
+            "interactionId": 6044,
+            "inputDelay": 0.699999988079071,
+            "processing": 1,
+            "presentation": 70.30000001192093,
+            "target": "pc"
+          },
+          {
+            "name": "keypress",
+            "start": 724.5999999940395,
+            "duration": 72,
+            "interactionId": 6044,
+            "inputDelay": 1.699999988079071,
+            "processing": 3.2000000178813934,
+            "presentation": 67.09999999403954,
+            "target": "pc"
+          },
+          {
+            "name": "beforeinput",
+            "start": 726.7999999821186,
+            "duration": 72,
+            "interactionId": 0,
+            "inputDelay": 0,
+            "processing": 0,
+            "presentation": 72,
+            "target": "pc"
+          },
+          {
+            "name": "input",
+            "start": 727.7999999821186,
+            "duration": 64,
+            "interactionId": 0,
+            "inputDelay": 0.30000001192092896,
+            "processing": 1.2999999821186066,
+            "presentation": 62.400000005960464,
+            "target": "pc"
+          },
+          {
+            "name": "pointerover",
+            "start": 1672.699999988079,
+            "duration": 56,
+            "interactionId": 0,
+            "inputDelay": 0.4000000059604645,
+            "processing": 0.4000000059604645,
+            "presentation": 55.19999998807907,
+            "target": "line"
+          },
+          {
+            "name": "pointerenter",
+            "start": 1672.699999988079,
+            "duration": 56,
+            "interactionId": 0,
+            "inputDelay": 0.800000011920929,
+            "processing": 0,
+            "presentation": 55.19999998807907
+          }
+        ],
+        "longTasks": [],
+        "frames": [
+          {
+            "start": 36.39999997615814,
+            "duration": 86.30000001192093,
+            "renderStart": 79.39999997615814,
+            "styleAndLayoutStart": 79.69999998807907,
+            "scripts": []
+          },
+          {
+            "start": 126.39999997615814,
+            "duration": 67.30000001192093,
+            "renderStart": 192.5,
+            "styleAndLayoutStart": 193.09999999403954,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/1255-852914124fd1f142.js",
+                "fn": "",
+                "invoker": "http://127.0.0.1:3111/_next/static/chunks/1255-852914124fd1f142.js",
+                "duration": 46.099999994039536,
+                "forcedLayout": 0
+              }
+            ]
+          }
+        ],
+        "shifts": [
+          {
+            "start": 193.59999999403954,
+            "value": 0.000056005256558641976
+          }
+        ],
+        "actions": [
+          {
+            "name": "finder keyboard",
+            "start": 693.0999999940395,
+            "end": 1638.3999999761581
+          },
+          {
+            "name": "menu open",
+            "start": 1641.0999999940395,
+            "end": 1888
+          },
+          {
+            "name": "menu close",
+            "start": 1891.0999999940395,
+            "end": 2138
+          },
+          {
+            "name": "manual open",
+            "start": 2140.7999999821186,
+            "end": 2385.699999988079
+          },
+          {
+            "name": "manual Width",
+            "start": 2387.2999999821186,
+            "end": 3302.899999976158
+          },
+          {
+            "name": "manual Profile",
+            "start": 3305.399999976158,
+            "end": 3884.399999976158
+          },
+          {
+            "name": "manual Rim",
+            "start": 3887,
+            "end": 4568.899999976158
+          }
+        ],
+        "overflow": false,
+        "originalEntryCounts": {
+          "events": 113,
+          "frames": 2,
+          "longTasks": 0
+        },
+        "eventCountsByName": {
+          "keydown": 19,
+          "keypress": 5,
+          "beforeinput": 2,
+          "input": 2,
+          "keyup": 4,
+          "pointerover": 7,
+          "pointerenter": 32,
+          "mouseover": 7,
+          "pointerdown": 3,
+          "mousedown": 3,
+          "pointerup": 3,
+          "mouseup": 3,
+          "click": 3,
+          "pointerout": 4,
+          "pointerleave": 12,
+          "mouseout": 4
+        }
+      },
+      "booking": {
+        "lcpMs": 152,
+        "layoutShiftSum": 0.02121322538901749,
+        "maxInteractionMs": 32,
+        "events": [
+          {
+            "name": "pointerout",
+            "start": 1109.4000000059605,
+            "duration": 32,
+            "interactionId": 0,
+            "inputDelay": 0.9000000059604645,
+            "processing": 0.19999998807907104,
+            "presentation": 30.900000005960464
+          },
+          {
+            "name": "pointerleave",
+            "start": 1109.4000000059605,
+            "duration": 32,
+            "interactionId": 0,
+            "inputDelay": 1.0999999940395355,
+            "processing": 0,
+            "presentation": 30.900000005960464
+          },
+          {
+            "name": "pointerleave",
+            "start": 1109.4000000059605,
+            "duration": 32,
+            "interactionId": 0,
+            "inputDelay": 1.0999999940395355,
+            "processing": 0,
+            "presentation": 30.900000005960464
+          },
+          {
+            "name": "pointerleave",
+            "start": 1109.4000000059605,
+            "duration": 32,
+            "interactionId": 0,
+            "inputDelay": 1.0999999940395355,
+            "processing": 0,
+            "presentation": 30.900000005960464
+          },
+          {
+            "name": "pointerleave",
+            "start": 1109.4000000059605,
+            "duration": 32,
+            "interactionId": 0,
+            "inputDelay": 1.0999999940395355,
+            "processing": 0,
+            "presentation": 30.900000005960464
+          },
+          {
+            "name": "pointerleave",
+            "start": 1109.4000000059605,
+            "duration": 32,
+            "interactionId": 0,
+            "inputDelay": 1.0999999940395355,
+            "processing": 0,
+            "presentation": 30.900000005960464
+          }
+        ],
+        "longTasks": [],
+        "frames": [
+          {
+            "start": 149.2000000178814,
+            "duration": 59.599999994039536,
+            "renderStart": 208.09999999403954,
+            "styleAndLayoutStart": 208.5,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "",
+                "invoker": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "duration": 40.70000001788139,
+                "forcedLayout": 0
+              },
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/app/booking/page-38072427fa74f701.js",
+                "fn": "",
+                "invoker": "http://127.0.0.1:3111/_next/static/chunks/app/booking/page-38072427fa74f701.js",
+                "duration": 10.300000011920929,
+                "forcedLayout": 0
+              }
+            ]
+          },
+          {
+            "start": 57.20000001788139,
+            "duration": 57.39999997615814,
+            "renderStart": 89.59999999403954,
+            "styleAndLayoutStart": 90.2000000178814,
+            "scripts": []
+          }
+        ],
+        "shifts": [
+          {
+            "start": 148.5,
+            "value": 0.0005359007282021605
+          },
+          {
+            "start": 286.7000000178814,
+            "value": 0.013823056721000513
+          },
+          {
+            "start": 307.09999999403954,
+            "value": 0.006854267939814816
+          }
+        ],
+        "actions": [
+          {
+            "name": "quantity increase",
+            "start": 846,
+            "end": 1089.800000011921
+          },
+          {
+            "name": "booking step 2",
+            "start": 1091.800000011921,
+            "end": 1338
+          },
+          {
+            "name": "booking step 3",
+            "start": 1340,
+            "end": 1588.5999999940395
+          },
+          {
+            "name": "slot selection",
+            "start": 1590.9000000059605,
+            "end": 1837.800000011921
+          },
+          {
+            "name": "booking step 4",
+            "start": 1840.800000011921,
+            "end": 2085.5
+          },
+          {
+            "name": "customer keyboard",
+            "start": 2088.2000000178814,
+            "end": 3143.300000011921
+          }
+        ],
+        "overflow": false,
+        "originalEntryCounts": {
+          "events": 96,
+          "frames": 2,
+          "longTasks": 0
+        },
+        "eventCountsByName": {
+          "pointerover": 8,
+          "pointerenter": 24,
+          "mouseover": 8,
+          "pointerdown": 5,
+          "mousedown": 5,
+          "pointerup": 5,
+          "mouseup": 5,
+          "click": 5,
+          "pointerout": 4,
+          "pointerleave": 14,
+          "mouseout": 4,
+          "keydown": 3,
+          "keypress": 3,
+          "beforeinput": 2,
+          "input": 1
+        }
+      }
+    },
+    {
+      "width": 1366,
+      "attempt": 0,
+      "throttled": false,
+      "home": {
+        "lcpMs": 492,
+        "layoutShiftSum": 0.023746266696237448,
+        "maxInteractionMs": 176,
+        "events": [
+          {
+            "name": "keydown",
+            "start": 3745,
+            "duration": 176,
+            "interactionId": 2964,
+            "inputDelay": 0.30000001192092896,
+            "processing": 5.300000011920929,
+            "presentation": 170.39999997615814,
+            "target": "rim"
+          },
+          {
+            "name": "keyup",
+            "start": 3815.600000023842,
+            "duration": 160,
+            "interactionId": 2964,
+            "inputDelay": 0.3999999761581421,
+            "processing": 0.10000002384185791,
+            "presentation": 159.5,
+            "target": "rim"
+          },
+          {
+            "name": "keydown",
+            "start": 3827.600000023842,
+            "duration": 152,
+            "interactionId": 2971,
+            "inputDelay": 0.29999998211860657,
+            "processing": 1.9000000059604645,
+            "presentation": 149.80000001192093,
+            "target": "rim"
+          },
+          {
+            "name": "keyup",
+            "start": 3893.100000023842,
+            "duration": 144,
+            "interactionId": 2971,
+            "inputDelay": 0.3999999761581421,
+            "processing": 0.10000002384185791,
+            "presentation": 143.5,
+            "target": "rim"
+          },
+          {
+            "name": "keydown",
+            "start": 3729.2000000178814,
+            "duration": 128,
+            "interactionId": 2957,
+            "inputDelay": 1.2999999821186066,
+            "processing": 0.20000001788139343,
+            "presentation": 126.5,
+            "target": "rim"
+          },
+          {
+            "name": "keydown",
+            "start": 3908.2000000178814,
+            "duration": 128,
+            "interactionId": 2978,
+            "inputDelay": 0.19999998807907104,
+            "processing": 1.9000000059604645,
+            "presentation": 125.90000000596046,
+            "target": "rim"
+          }
+        ],
+        "longTasks": [
+          {
+            "start": 73.30000001192093,
+            "duration": 89
+          },
+          {
+            "start": 169.10000002384186,
+            "duration": 59
+          }
+        ],
+        "frames": [
+          {
+            "start": 44.30000001192093,
+            "duration": 115.90000000596046,
+            "renderStart": 73.30000001192093,
+            "styleAndLayoutStart": 73.7000000178814,
+            "scripts": []
+          },
+          {
+            "start": 166.7000000178814,
+            "duration": 85.19999998807907,
+            "renderStart": 228.90000000596046,
+            "styleAndLayoutStart": 245.10000002384186,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/1255-852914124fd1f142.js",
+                "fn": "",
+                "invoker": "http://127.0.0.1:3111/_next/static/chunks/1255-852914124fd1f142.js",
+                "duration": 58.29999998211861,
+                "forcedLayout": 0
+              }
+            ]
+          },
+          {
+            "start": 338.90000000596046,
+            "duration": 84.2000000178814,
+            "renderStart": 421.7000000178814,
+            "styleAndLayoutStart": 421.80000001192093,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/1255-852914124fd1f142.js",
+                "fn": "w",
+                "invoker": "MessagePort.onmessage",
+                "duration": 7.700000017881393,
+                "forcedLayout": 0
+              },
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/1255-852914124fd1f142.js",
+                "fn": "w",
+                "invoker": "MessagePort.onmessage",
+                "duration": 6.800000011920929,
+                "forcedLayout": 0
+              }
+            ]
+          },
+          {
+            "start": 2225.2000000178814,
+            "duration": 83.2999999821186,
+            "renderStart": 2307.600000023842,
+            "styleAndLayoutStart": 2308.5,
+            "scripts": []
+          },
+          {
+            "start": 4098.600000023842,
+            "duration": 70.2999999821186,
+            "renderStart": 4168.700000017881,
+            "styleAndLayoutStart": 4168.700000017881,
+            "scripts": []
+          }
+        ],
+        "shifts": [
+          {
+            "start": 251.90000000596046,
+            "value": 0.0236622807409297
+          },
+          {
+            "start": 315.80000001192093,
+            "value": 0.00008398595530774692
+          }
+        ],
+        "actions": [
+          {
+            "name": "finder keyboard",
+            "start": 964.4000000059605,
+            "end": 1935.800000011921
+          },
+          {
+            "name": "manual open",
+            "start": 1938.2000000178814,
+            "end": 2202.800000011921
+          },
+          {
+            "name": "manual Width",
+            "start": 2207.2000000178814,
+            "end": 3151
+          },
+          {
+            "name": "manual Profile",
+            "start": 3153.4000000059605,
+            "end": 3717.7000000178814
+          },
+          {
+            "name": "manual Rim",
+            "start": 3719.300000011921,
+            "end": 4383
+          }
+        ],
+        "overflow": false,
+        "originalEntryCounts": {
+          "events": 91,
+          "frames": 15,
+          "longTasks": 2
+        },
+        "eventCountsByName": {
+          "keydown": 29,
+          "keypress": 10,
+          "beforeinput": 7,
+          "input": 6,
+          "keyup": 11,
+          "pointerover": 3,
+          "pointerenter": 15,
+          "mouseover": 3,
+          "pointerdown": 1,
+          "mousedown": 1,
+          "pointerup": 1,
+          "mouseup": 1,
+          "click": 1,
+          "pointerout": 1,
+          "mouseout": 1
+        }
+      },
+      "booking": {
+        "lcpMs": 196,
+        "layoutShiftSum": 0.013740509817011285,
+        "maxInteractionMs": 48,
+        "events": [
+          {
+            "name": "pointerout",
+            "start": 1584.3999999761581,
+            "duration": 48,
+            "interactionId": 0,
+            "inputDelay": 1.300000011920929,
+            "processing": 0.4000000059604645,
+            "presentation": 46.29999998211861
+          },
+          {
+            "name": "pointerleave",
+            "start": 1584.3999999761581,
+            "duration": 48,
+            "interactionId": 0,
+            "inputDelay": 1.7000000178813934,
+            "processing": 0,
+            "presentation": 46.29999998211861
+          },
+          {
+            "name": "pointerleave",
+            "start": 1584.3999999761581,
+            "duration": 48,
+            "interactionId": 0,
+            "inputDelay": 1.7000000178813934,
+            "processing": 0,
+            "presentation": 46.29999998211861
+          },
+          {
+            "name": "pointerleave",
+            "start": 1584.3999999761581,
+            "duration": 48,
+            "interactionId": 0,
+            "inputDelay": 1.7000000178813934,
+            "processing": 0,
+            "presentation": 46.29999998211861
+          },
+          {
+            "name": "pointerover",
+            "start": 1584.3999999761581,
+            "duration": 48,
+            "interactionId": 0,
+            "inputDelay": 1.7000000178813934,
+            "processing": 0,
+            "presentation": 46.29999998211861
+          },
+          {
+            "name": "pointerenter",
+            "start": 1584.3999999761581,
+            "duration": 48,
+            "interactionId": 0,
+            "inputDelay": 1.7000000178813934,
+            "processing": 0,
+            "presentation": 46.29999998211861
+          }
+        ],
+        "longTasks": [
+          {
+            "start": 172.2999999821186,
+            "duration": 62
+          }
+        ],
+        "frames": [
+          {
+            "start": 169.59999999403954,
+            "duration": 112.5,
+            "renderStart": 250.69999998807907,
+            "styleAndLayoutStart": 250.69999998807907,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "",
+                "invoker": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "duration": 60.80000001192093,
+                "forcedLayout": 0
+              },
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/app/booking/page-38072427fa74f701.js",
+                "fn": "",
+                "invoker": "http://127.0.0.1:3111/_next/static/chunks/app/booking/page-38072427fa74f701.js",
+                "duration": 11.299999982118607,
+                "forcedLayout": 0
+              }
+            ]
+          },
+          {
+            "start": 89.2999999821186,
+            "duration": 68.90000000596046,
+            "renderStart": 113.7999999821186,
+            "styleAndLayoutStart": 114,
+            "scripts": []
+          }
+        ],
+        "shifts": [
+          {
+            "start": 282.09999999403954,
+            "value": 0.0010913786730948284
+          },
+          {
+            "start": 405.39999997615814,
+            "value": 0.00792290892413564
+          },
+          {
+            "start": 417.5,
+            "value": 0.0036963072369695033
+          },
+          {
+            "start": 430.2999999821186,
+            "value": 0.0010299149828113133
+          }
+        ],
+        "actions": [
+          {
+            "name": "quantity increase",
+            "start": 984,
+            "end": 1286.5
+          },
+          {
+            "name": "booking step 2",
+            "start": 1289,
+            "end": 1549.5999999940395
+          },
+          {
+            "name": "booking step 3",
+            "start": 1552,
+            "end": 1820.0999999940395
+          },
+          {
+            "name": "slot selection",
+            "start": 1822.5,
+            "end": 2070.0999999940395
+          },
+          {
+            "name": "booking step 4",
+            "start": 2072,
+            "end": 2336.7999999821186
+          },
+          {
+            "name": "customer keyboard",
+            "start": 2338.699999988079,
+            "end": 3384.699999988079
+          }
+        ],
+        "overflow": false,
+        "originalEntryCounts": {
+          "events": 113,
+          "frames": 2,
+          "longTasks": 1
+        },
+        "eventCountsByName": {
+          "pointerover": 11,
+          "pointerenter": 31,
+          "mouseover": 11,
+          "pointerdown": 5,
+          "mousedown": 5,
+          "pointerup": 5,
+          "mouseup": 5,
+          "click": 5,
+          "pointerout": 7,
+          "pointerleave": 14,
+          "mouseout": 7,
+          "keydown": 3,
+          "keypress": 3,
+          "beforeinput": 1
+        }
+      }
+    },
+    {
+      "width": 1440,
+      "attempt": 0,
+      "throttled": false,
+      "home": {
+        "lcpMs": 632,
+        "layoutShiftSum": 0.02618632119261188,
+        "maxInteractionMs": 240,
+        "events": [
+          {
+            "name": "keyup",
+            "start": 1264.2000000178814,
+            "duration": 240,
+            "interactionId": 862,
+            "inputDelay": 0.5,
+            "processing": 0.8999999761581421,
+            "presentation": 238.60000002384186,
+            "target": "pc"
+          },
+          {
+            "name": "keydown",
+            "start": 1266.9000000059605,
+            "duration": 232,
+            "interactionId": 869,
+            "inputDelay": 0.30000001192092896,
+            "processing": 0.19999998807907104,
+            "presentation": 231.5,
+            "target": "pc"
+          },
+          {
+            "name": "keypress",
+            "start": 1266.9000000059605,
+            "duration": 232,
+            "interactionId": 869,
+            "inputDelay": 0.5,
+            "processing": 2.4000000059604645,
+            "presentation": 229.09999999403954,
+            "target": "pc"
+          },
+          {
+            "name": "beforeinput",
+            "start": 1267.5,
+            "duration": 232,
+            "interactionId": 0,
+            "inputDelay": 0,
+            "processing": 0,
+            "presentation": 232,
+            "target": "pc"
+          },
+          {
+            "name": "input",
+            "start": 1268.4000000059605,
+            "duration": 232,
+            "interactionId": 0,
+            "inputDelay": 0.30000001192092896,
+            "processing": 1,
+            "presentation": 230.69999998807907,
+            "target": "pc"
+          },
+          {
+            "name": "keyup",
+            "start": 1364.0999999940395,
+            "duration": 216,
+            "interactionId": 869,
+            "inputDelay": 0.5,
+            "processing": 0.30000001192092896,
+            "presentation": 215.19999998807907,
+            "target": "pc"
+          }
+        ],
+        "longTasks": [
+          {
+            "start": 289.80000001192093,
+            "duration": 62
+          },
+          {
+            "start": 367.80000001192093,
+            "duration": 55
+          }
+        ],
+        "frames": [
+          {
+            "start": 54.70000001788139,
+            "duration": 162.19999998807907,
+            "renderStart": 112.40000000596046,
+            "styleAndLayoutStart": 112.40000000596046,
+            "scripts": []
+          },
+          {
+            "start": 1330.0999999940395,
+            "duration": 92.60000002384186,
+            "renderStart": 1421.2000000178814,
+            "styleAndLayoutStart": 1421.9000000059605,
+            "scripts": []
+          },
+          {
+            "start": 1885.5,
+            "duration": 83.80000001192093,
+            "renderStart": 1968.7000000178814,
+            "styleAndLayoutStart": 1969.0999999940395,
+            "scripts": []
+          },
+          {
+            "start": 1090.7000000178814,
+            "duration": 81.09999999403954,
+            "renderStart": 1171,
+            "styleAndLayoutStart": 1171.300000011921,
+            "scripts": []
+          },
+          {
+            "start": 1173.800000011921,
+            "duration": 78.2999999821186,
+            "renderStart": 1251.300000011921,
+            "styleAndLayoutStart": 1251.7000000178814,
+            "scripts": []
+          }
+        ],
+        "shifts": [
+          {
+            "start": 364.59999999403954,
+            "value": 0.026028039400077158
+          },
+          {
+            "start": 431.5,
+            "value": 0.00015828179253472223
+          }
+        ],
+        "actions": [
+          {
+            "name": "finder keyboard",
+            "start": 1108.0999999940395,
+            "end": 2097.7000000178814
+          },
+          {
+            "name": "manual open",
+            "start": 2100.300000011921,
+            "end": 2382.5
+          },
+          {
+            "name": "manual Width",
+            "start": 2385.300000011921,
+            "end": 3331.5999999940395
+          },
+          {
+            "name": "manual Profile",
+            "start": 3335,
+            "end": 3933.5
+          },
+          {
+            "name": "manual Rim",
+            "start": 3935.7000000178814,
+            "end": 4611.4000000059605
+          }
+        ],
+        "overflow": false,
+        "originalEntryCounts": {
+          "events": 91,
+          "frames": 16,
+          "longTasks": 2
+        },
+        "eventCountsByName": {
+          "keydown": 30,
+          "keypress": 10,
+          "beforeinput": 7,
+          "input": 7,
+          "keyup": 9,
+          "pointerover": 3,
+          "pointerenter": 15,
+          "mouseover": 3,
+          "pointerdown": 1,
+          "mousedown": 1,
+          "pointerup": 1,
+          "mouseup": 1,
+          "click": 1,
+          "pointerout": 1,
+          "mouseout": 1
+        }
+      },
+      "booking": {
+        "lcpMs": 148,
+        "layoutShiftSum": 0.011048677370675797,
+        "maxInteractionMs": 56,
+        "events": [
+          {
+            "name": "pointerout",
+            "start": 1411.7999999821186,
+            "duration": 56,
+            "interactionId": 0,
+            "inputDelay": 1,
+            "processing": 0.30000001192092896,
+            "presentation": 54.69999998807907
+          },
+          {
+            "name": "pointerleave",
+            "start": 1411.7999999821186,
+            "duration": 56,
+            "interactionId": 0,
+            "inputDelay": 1.300000011920929,
+            "processing": 0,
+            "presentation": 54.69999998807907
+          },
+          {
+            "name": "pointerleave",
+            "start": 1411.7999999821186,
+            "duration": 56,
+            "interactionId": 0,
+            "inputDelay": 1.300000011920929,
+            "processing": 0,
+            "presentation": 54.69999998807907
+          },
+          {
+            "name": "pointerleave",
+            "start": 1411.7999999821186,
+            "duration": 56,
+            "interactionId": 0,
+            "inputDelay": 1.300000011920929,
+            "processing": 0,
+            "presentation": 54.69999998807907
+          },
+          {
+            "name": "pointerover",
+            "start": 1411.7999999821186,
+            "duration": 56,
+            "interactionId": 0,
+            "inputDelay": 1.300000011920929,
+            "processing": 0.09999999403953552,
+            "presentation": 54.599999994039536
+          },
+          {
+            "name": "pointerenter",
+            "start": 1411.7999999821186,
+            "duration": 56,
+            "interactionId": 0,
+            "inputDelay": 1.4000000059604645,
+            "processing": 0,
+            "presentation": 54.599999994039536
+          }
+        ],
+        "longTasks": [
+          {
+            "start": 115.69999998807907,
+            "duration": 58
+          }
+        ],
+        "frames": [
+          {
+            "start": 114.2999999821186,
+            "duration": 111.30000001192093,
+            "renderStart": 191.7999999821186,
+            "styleAndLayoutStart": 191.7999999821186,
+            "scripts": [
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "fn": "",
+                "invoker": "http://127.0.0.1:3111/_next/static/chunks/4bd1b696-f785427dddbba9fb.js",
+                "duration": 56.900000005960464,
+                "forcedLayout": 0
+              },
+              {
+                "source": "http://127.0.0.1:3111/_next/static/chunks/7089-c7ff19cbf1b6fb66.js",
+                "fn": "",
+                "invoker": "http://127.0.0.1:3111/_next/static/chunks/7089-c7ff19cbf1b6fb66.js",
+                "duration": 11.400000005960464,
+                "forcedLayout": 0
+              }
+            ]
+          },
+          {
+            "start": 51.29999998211861,
+            "duration": 52.60000002384186,
+            "renderStart": 72.5,
+            "styleAndLayoutStart": 72.69999998807907,
+            "scripts": []
+          }
+        ],
+        "shifts": [
+          {
+            "start": 225.59999999403954,
+            "value": 0.0010328561706961592
+          },
+          {
+            "start": 350.5,
+            "value": 0.006772649903683341
+          },
+          {
+            "start": 370.90000000596046,
+            "value": 0.0032431712962962965
+          }
+        ],
+        "actions": [
+          {
+            "name": "quantity increase",
+            "start": 887.1999999880791,
+            "end": 1142.7999999821186
+          },
+          {
+            "name": "booking step 2",
+            "start": 1144.7999999821186,
+            "end": 1392.9000000059605
+          },
+          {
+            "name": "booking step 3",
+            "start": 1394.5999999940395,
+            "end": 1643.699999988079
+          },
+          {
+            "name": "slot selection",
+            "start": 1645,
+            "end": 1908.5999999940395
+          },
+          {
+            "name": "booking step 4",
+            "start": 1910.0999999940395,
+            "end": 2158.9000000059605
+          },
+          {
+            "name": "customer keyboard",
+            "start": 2160.7999999821186,
+            "end": 3210
+          }
+        ],
+        "overflow": false,
+        "originalEntryCounts": {
+          "events": 110,
+          "frames": 2,
+          "longTasks": 1
+        },
+        "eventCountsByName": {
+          "pointerover": 11,
+          "pointerenter": 31,
+          "mouseover": 11,
+          "pointerdown": 5,
+          "mousedown": 5,
+          "pointerup": 5,
+          "mouseup": 5,
+          "click": 5,
+          "pointerout": 7,
+          "pointerleave": 14,
+          "mouseout": 7,
+          "keydown": 1,
+          "keypress": 1,
+          "beforeinput": 1,
+          "input": 1
+        }
+      }
+    }
+  ],
+  "webkit": {
+    "status": "PASS",
+    "scope": "Local WebKit manual finder smoke; no Safari hardware or hosted persistence"
+  },
+  "fieldINP": "BLOCKED: lab events cannot establish real-user p75 INP",
+  "paintAblation": false,
+  "labTargets": {
+    "throttledSamples": 3,
+    "homeLcpMs": [
+      1984,
+      2336,
+      1580
+    ],
+    "maxInteractionMs": [
+      336,
+      168,
+      136
+    ],
+    "maxLayoutShiftSum": 0.047784294238683134,
+    "note": "Lab LCP, interaction maxima and layout-shift sums only; no field percentile claim"
+  },
+  "functionalStatus": "PASS",
+  "retention": "Aggregates unchanged; six slowest events, five longest frames (three scripts each), five longest tasks per route. Complete entries retained in ignored .local-postgres files."
+}

@@ -1,0 +1,2 @@
+import AdminNav from '@/components/admin/AdminNav';import AccessManager from '@/components/admin/AccessManager';import {requireAdminPage} from '@/lib/auth/admin';
+export default async function Page(){const a=await requireAdminPage();return <div className="container-g section"><AdminNav/><h1 className="display-2 mb-6">Access</h1>{a.profile.role==='owner'?<AccessManager/>:<p className="card">Owner access required.</p>}</div>;}
