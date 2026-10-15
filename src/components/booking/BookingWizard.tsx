@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -181,8 +181,14 @@ export default function BookingWizard({ phoneBooking = false }: { phoneBooking?:
     setSelectedSlot(slot);
   }
 
-  const availableDates = Array.from(new Set(slots.map((slot) => slot.slot_date))).slice(0, 10);
-  const slotsForSelectedDate = slots.filter((slot) => slot.slot_date === selectedDate);
+  const availableDates = useMemo(
+    () => Array.from(new Set(slots.map((slot) => slot.slot_date))).slice(0, 10),
+    [slots]
+  );
+  const slotsForSelectedDate = useMemo(
+    () => slots.filter((slot) => slot.slot_date === selectedDate),
+    [slots, selectedDate]
+  );
   const frontTotal = selectedTyre ? selectedTyre.sell_price * quantity : undefined;
   const rearTotal = rearTyre ? rearTyre.sell_price * rearQuantity : undefined;
   const price = (value: number | undefined) => value === undefined ? 'Unavailable' : formatPrice(value);

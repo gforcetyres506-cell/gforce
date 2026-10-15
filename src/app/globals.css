@@ -512,7 +512,6 @@
     inset: 2%;
     transform-style: preserve-3d;
     transform-origin: 50% 52%;
-    animation: tyre-idle-3d 7.5s cubic-bezier(.45,.05,.25,.95) .8s infinite;
     will-change: transform;
   }
 
@@ -528,7 +527,6 @@
     background: conic-gradient(from 90deg, transparent, rgba(56,189,248,.22), transparent 42%, rgba(255,255,255,.08), transparent 72%);
     filter: blur(16px);
     opacity: .7;
-    animation: tyre-aura-turn 14s linear infinite;
   }
 
   .hero-tyre-ground-shadow {
@@ -541,7 +539,6 @@
     background: radial-gradient(ellipse, rgba(0,0,0,.8), transparent 68%);
     filter: blur(8px);
     transform: rotate(-5deg) scaleX(.9);
-    animation: tyre-shadow-breathe 7.5s ease-in-out .8s infinite;
   }
 
   .hero-tyre-tilt {
@@ -561,7 +558,6 @@
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
-    animation: tyre-wheel-spin 22s linear 1s infinite;
     will-change: transform;
   }
 
@@ -604,7 +600,6 @@
     background: linear-gradient(90deg, transparent, rgba(56,189,248,.2) 22%, rgba(125,220,255,.92) 50%, rgba(56,189,248,.2) 78%, transparent);
     box-shadow: 0 0 14px rgba(56,189,248,.7), 0 0 36px rgba(56,189,248,.28);
     opacity: .72;
-    animation: tyre-scan 4.8s cubic-bezier(.45,.05,.55,.95) 1.2s infinite;
     will-change: transform, opacity;
   }
 
@@ -630,13 +625,11 @@
   .hero-orbit-one {
     inset: 9% -1% 14% 2%;
     border-color: rgba(56,189,248,.34) transparent rgba(56,189,248,.12);
-    animation: hero-orbit-one 10s linear infinite;
   }
 
   .hero-orbit-two {
     inset: 20% 8% 18% -3%;
     border-color: rgba(255,255,255,.14) rgba(56,189,248,.16) transparent;
-    animation: hero-orbit-two 13s linear infinite reverse;
   }
 
   .hero-orbit-two::after {
@@ -870,6 +863,27 @@
       width: min(48vw, 650px);
       justify-self: end;
       pointer-events: auto;
+    }
+    .hero-tyre-motion {
+      animation: tyre-idle-3d 7.5s cubic-bezier(.45,.05,.25,.95) .8s infinite;
+    }
+    .hero-tyre-aura {
+      animation: tyre-aura-turn 14s linear infinite;
+    }
+    .hero-tyre-ground-shadow {
+      animation: tyre-shadow-breathe 7.5s ease-in-out .8s infinite;
+    }
+    .hero-tyre-spin {
+      animation: tyre-wheel-spin 22s linear 1s infinite;
+    }
+    .hero-tyre-scanline {
+      animation: tyre-scan 4.8s cubic-bezier(.45,.05,.55,.95) 1.2s infinite;
+    }
+    .hero-orbit-one {
+      animation: hero-orbit-one 10s linear infinite;
+    }
+    .hero-orbit-two {
+      animation: hero-orbit-two 13s linear infinite reverse;
     }
     .hero-spec-card { display: block; }
     .hero-scroll-cue { display: flex; }
