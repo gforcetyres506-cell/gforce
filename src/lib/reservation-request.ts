@@ -5,6 +5,7 @@ import { createServiceClient } from '@/lib/supabase';
 import { resolvePostcode } from '@/lib/postcodes';
 import { checkRateLimit, getClientIp } from '@/lib/rateLimit';
 import { reservationSchema } from '@/lib/checkout-result';
+import { getRequestOrigin } from '@/lib/request-origin';
 
 import type { AdminContext } from '@/lib/auth/admin';
 
@@ -19,7 +20,7 @@ const errors: Record<string, { status: number; error: string; message: string }>
 };
 export async function handleReservationRequest(req: Request, actor?: AdminContext) {
   const origin = req.headers.get('origin');
-  if (origin && origin !== new URL(req.url).origin) return NextResponse.json({ ok: false, error: 'forbidden' }, { status: 403 });
+  if (req.headers.get('sec-fetch-site') === 'cross-site' || (origin && origin !== getRequestOrigin(req))) return NextResponse.json({ ok: false, error: 'forbidden' }, { status: 403 });
   const input = checkoutSchema.safeParse(await req.json().catch(() => null));
   if (!input.success) return NextResponse.json({ ok: false, error: 'invalid_checkout', message: 'Check your tyres and contact details.' }, { status: 400 });
   try {

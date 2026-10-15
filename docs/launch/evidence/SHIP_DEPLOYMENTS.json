@@ -1,0 +1,27 @@
+{
+  "checkedAt": "2026-10-12T12:25:05.982Z",
+  "deployments": [
+    {
+      "sha": "feec554f4d93a66fc8af7560bed14cb6f267badd",
+      "environment": "Preview",
+      "createdAt": "2026-10-12T11:58:30Z",
+      "status": "success",
+      "url": "https://gforce-1wy8pad70-g-force2.vercel.app"
+    },
+    {
+      "sha": "14ac0ac15082517283fa5260a60272ab32e0b70e",
+      "environment": "Preview",
+      "createdAt": "2026-10-12T12:24:22Z",
+      "status": "success",
+      "url": "https://gforce-f9djkkgo7-g-force2.vercel.app"
+    }
+  ],
+  "previewAccess": "BLOCKED: protected by Vercel authentication; available signed-in account has no G Force project access",
+  "productionSHA": "UNKNOWN: provider/domain mapping not attested; no production deployment performed",
+  "latestRecordedProduction": {
+    "sha": "61346440dd64e5dacff31d6e6409236d08d3e6c8",
+    "environment": "Production",
+    "createdAt": "2026-09-19T07:19:42Z",
+    "domainMappingAttested": false
+  }
+}

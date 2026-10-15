@@ -75,15 +75,27 @@ test('owner bank settings start empty and report configuration required', async 
   for (const label of ['Account name','Bank name','Sort code','Account number','Payment window (minutes)']) await expect(page.getByLabel(label, { exact: true })).toHaveValue('');
   await noOverflow(page);
 });
-test('actual staff controls copy instructions, email without a delivery claim and explicitly extend', async ({ page }) => {
+test('actual staff controls copy instructions, email without a delivery claim and explicitly extend', async ({ page, browserName }) => {
   const bodies: object[] = [];
-  await page.context().grantPermissions(['clipboard-read','clipboard-write']);
+  if (browserName === 'chromium') await page.context().grantPermissions(['clipboard-read','clipboard-write']);
+  else await page.addInitScript(() => {
+    // WebKit has no Playwright clipboard permission override. Exercise the
+    // real denial fallback without reading the operating-system clipboard.
+    Object.defineProperty(navigator, 'clipboard', { configurable:true, value:{ writeText:async()=>{ throw new Error('Test-only copy denial'); } } });
+  });
   await page.route('**/api/admin/bookings', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ ok: true, data: [pending] }) }));
   await page.route('**/api/admin/payments/instructions', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ ok: true, message: 'Email accepted by the provider. Inbox delivery is not confirmed.' }) }));
   await page.route('**/api/admin/payments', route => { bodies.push(route.request().postDataJSON()); return route.fulfill({ contentType: 'application/json', body: JSON.stringify({ ok: true }) }); });
   await harness(page, 'bookings'); await page.getByLabel('Select booking').selectOption(id);
-  await page.getByRole('button', { name: 'Copy payment instructions' }).click(); await expect(page.getByText('Payment instructions copied.', { exact: true })).toBeVisible();
-  expect(await page.evaluate(() => navigator.clipboard.readText())).toContain('Amount due: £117.00');
+  await page.getByRole('button', { name: 'Copy payment instructions' }).click();
+  if (browserName === 'chromium') {
+    await expect(page.getByText('Payment instructions copied.', { exact: true })).toBeVisible();
+    expect(await page.evaluate(() => navigator.clipboard.readText())).toContain('Amount due: £117.00');
+  } else {
+    await expect(page.getByText('Copy was unavailable. Please select the bank details below.')).toBeVisible();
+    await expect(page.getByText('Payment instructions copied.', { exact: true })).toHaveCount(0);
+    await expect(page.getByRole('region', { name:'Bank transfer instructions' })).toContainText('UI Test Bank');
+  }
   await page.getByRole('button', { name: 'Email payment instructions' }).click(); await expect(page.getByRole('status').first()).toContainText('Inbox delivery is not confirmed');
   await page.getByLabel('Additional minutes').fill('30'); await page.getByLabel('Reason for extension').fill('Customer requested additional transfer time');
   await page.getByRole('button', { name: 'Check availability and extend' }).click(); await expect(page.getByRole('status').first()).toContainText('Change saved and audited');

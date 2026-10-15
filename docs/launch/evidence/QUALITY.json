@@ -1,0 +1,147 @@
+{
+  "checkedAt": "2026-10-12T10:45:49.499Z",
+  "branch": "release/seo-security-launch",
+  "startingSha": "5ab984d050fed5c68fbb0f8eed5d04b2d37461cf",
+  "scope": "Local branch verification only. Browser fixtures and disposable loopback PostgreSQL do not attest hosted/provider/production acceptance.",
+  "localFunctionalStatus": "PASS",
+  "commands": {
+    "typecheck": {
+      "status": "PASS",
+      "exitCode": 0
+    },
+    "lint": {
+      "status": "PASS",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 3,
+      "note": "Existing unused-variable warnings in src/components/3d/TyreScene.tsx; component not loaded by homepage."
+    },
+    "build": {
+      "status": "PASS",
+      "exitCode": 0,
+      "next": "15.5.27",
+      "note": "Standalone production build passed; final origin-focused Playwright run rebuilt the final application source successfully."
+    },
+    "security": {
+      "status": "PASS",
+      "exitCode": 0,
+      "scope": "Structural security checks; hosted Supabase scenarios remain gated."
+    },
+    "reliability": {
+      "status": "PASS",
+      "passed": 129,
+      "failed": 0,
+      "skipped": 0
+    },
+    "database": {
+      "status": "PASS",
+      "passed": 16,
+      "failed": 0,
+      "scope": "PGlite migration/RLS regression"
+    },
+    "concurrency": {
+      "status": "PASS",
+      "passed": 12,
+      "failed": 0,
+      "scope": "Native loopback PostgreSQL 16.15; all 18 migrations",
+      "evidence": "LOCAL_BOOKING_POSTGRES.json"
+    },
+    "bankPayments": {
+      "status": "PASS",
+      "passed": 17,
+      "failed": 0,
+      "scope": "Native loopback PostgreSQL only",
+      "evidence": "LOCAL_BANK_POSTGRES.json"
+    },
+    "adminOs": {
+      "status": "PASS",
+      "passed": 3,
+      "failed": 0,
+      "scope": "Native loopback PostgreSQL only; owner operations/viewer denial/self-lockout",
+      "evidence": "LOCAL_ADMIN_POSTGRES.json"
+    },
+    "ui": {
+      "status": "PASS",
+      "passed": 252,
+      "failed": 0,
+      "skipped": 0,
+      "widths": [
+        360,
+        375,
+        390,
+        430,
+        768,
+        1366,
+        1440
+      ],
+      "duration": "5.5m",
+      "scope": "Automated Chromium, reduced motion, isolated browser API fixtures and credential-free local production server. Not physical devices or hosted E2E.",
+      "finalOriginChangeVerification": "The shared reverse-proxy origin fix followed the full 252-case run. Final reliability tests, production rebuild, 7/7 API browser checks across all widths, and the local proxy integration audit then passed. No database/payment transaction semantics changed.",
+      "previousFailures": "Corrected obsolete malformed-token 503 expectation (now 404); fixed test locator-list hydration race without lowering touch-target requirements."
+    },
+    "finalApiBrowser": {
+      "status": "PASS",
+      "passed": 7,
+      "failed": 0,
+      "scope": "Fresh production build after shared origin fix; all seven widths"
+    },
+    "diffCheck": {
+      "status": "PASS",
+      "exitCode": 0
+    },
+    "secrets": {
+      "status": "PASS",
+      "evidence": "SECRET_SCAN.json",
+      "builtBrowserFiles": 98,
+      "sourceMaps": 0,
+      "findings": 0,
+      "note": "No private deployment environment values supplied; remote account/log audit not performed."
+    },
+    "runtimeAudit": {
+      "status": "PASS",
+      "critical": 0,
+      "high": 0,
+      "moderate": 0,
+      "total": 0
+    },
+    "fullAudit": {
+      "status": "FAIL",
+      "critical": 0,
+      "high": 7,
+      "moderate": 2,
+      "total": 9,
+      "scope": "Unresolved development toolchain findings; see DEPENDENCY_REVIEW.md and DEPENDENCIES_AFTER.json"
+    }
+  },
+  "localProxyAndSlowNetwork": {
+    "functionalStatus": "PASS",
+    "evidence": "LOCAL_BROWSER.json",
+    "hsts": "max-age=31536000; includeSubDomains",
+    "apexRedirectStatus": 308,
+    "crossSiteMutationStatus": 403,
+    "sameSiteInvalidInputStatus": 400,
+    "performanceAcceptance": "BLOCKED",
+    "note": "One simulated 390px sample at 150ms latency, 1.6Mbps download, 750Kbps upload, 4x CPU slowdown. LCP 2488ms, layout-shift sum 0.04624, event durations up to 696ms. Event timing from this small synthetic sequence is not field INP. High latency needs investigation and physical/field acceptance."
+  },
+  "blocked": [
+    "Accepted exact-SHA deployment",
+    "Hosted schema/Auth/RLS/RBAC and booking/provider acceptance",
+    "Real owner-approved contact/coverage/catalogue/bank facts",
+    "Approved legal policies",
+    "Physical Safari/Chrome/Instagram sessions",
+    "Field Core Web Vitals",
+    "External structured-data validators for branch deployment",
+    "Platform log-redaction and remote secret attestation",
+    "Monitoring activation/ownership",
+    "Backups, restore, rollback and owner operational acceptance"
+  ],
+  "humanActionRequired": [
+    "Google Search Console",
+    "Google Business Profile",
+    "Bing/Apple discovery account verification"
+  ],
+  "indexingReady": false,
+  "productionReady": false,
+  "p0Open": 1,
+  "p1Open": 11
+}

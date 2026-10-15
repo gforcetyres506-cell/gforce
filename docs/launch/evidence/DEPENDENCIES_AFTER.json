@@ -1,0 +1,107 @@
+{
+  "checkedAt": "2026-10-12T10:17:59.546Z",
+  "full": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 2,
+      "high": 7,
+      "critical": 0,
+      "total": 9
+    },
+    "dependencies": {
+      "prod": 137,
+      "dev": 687,
+      "optional": 129,
+      "peer": 24,
+      "peerOptional": 0,
+      "total": 869
+    }
+  },
+  "runtime": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "dependencies": {
+      "prod": 137,
+      "dev": 687,
+      "optional": 129,
+      "peer": 24,
+      "peerOptional": 0,
+      "total": 869
+    }
+  },
+  "findings": [
+    {
+      "name": "@next/eslint-plugin-next",
+      "severity": "high",
+      "direct": false,
+      "advisories": []
+    },
+    {
+      "name": "braces",
+      "severity": "high",
+      "direct": false,
+      "advisories": [
+        {
+          "title": "braces vulnerable to stack-exhaustion denial of service through deeply nested patterns",
+          "url": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+          "range": "<=3.0.3"
+        }
+      ]
+    },
+    {
+      "name": "chokidar",
+      "severity": "high",
+      "direct": false,
+      "advisories": []
+    },
+    {
+      "name": "eslint-config-next",
+      "severity": "high",
+      "direct": true,
+      "advisories": []
+    },
+    {
+      "name": "fast-glob",
+      "severity": "high",
+      "direct": false,
+      "advisories": []
+    },
+    {
+      "name": "micromatch",
+      "severity": "high",
+      "direct": false,
+      "advisories": []
+    },
+    {
+      "name": "postcss-nested",
+      "severity": "moderate",
+      "direct": false,
+      "advisories": []
+    },
+    {
+      "name": "postcss-selector-parser",
+      "severity": "moderate",
+      "direct": false,
+      "advisories": [
+        {
+          "title": "PostCSS: Quadratic complexity in flat selector parsing allows CPU exhaustion",
+          "url": "https://github.com/advisories/GHSA-rj75-hqrm-r3gf",
+          "range": "<7.1.6"
+        }
+      ]
+    },
+    {
+      "name": "tailwindcss",
+      "severity": "high",
+      "direct": true,
+      "advisories": []
+    }
+  ]
+}

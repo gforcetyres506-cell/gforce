@@ -1,0 +1,30 @@
+{
+  "checkedAt": "2026-10-12T10:43:57.624Z",
+  "status": "PASS",
+  "scope": "Local production build, Chromium 390px, reduced motion, no configured database/providers. Simulated network: 150ms latency, 1.6Mbps download, 750Kbps upload; CPU 4x slowdown. One lab sample only.",
+  "httpStatus": 200,
+  "overflow": false,
+  "coverageVisible": true,
+  "focusedAfterPostcodeTab": {
+    "tag": "BUTTON",
+    "name": null
+  },
+  "policyChecks": {
+    "hsts": "max-age=31536000; includeSubDomains",
+    "apexStatus": 308,
+    "apexLocation": "https://www.gforcetyres-mobile.co.uk/coverage?utm_source=qa",
+    "crossSiteMutationStatus": 403,
+    "sameSiteInvalidInputStatus": 400
+  },
+  "metrics": {
+    "lcpMs": 2488,
+    "layoutShiftSum": 0.04624290376473159,
+    "eventDurationsMs": [
+      696,
+      240,
+      160,
+      72
+    ]
+  },
+  "fieldCoreWebVitals": "BLOCKED: lab LCP/layout-shift/event timing does not establish field LCP/CLS or INP; real devices and accepted deployment required."
+}

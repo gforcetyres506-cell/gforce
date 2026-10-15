@@ -2,6 +2,7 @@ import { defineConfig } from '@playwright/test';
 
 const widths = [360, 375, 390, 430, 768, 1366, 1440];
 const contactsConfigured = process.env.UI_TEST_CONTACTS !== 'off';
+const browsers = process.env.UI_TEST_BROWSERS === 'all' ? ['chromium', 'webkit'] as const : ['chromium'] as const;
 
 export default defineConfig({
   testDir: './tests/ui',
@@ -17,10 +18,10 @@ export default defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },
-  projects: widths.map((width) => ({
-    name: `chromium-${width}`,
-    use: { viewport: { width, height: width < 768 ? 844 : 900 } },
-  })),
+  projects: browsers.flatMap((browserName) => widths.map((width) => ({
+    name: `${browserName}-${width}`,
+    use: { browserName, viewport: { width, height: width < 768 ? 844 : 900 } },
+  }))),
   webServer: {
     command: 'npm run build && npm run start -- --hostname 127.0.0.1 --port 3100',
     url: 'http://127.0.0.1:3100',

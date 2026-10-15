@@ -1,5 +1,7 @@
 import Image from 'next/image';
-import type { Metadata } from 'next';
+import { publicMetadata } from '@/lib/site';
+import StructuredData from '@/components/StructuredData';
+import { organizationSchema } from '@/lib/business-entity';
 import Link from 'next/link';
 import {
   ArrowRight,
@@ -17,10 +19,7 @@ import HeroTyreMotion from '@/components/animations/HeroTyreMotion';
 import TyreFinder from '@/components/booking/TyreFinder';
 import { ContactActions } from '@/components/layout/BusinessContact';
 
-export const metadata: Metadata = {
-  title: 'Mobile Tyre Fitting',
-  description: 'Check your fitting postcode, find your tyre size and book mobile tyre fitting with G Force Tyres.',
-};
+export const metadata = publicMetadata('/', 'Mobile Tyre Fitting', 'G Force Tyres Mobile provides mobile tyre fitting. Check your postcode and tyre size, review available tyres and follow the booking instructions.');
 
 const STEPS = [
   {
@@ -30,8 +29,8 @@ const STEPS = [
   },
   {
     n: '02',
-    title: 'Match the vehicle or size',
-    body: 'Use the registration lookup, or enter the three numbers printed on the tyre sidewall yourself.',
+    title: 'Read your tyre size',
+    body: 'Enter the width, profile and rim size printed on the tyre sidewall. Check vehicle requirements before selecting a replacement.',
   },
   {
     n: '03',
@@ -42,7 +41,7 @@ const STEPS = [
 
 const JOURNEY_PROOF = [
   { icon: MapPin, label: 'Location first', sub: 'Postcode-based service check' },
-  { icon: Car, label: 'Two ways to search', sub: 'Registration or tyre size' },
+  { icon: Car, label: 'Search by size', sub: 'Use the tyre sidewall markings' },
   { icon: ScanSearch, label: 'Fitment confirmation', sub: 'Review before selection' },
   { icon: ShieldCheck, label: 'Clear next steps', sub: 'No hidden navigation' },
 ];
@@ -68,6 +67,7 @@ const FITTING_CONTEXTS = [
 export default function HomePage() {
   return (
     <>
+      <StructuredData data={organizationSchema()} />
       <section className="hero-shell" aria-labelledby="hero-title">
         <div className="hero-grid-lines" aria-hidden="true" />
         <div className="hero-glow" aria-hidden="true" />
@@ -82,8 +82,8 @@ export default function HomePage() {
             </h1>
 
             <p className="hero-lede">
-              Check your postcode, identify the correct tyre size and move into
-              booking through one focused, mobile-first journey.
+              G Force Tyres Mobile provides mobile tyre fitting. Check your
+              postcode, enter your tyre size and review the available options.
             </p>
             <ContactActions className="mt-5" />
 
@@ -92,7 +92,7 @@ export default function HomePage() {
             </div>
 
             <div className="hero-microproof" aria-label="Search options">
-              <span><CheckCircle2 size={14} /> Registration lookup</span>
+              <span><CheckCircle2 size={14} /> Postcode check</span>
               <span><CheckCircle2 size={14} /> Manual size entry</span>
               <span><CheckCircle2 size={14} /> No account required</span>
             </div>
@@ -114,7 +114,7 @@ export default function HomePage() {
             </HeroTyreMotion>
             <div className="hero-spec-card" aria-hidden="true">
               <span className="hero-spec-kicker">Fitment search</span>
-              <strong>REG → SIZE → TYRE</strong>
+              <strong>POSTCODE → SIZE → TYRE</strong>
               <span>One clear route to the right option</span>
             </div>
           </div>
@@ -149,8 +149,8 @@ export default function HomePage() {
             <p className="label mb-3">A shorter route to the right fit</p>
             <h2 className="display-1 mb-5 max-w-[14ch]">From postcode to tyre choice</h2>
             <p className="mb-14 max-w-readable text-ink-2">
-              Each step asks for only the information needed to unlock the next
-              decision. You can always switch to manual tyre-size entry.
+              Check the fitting location first, then enter the tyre-size markings.
+              Registration lookup is currently unavailable.
             </p>
           </ScrollReveal>
 
@@ -176,9 +176,8 @@ export default function HomePage() {
             </div>
             <div>
               <p className="max-w-readable text-ink-2">
-                The postcode check sits at the beginning—not buried later in the
-                funnel—so the service area is established before vehicle and tyre
-                details are entered.
+                Enter the postcode where the vehicle will be fitted. Coverage,
+                stock and appointment availability must be checked before booking.
               </p>
               <Link href="/#tyre-finder" className="btn btn-secondary mt-7">
                 Check a postcode <ArrowRight size={16} />
@@ -207,8 +206,7 @@ export default function HomePage() {
             </div>
             <div className="max-w-[420px] lg:text-right">
               <p className="mb-7 text-ink-2">
-                Start with a postcode, then use the registration or the numbers on
-                the tyre sidewall.
+                Start with a postcode, then use the numbers on the tyre sidewall.
               </p>
               <Link href="/#tyre-finder" className="btn btn-primary">
                 Start tyre search <ArrowRight size={16} />
@@ -217,6 +215,17 @@ export default function HomePage() {
           </ScrollReveal>
         </div>
       </section>
+      <section className="section border-t border-line"><div className="container-g max-w-3xl">
+        <h2 className="display-2 mb-5">Before you book</h2>
+        <p className="text-ink-2 mb-4">Bank-transfer reservations require independent staff payment verification. A pending payment is not a confirmed fitting. Keep your private management link to check the recorded status.</p>
+        <p className="text-ink-2 mb-6">Check your postcode for coverage. Published opening hours and a service-area list are not yet available.</p>
+        <nav aria-label="Service information" className="flex flex-wrap gap-3">
+          <Link className="btn btn-secondary" href="/mobile-tyre-fitting">Mobile tyre fitting</Link>
+          <Link className="btn btn-secondary" href="/how-it-works">Booking and payment steps</Link>
+          <Link className="btn btn-secondary" href="/guides/tyre-size">Read your tyre size</Link>
+          <Link className="btn btn-secondary" href="/contact">Contact G Force Tyres Mobile</Link>
+        </nav>
+      </div></section>
     </>
   );
 }

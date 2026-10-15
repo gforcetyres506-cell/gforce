@@ -422,7 +422,7 @@ export default function BookingWizard({ phoneBooking = false }: { phoneBooking?:
 
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="postcode" className="label mb-2 block">London Postcode *</label>
+                  <label htmlFor="postcode" className="label mb-2 block">Fitting postcode *</label>
                   <div className="flex flex-col sm:flex-row gap-2">
                     <input
                       id="postcode"
@@ -776,7 +776,7 @@ export default function BookingWizard({ phoneBooking = false }: { phoneBooking?:
 
             {/* Callout fee */}
             <div className="flex items-center justify-between text-xs text-ink-2">
-              <span>London area call-out</span>
+              <span>Fitting location call-out</span>
               <span className="mono font-semibold text-ink-1">
                 {price(quote?.callout_charge)}
               </span>
