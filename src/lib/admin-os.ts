@@ -47,13 +47,15 @@ export const adminActionSchema = z.discriminatedUnion('action', [
     active:z.boolean(),note:z.string().trim().max(500) }).strict() }),
   z.object({ action:z.literal('slot.special.delete'), payload:z.object({ id }).strict() }),
   z.object({ action:z.literal('settings.save'), payload:z.object({ phone:z.string().trim().max(30),email:z.union([z.string().trim().email(),z.literal('')]),
-    whatsapp:z.string().trim().max(30),fitting_fee_pence:z.number().int().nonnegative(),booking_horizon_days:z.number().int().min(1).max(365),
+    whatsapp:z.string().trim().max(30),fitting_fee_pence:z.number().int().nonnegative(),job_duration_minutes:z.number().int().min(1).max(480).optional(),booking_horizon_days:z.number().int().min(1).max(365),
     vat_registered:z.boolean(),vat_number:z.string().trim().max(30),vat_rate_bps:z.number().int().min(0).max(10000),
     same_day_enabled:z.boolean(),same_day_cutoff:z.union([z.string().regex(/^\d{2}:\d{2}$/),z.literal('')]),
     cancellation_notice_hours:z.number().int().min(0).max(8760),cancellation_policy:z.string().trim().min(1).max(5000),
     terms_and_conditions:z.string().trim().max(20000),privacy_policy:z.string().trim().max(20000) }).strict().superRefine((v,c)=>{
       if(v.same_day_enabled&&!v.same_day_cutoff)c.addIssue({code:z.ZodIssueCode.custom,path:['same_day_cutoff'],message:'Required when same-day booking is enabled'});
     }) }),
+  z.object({ action:z.literal('settings.approve_pricing'), payload:z.object({ approved:z.literal(true),reason }).strict() }),
+  z.object({ action:z.literal('settings.revoke_pricing'), payload:z.object({ reason }).strict() }),
   z.object({ action:z.literal('booking.assign_fitter'), payload:z.object({ booking_id:id,fitter_id:id,reason }).strict() }),
   z.object({ action:z.literal('booking.status'), payload:z.object({ booking_id:id,status:z.enum(['tyres_reserved','fitter_assigned','en_route','completed']),reason }).strict() }),
   z.object({ action:z.literal('booking.reschedule'), payload:z.object({ booking_id:id,slot_id:id,reason }).strict() }),

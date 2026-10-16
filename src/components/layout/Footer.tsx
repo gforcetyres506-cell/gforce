@@ -61,7 +61,7 @@ export default function Footer() {
 
         <div className="mt-12 border-t border-line pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-ink-3">
           <div>
-            © {new Date().getFullYear()} G Force Tyres Mobile. Mobile tyre fitting.
+            © {new Date().getFullYear()} G Force Tyres Mobile. Mobile tyre fitting across verified service zones. Independent mobile operator; not affiliated with static garages or gforcetyres.co.uk.
           </div>
           <div className="flex items-center gap-4">
             <span>Location-first booking</span>

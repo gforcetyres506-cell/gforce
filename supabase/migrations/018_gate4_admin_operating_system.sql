@@ -364,9 +364,11 @@ begin
     returning id,to_jsonb(special_dates.*) into row_id,after_row;
     perform public.admin_os_audit(p_actor_user_id,p_action,'special_dates',row_id,null,after_row); return after_row;
   elsif p_action='settings.save' then
+    perform public.assert_bank_operator(p_actor_user_id,p_session_id,true);
     select to_jsonb(s) into before_row from public.business_settings s where id=1 for update;
     update public.business_settings set phone=nullif(btrim(p_payload->>'phone'),''),email=nullif(btrim(p_payload->>'email'),''),
       whatsapp=nullif(btrim(p_payload->>'whatsapp'),''),fitting_fee_pence=(p_payload->>'fitting_fee_pence')::int,
+      job_duration_minutes=coalesce((p_payload->>'job_duration_minutes')::int,job_duration_minutes),
       booking_horizon_days=(p_payload->>'booking_horizon_days')::int,vat_registered=(p_payload->>'vat_registered')::boolean,
       vat_number=nullif(btrim(p_payload->>'vat_number'),''),vat_rate_bps=(p_payload->>'vat_rate_bps')::int,
       same_day_enabled=(p_payload->>'same_day_enabled')::boolean,
@@ -377,6 +379,32 @@ begin
       where id=1 returning to_jsonb(business_settings.*)-'account_number'-'sort_code'-'bank_account_name'-'bank_name' into after_row;
     perform public.admin_os_audit(p_actor_user_id,p_action,'business_settings',null,
       before_row-'account_number'-'sort_code'-'bank_account_name'-'bank_name',after_row); return after_row;
+  elsif p_action='settings.approve_pricing' then
+    perform public.assert_bank_operator(p_actor_user_id,p_session_id,true);
+    select to_jsonb(s) into before_row from public.business_settings s where id=1 for update;
+    if (before_row->>'fitting_fee_pence') is null or (before_row->>'fitting_fee_pence')::int < 0
+       or (before_row->>'job_duration_minutes') is null or (before_row->>'job_duration_minutes')::int <= 0
+       or nullif(btrim(coalesce(before_row->>'cancellation_policy','')),'') is null
+       or (before_row->>'bank_payment_window_minutes') is null or (before_row->>'bank_payment_window_minutes')::int < 1
+       or nullif(btrim(coalesce(before_row->>'bank_name','')),'') is null
+       or nullif(btrim(coalesce(before_row->>'bank_account_name','')),'') is null
+       or nullif(btrim(coalesce(before_row->>'sort_code','')),'') is null
+       or nullif(btrim(coalesce(before_row->>'account_number','')),'') is null then
+      raise check_violation using message='Mandatory pricing and bank configuration must be complete before approval';
+    end if;
+    update public.business_settings set pricing_configured=true where id=1
+      returning to_jsonb(business_settings.*)-'account_number'-'sort_code'-'bank_account_name'-'bank_name' into after_row;
+    perform public.admin_os_audit(p_actor_user_id,'settings.pricing_approved','business_settings',null,
+      before_row-'account_number'-'sort_code'-'bank_account_name'-'bank_name',after_row,
+      jsonb_build_object('reason',p_payload->>'reason')); return after_row;
+  elsif p_action='settings.revoke_pricing' then
+    perform public.assert_bank_operator(p_actor_user_id,p_session_id,true);
+    select to_jsonb(s) into before_row from public.business_settings s where id=1 for update;
+    update public.business_settings set pricing_configured=false where id=1
+      returning to_jsonb(business_settings.*)-'account_number'-'sort_code'-'bank_account_name'-'bank_name' into after_row;
+    perform public.admin_os_audit(p_actor_user_id,'settings.pricing_revoked','business_settings',null,
+      before_row-'account_number'-'sort_code'-'bank_account_name'-'bank_name',after_row,
+      jsonb_build_object('reason',p_payload->>'reason')); return after_row;
   elsif p_action in ('booking.assign_fitter','booking.status','booking.reschedule','booking.cancel','payment.refund') then
     row_id:=(p_payload->>'booking_id')::uuid; select * into b from public.bookings where id=row_id for update;
     if not found then raise no_data_found; end if; before_row:=to_jsonb(b);

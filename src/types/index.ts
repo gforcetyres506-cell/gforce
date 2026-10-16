@@ -43,6 +43,18 @@ export interface TyreSize {
   rim: number;
 }
 
+export interface InventoryRecord {
+  id?: string;
+  tyre_product_id?: string;
+  stock_qty: number;
+  reserved_qty: number;
+  cost_price_pence: number;
+  selling_price_pence: number;
+  supplier_sku?: string | null;
+  low_stock_threshold: number;
+  updated_at?: string;
+}
+
 // ─────────────────────────────────────────────────────────────
 // Coverage
 // ─────────────────────────────────────────────────────────────

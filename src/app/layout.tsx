@@ -22,7 +22,12 @@ export const metadata: Metadata = {
   description:
     'Check your postcode and tyre size with G Force Tyres Mobile.',
   icons: {
-    icon: [{ url: '/icon.png', type: 'image/png', sizes: '512x512' }],
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon-48.png', type: 'image/png', sizes: '48x48' },
+      { url: '/icon-192.png', type: 'image/png', sizes: '192x192' },
+      { url: '/icon.png', type: 'image/png', sizes: '512x512' },
+    ],
     apple: [{ url: '/apple-icon.png', type: 'image/png', sizes: '180x180' }],
   },
   // Indexable pages opt in with their own canonical and social metadata.

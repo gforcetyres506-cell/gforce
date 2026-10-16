@@ -53,14 +53,16 @@ The application records this event; it cannot execute a bank transfer.
 
 | Screen | Owner workflow |
 | --- | --- |
+| Dashboard | Inspect real-time metrics and the **Launch Setup Checklist** (10 persisted criteria covering contacts, stock, zones, fitters, slots, pricing, bank details, legal policies, email, and live approval). |
 | Products | Create/edit the real SKU, brand/model, dimensions, ratings, season and tier; archive discontinued products; use the validated CSV import for 1–500 rows |
-| Inventory | Review current reservations, set actual stock/cost/selling price/supplier SKU/low-stock threshold; review before save; use a labelled physical cycle count after counting tyres |
-| Slots | Save weekday rules and hours/duration/capacity; generate an explicit date range; add special-date hours or block a date; review a generated slot's capacity change |
-| Zones | Save actual outward postcode prefixes and callout fees; deactivate areas you cannot serve; no postcode wildcards |
-| Fitters | Add/update real fitter name/contact and active status; inspect workload before assignment |
-| Settings | Save contact, fitting fee, horizon, VAT decision and approved policy fields; owner-only bank panel changes destination and payment window |
+| Inventory | Inspect current stock, reserved stock, and available stock. Update selling price, cost price, supplier SKU, and low-stock thresholds. Use a labelled physical cycle count after counting physical depot inventory. If an inventory row is genuinely absent, an explicit alert is displayed. |
+| Slots | Save weekday rules using the Monday–Sunday dropdown, start/end times, slot duration (mins), and concurrent van capacity; generate slots over an explicit date range; add special-date hours or block dates (e.g., bank holidays). |
+| Zones | Save actual outward postcode prefixes and callout fees; deactivate areas you cannot serve; no postcode wildcards. |
+| Fitters | Add/update real fitter name/contact and active status; inspect workload before assignment. |
+| Settings | Configure telephone, email, WhatsApp, fitting fee, standard job duration, booking horizon, VAT rate, and cancellation policy. **Bank transfer settings** (account name, bank name, sort code, account number, payment window) must be configured first. Once all mandatory fields are filled, click **Approve Pricing & Enable Live Checkout** to enable customer bookings. Click **Revoke Approval & Pause Checkout** to pause online bookings at any time. |
 | Access | Invite/provision a named owner/admin/viewer; review role/active changes; self-demotion and removal of the final owner are denied |
 | Customers / Audit | Inspect recorded history and changes; audit entries cannot be edited or deleted |
+| Bookings | Manage live customer appointments. Pre-existing records are flagged **"Historical — read only"**; operational mutation actions are disabled to safeguard accounting history. |
 
 Prices in admin fields labelled `pence` use integer pence: convert your approved
 pound price by multiplying by 100. Do not enter fabricated test stock or prices.

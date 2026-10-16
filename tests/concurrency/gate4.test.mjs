@@ -64,3 +64,14 @@ test('viewer and browser roles cannot mutate; owner self-lockout and audit edits
  await assert.rejects(call(actors.admin,'inventory.adjust',{tyre_product_id:(await db.query("select id from public.tyre_products where sku='TEST-G4'")).rows[0].id,stock_qty:99,reason:'Must rollback'}),/injected audit failure/);
  assert.equal((await db.query("select stock_qty from public.inventory i join public.tyre_products p on p.id=i.tyre_product_id where p.sku='TEST-G4'")).rows[0].stock_qty,stockBefore);
 });
+
+test('owner explicit approval validates mandatory fields and controls live pricing readiness',async()=>{
+ const owner=actors.owner,admin=actors.admin;
+ await assert.rejects(call(admin,'settings.approve_pricing',{approved:true,reason:'Admin unauthorized attempt'}),{code:'42501'});
+ await call(owner,'settings.approve_pricing',{approved:true,reason:'Owner explicit approval for live checkout'});
+ assert.equal((await db.query('select pricing_configured from public.business_settings where id=1')).rows[0].pricing_configured,true);
+ await call(owner,'settings.revoke_pricing',{reason:'Owner temporary hold'});
+ assert.equal((await db.query('select pricing_configured from public.business_settings where id=1')).rows[0].pricing_configured,false);
+ await call(owner,'settings.approve_pricing',{approved:true,reason:'Owner live release approval'});
+ assert.equal((await db.query('select pricing_configured from public.business_settings where id=1')).rows[0].pricing_configured,true);
+});

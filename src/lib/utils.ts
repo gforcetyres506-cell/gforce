@@ -57,3 +57,15 @@ export function makeSessionToken(): string {
 export function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms));
 }
+
+/**
+ * Safely extracts an inventory record whether returned by PostgREST as a 1:1 object relation
+ * or as an array of rows. Returns null only if no inventory record is present.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function extractInventory<T = Record<string, any>>(inv: unknown): T | null {
+  if (!inv) return null;
+  if (Array.isArray(inv)) return inv.length > 0 ? (inv[0] as T) : null;
+  if (typeof inv === 'object') return inv as T;
+  return null;
+}

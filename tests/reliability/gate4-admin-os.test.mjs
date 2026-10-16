@@ -33,8 +33,11 @@ test('server validation covers product, inventory, zones, fitters, slots, settin
   {action:'slot.generate',payload:{from_date:'2030-01-01',to_date:'2030-01-07'}},
   {action:'booking.cancel',payload:{booking_id:'11111111-1111-4111-8111-111111111111',reason:'Owner confirmed'}},
   {action:'payment.refund',payload:{booking_id:'11111111-1111-4111-8111-111111111111',reason:'Refund complete',refund_amount_pence:1000,refund_reference:'BANK-1',refund_confirmed:true}},
+  {action:'settings.approve_pricing',payload:{approved:true,reason:'Owner approval'}},
+  {action:'settings.revoke_pricing',payload:{reason:'Owner pause'}},
  ];for(const value of valid)assert.equal(adminActionSchema.safeParse(value).success,true,JSON.stringify(value));
  assert.equal(adminActionSchema.safeParse({action:'payment.refund',payload:{booking_id:'11111111-1111-4111-8111-111111111111',reason:'Refund',refund_confirmed:false}}).success,false);
+ assert.equal(adminActionSchema.safeParse({action:'settings.approve_pricing',payload:{approved:false,reason:'Invalid'}}).success,false);
 });
 test('SQL has immutable before/after audit and service-only operations',()=>{
  const sql=read('supabase/migrations/018_gate4_admin_operating_system.sql');
