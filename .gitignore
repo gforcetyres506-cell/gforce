@@ -5,7 +5,7 @@ node_modules
 .open-next
 out
 dist
-coverage
+/coverage/
 playwright-report/
 test-results/
 .env
