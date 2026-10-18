@@ -5,8 +5,17 @@ import type { Metadata } from 'next';
 export const SITE_ORIGIN = 'https://www.gforcetyres-mobile.co.uk';
 export const SITE_NAME = 'G Force Tyres Mobile';
 export const SEARCH_PAGES = [
-  '/', '/mobile-tyre-fitting', '/how-it-works', '/coverage', '/contact',
+  '/',
+  '/mobile-tyre-fitting',
+  '/how-it-works',
+  '/coverage',
+  '/contact',
+  '/guides',
   '/guides/tyre-size',
+  '/guides/puncture-repair',
+  '/guides/mobile-fitting-checklist',
+  '/guides/tyre-replacement-signs',
+  '/guides/load-speed-ratings',
 ] as const;
 
 export function publicMetadata(path: string, title: string, description: string): Metadata {

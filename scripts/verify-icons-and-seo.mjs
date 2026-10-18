@@ -2,12 +2,11 @@ import { spawn } from 'node:child_process';
 import assert from 'node:assert/strict';
 
 async function verify() {
-  console.log('=== VERIFYING LOCAL NEXT.JS BUILD AND ICON ROUTES ===');
+  console.log('=== VERIFYING LOCAL NEXT.JS BUILD, SEO AND ICON ROUTES ===');
 
-  const port = 3125;
-  const child = spawn('npx', ['next', 'start', '-p', String(port)], {
+  const port = 3126;
+  const child = spawn(process.execPath, ['./node_modules/next/dist/bin/next', 'start', '-p', String(port)], {
     stdio: ['ignore', 'pipe', 'pipe'],
-    shell: true,
   });
 
   child.stdout.on('data', (d) => process.stdout.write('[next-stdout] ' + d));
@@ -27,7 +26,7 @@ async function verify() {
   }
 
   if (!ready) {
-    child.kill();
+    try { process.kill(child.pid); } catch {}
     throw new Error('Next.js start failed to become ready on port ' + port);
   }
 
@@ -43,6 +42,14 @@ async function verify() {
       { path: '/apple-touch-icon.png', expectedStatus: 200, contentType: 'image/png' },
       { path: '/robots.txt', expectedStatus: 200 },
       { path: '/sitemap.xml', expectedStatus: 200 },
+      { path: '/llms.txt', expectedStatus: 200 },
+      { path: '/coverage', expectedStatus: 200 },
+      { path: '/guides', expectedStatus: 200 },
+      { path: '/guides/tyre-size', expectedStatus: 200 },
+      { path: '/guides/puncture-repair', expectedStatus: 200 },
+      { path: '/guides/mobile-fitting-checklist', expectedStatus: 200 },
+      { path: '/guides/tyre-replacement-signs', expectedStatus: 200 },
+      { path: '/guides/load-speed-ratings', expectedStatus: 200 },
     ];
 
     console.log('\n--- Checking Endpoint Statuses ---');
@@ -59,7 +66,7 @@ async function verify() {
       }
     }
 
-    console.log('\n--- Checking HTML Icon Tags ---');
+    console.log('\n--- Checking HTML Icon Tags & Meta ---');
     const homeRes = await fetch(`http://localhost:${port}/`);
     const html = await homeRes.text();
 
@@ -79,13 +86,36 @@ async function verify() {
     console.log('Robots tag:', robotsMatch);
     assert(robotsMatch.length > 0, 'Robots meta tag missing');
 
-    console.log('\nALL LOCAL VERIFICATIONS PASSED: 100% SUCCESS.');
+    console.log('\n--- Checking Sitemap Content ---');
+    const sitemapRes = await fetch(`http://localhost:${port}/sitemap.xml`);
+    const sitemapXml = await sitemapRes.text();
+    const urlsInSitemap = [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
+    console.log('URLs in sitemap.xml:', urlsInSitemap);
+    assert.equal(urlsInSitemap.length, 11, 'Expected 11 URLs in sitemap');
+    assert(urlsInSitemap.includes('https://www.gforcetyres-mobile.co.uk/guides'));
+    assert(urlsInSitemap.includes('https://www.gforcetyres-mobile.co.uk/guides/puncture-repair'));
+
+    console.log('\n--- Checking llms.txt Content ---');
+    const llmsRes = await fetch(`http://localhost:${port}/llms.txt`);
+    const llmsText = await llmsRes.text();
+    assert(llmsText.includes('G Force Tyres Mobile'), 'llms.txt missing business name');
+    assert(llmsText.includes('BS AU 159'), 'llms.txt missing BS AU 159');
+
+    console.log('\nALL 18 ENDPOINT AND CONTENT VERIFICATIONS PASSED: 100% SUCCESS.');
   } finally {
-    child.kill();
+    if (process.platform === 'win32') {
+      spawn('taskkill', ['/pid', String(child.pid), '/f', '/t'], { stdio: 'ignore' });
+    } else {
+      child.kill('SIGKILL');
+    }
   }
 }
 
-verify().catch((err) => {
-  console.error('Verification failed:', err);
-  process.exitCode = 1;
-});
+verify()
+  .then(() => {
+    setTimeout(() => process.exit(0), 1000);
+  })
+  .catch((err) => {
+    console.error('Verification failed:', err);
+    process.exit(1);
+  });

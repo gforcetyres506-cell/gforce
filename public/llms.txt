@@ -1,0 +1,36 @@
+# G Force Tyres Mobile
+
+> Independent mobile tyre fitting service in the United Kingdom. We bring the tyre workshop directly to your home, workplace, or agreed location.
+
+## Core Services
+- **Mobile Tyre Fitting**: Full tyre replacement service on-site using mobile vans equipped with industrial tyre changers, wheel balancers, and new valve stems.
+- **Puncture Inspection & Repair**: Assessment under British Standard BS AU 159. Punctures in the central 60-70% of tread up to 6mm can be repaired with internal vulcanised mushroom plugs. Sidewall/shoulder punctures cannot be repaired.
+- **Wheel Balancing & Valve Replacement**: Every new tyre fitted includes electronic dynamic wheel balancing and replacement valve stems.
+
+## How Booking Works
+1. **Postcode & Tyre Size Entry**: Enter your vehicle's fitting postcode and tyre dimensions (e.g., 205/55 R16) to check coverage and available stock.
+2. **Tyre Selection**: Choose from premium, mid-range, or budget tyres with transparent pricing.
+3. **Appointment Scheduling**: Select an available fitting slot.
+4. **Order Confirmation**: For bank-transfer bookings, a unique booking reference is issued. Payment is reconciled manually before technician dispatch.
+
+## Key Operational Facts & Safety
+- **Service Area**: Verified strictly by full UK postcode in the booking tool.
+- **Ground Requirements**: Requires firm, level, flat ground (tarmac, concrete, or paving) with at least 1 metre clearance around wheels.
+- **Roadside Safety**: Under UK safety regulations, mobile fitting cannot be performed on the hard shoulder of live motorways without emergency impact protection.
+- **Anti-Theft Key**: Customers must provide the vehicle's locking wheel nut key for wheel removal.
+- **Business Identity**: G Force Tyres Mobile is an independent mobile specialist. It is completely separate from and not affiliated with gforcetyres.co.uk or static garage workshops.
+
+## Key Information Pages
+- [Home](https://www.gforcetyres-mobile.co.uk/): Tyre finder and booking portal.
+- [Mobile Tyre Fitting](https://www.gforcetyres-mobile.co.uk/mobile-tyre-fitting): Detailed breakdown of on-site fitting.
+- [How It Works](https://www.gforcetyres-mobile.co.uk/how-it-works): Step-by-step customer journey.
+- [Fitting Coverage](https://www.gforcetyres-mobile.co.uk/coverage): Service area check, vehicle access rules, and roadside policy.
+- [Contact](https://www.gforcetyres-mobile.co.uk/contact): Customer service and operational enquiry options.
+
+## Tyre Knowledge & Customer Guides
+- [Tyre Guides Directory](https://www.gforcetyres-mobile.co.uk/guides): Overview of tyre advice and maintenance articles.
+- [How to Read Tyre Size](https://www.gforcetyres-mobile.co.uk/guides/tyre-size): Explanation of markings such as 205/55 R16 and 225/45 R18.
+- [Load and Speed Ratings](https://www.gforcetyres-mobile.co.uk/guides/load-speed-ratings): Load index tables, speed symbol charts, and Extra Load (XL) tyre guidance.
+- [Puncture Repair Guide](https://www.gforcetyres-mobile.co.uk/guides/puncture-repair): British Standard BS AU 159 legal repair criteria.
+- [When to Replace Tyres](https://www.gforcetyres-mobile.co.uk/guides/tyre-replacement-signs): UK 1.6mm legal tread limit, 3mm wet-grip recommendation, 20p coin test, and tyre age codes.
+- [Mobile Fitting Checklist](https://www.gforcetyres-mobile.co.uk/guides/mobile-fitting-checklist): Preparation checklist and bank payment confirmation details.

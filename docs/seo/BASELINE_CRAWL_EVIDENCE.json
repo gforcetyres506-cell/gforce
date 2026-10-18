@@ -1,0 +1,680 @@
+{
+  "auditedAt": "2026-10-18T08:56:23.897Z",
+  "productionOrigin": "https://www.gforcetyres-mobile.co.uk",
+  "pages": {
+    "/": {
+      "status": 200,
+      "latencyMs": 627,
+      "contentType": "text/html; charset=utf-8",
+      "xVercelId": "bom1::iad1::6sjwc-1792313787393-f6f25c24c295",
+      "securityHeaders": {
+        "csp": true,
+        "hsts": true,
+        "nosniff": true
+      },
+      "parsed": {
+        "title": "Mobile Tyre Fitting | G Force Tyres Mobile",
+        "description": "G Force Tyres Mobile provides mobile tyre fitting. Check your postcode and tyre size, review available tyres and follow the booking instructions.",
+        "canonical": "https://www.gforcetyres-mobile.co.uk",
+        "robots": "index, follow",
+        "h1": [
+          "The right tyres.Fitted where you need them."
+        ],
+        "h2": [
+          "From postcode to tyre choice",
+          "Start where the vehicle is",
+          "Find the size. See the options.",
+          "Before you book"
+        ],
+        "icons": [
+          "<link rel=\"icon\" href=\"/icon.png\" type=\"image/png\" sizes=\"512x512\"/>",
+          "<link rel=\"apple-touch-icon\" href=\"/apple-icon.png\" type=\"image/png\" sizes=\"180x180\"/>"
+        ],
+        "jsonLd": [
+          {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "@id": "https://www.gforcetyres-mobile.co.uk/#organization",
+            "name": "G Force Tyres Mobile",
+            "url": "https://www.gforcetyres-mobile.co.uk",
+            "logo": "https://www.gforcetyres-mobile.co.uk/brand/g-force-tyres-logo.webp"
+          }
+        ],
+        "internalLinks": [
+          "/",
+          "/#tyre-finder",
+          "/how-it-works",
+          "/coverage",
+          "/tyres",
+          "/mobile-tyre-fitting",
+          "/guides/tyre-size",
+          "/contact",
+          "/privacy",
+          "/terms",
+          "/cancellation"
+        ]
+      }
+    },
+    "/mobile-tyre-fitting": {
+      "status": 200,
+      "latencyMs": 310,
+      "contentType": "text/html; charset=utf-8",
+      "xVercelId": "bom1::iad1::vl446-1792313788026-61591a1da9fc",
+      "securityHeaders": {
+        "csp": true,
+        "hsts": true,
+        "nosniff": true
+      },
+      "parsed": {
+        "title": "Mobile Tyre Fitting Service | G Force Tyres Mobile",
+        "description": "Find out how mobile tyre fitting works with G Force Tyres Mobile. Check your postcode and tyre size before choosing available tyres.",
+        "canonical": "https://www.gforcetyres-mobile.co.uk/mobile-tyre-fitting",
+        "robots": "index, follow",
+        "h1": [
+          "Mobile tyre fitting"
+        ],
+        "h2": [
+          "At your fitting location",
+          "Choose the correct tyre",
+          "Review before booking"
+        ],
+        "icons": [
+          "<link rel=\"icon\" href=\"/icon.png\" type=\"image/png\" sizes=\"512x512\"/>",
+          "<link rel=\"apple-touch-icon\" href=\"/apple-icon.png\" type=\"image/png\" sizes=\"180x180\"/>"
+        ],
+        "jsonLd": [
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://www.gforcetyres-mobile.co.uk/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Mobile tyre fitting",
+                "item": "https://www.gforcetyres-mobile.co.uk/mobile-tyre-fitting"
+              }
+            ]
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "@id": "https://www.gforcetyres-mobile.co.uk/mobile-tyre-fitting#service",
+            "name": "Mobile tyre fitting",
+            "serviceType": "Mobile tyre fitting",
+            "url": "https://www.gforcetyres-mobile.co.uk/mobile-tyre-fitting",
+            "provider": {
+              "@id": "https://www.gforcetyres-mobile.co.uk/#organization"
+            }
+          }
+        ],
+        "internalLinks": [
+          "/",
+          "/#tyre-finder",
+          "/how-it-works",
+          "/coverage",
+          "/tyres",
+          "/guides/tyre-size",
+          "/contact",
+          "/mobile-tyre-fitting",
+          "/privacy",
+          "/terms",
+          "/cancellation"
+        ]
+      }
+    },
+    "/how-it-works": {
+      "status": 200,
+      "latencyMs": 301,
+      "contentType": "text/html; charset=utf-8",
+      "xVercelId": "bom1::iad1::vl446-1792313788349-d6e767ce6997",
+      "securityHeaders": {
+        "csp": true,
+        "hsts": true,
+        "nosniff": true
+      },
+      "parsed": {
+        "title": "How Mobile Tyre Booking Works | G Force Tyres Mobile",
+        "description": "Understand postcode checks, tyre selection, fitting appointments and manual bank-transfer verification with G Force Tyres Mobile.",
+        "canonical": "https://www.gforcetyres-mobile.co.uk/how-it-works",
+        "robots": "index, follow",
+        "h1": [
+          "How booking works"
+        ],
+        "h2": [
+          "1. Check your postcode and size",
+          "2. Review tyres, price and appointment",
+          "3. Follow the bank-transfer instructions",
+          "4. Check the recorded booking status"
+        ],
+        "icons": [
+          "<link rel=\"icon\" href=\"/icon.png\" type=\"image/png\" sizes=\"512x512\"/>",
+          "<link rel=\"apple-touch-icon\" href=\"/apple-icon.png\" type=\"image/png\" sizes=\"180x180\"/>"
+        ],
+        "jsonLd": [
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://www.gforcetyres-mobile.co.uk/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "How booking works",
+                "item": "https://www.gforcetyres-mobile.co.uk/how-it-works"
+              }
+            ]
+          }
+        ],
+        "internalLinks": [
+          "/",
+          "/#tyre-finder",
+          "/how-it-works",
+          "/coverage",
+          "/tyres",
+          "/contact",
+          "/mobile-tyre-fitting",
+          "/guides/tyre-size",
+          "/privacy",
+          "/terms",
+          "/cancellation"
+        ]
+      }
+    },
+    "/coverage": {
+      "status": 200,
+      "latencyMs": 353,
+      "contentType": "text/html; charset=utf-8",
+      "xVercelId": "bom1::iad1::vl446-1792313788667-7450852bfd10",
+      "securityHeaders": {
+        "csp": true,
+        "hsts": true,
+        "nosniff": true
+      },
+      "parsed": {
+        "title": "Check Mobile Tyre Fitting Coverage | G Force Tyres Mobile",
+        "description": "Check the fitting postcode before choosing tyres. G Force Tyres Mobile only continues the booking journey for an active service area.",
+        "canonical": "https://www.gforcetyres-mobile.co.uk/coverage",
+        "robots": "index, follow",
+        "h1": [
+          "Fitting coverage"
+        ],
+        "h2": [
+          "Check the vehicle location",
+          "Service areas",
+          "If the check is unavailable"
+        ],
+        "icons": [
+          "<link rel=\"icon\" href=\"/icon.png\" type=\"image/png\" sizes=\"512x512\"/>",
+          "<link rel=\"apple-touch-icon\" href=\"/apple-icon.png\" type=\"image/png\" sizes=\"180x180\"/>"
+        ],
+        "jsonLd": [
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://www.gforcetyres-mobile.co.uk/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Fitting coverage",
+                "item": "https://www.gforcetyres-mobile.co.uk/coverage"
+              }
+            ]
+          }
+        ],
+        "internalLinks": [
+          "/",
+          "/#tyre-finder",
+          "/how-it-works",
+          "/coverage",
+          "/tyres",
+          "/contact",
+          "/mobile-tyre-fitting",
+          "/guides/tyre-size",
+          "/privacy",
+          "/terms",
+          "/cancellation"
+        ]
+      }
+    },
+    "/contact": {
+      "status": 200,
+      "latencyMs": 300,
+      "contentType": "text/html; charset=utf-8",
+      "xVercelId": "bom1::iad1::tlcf7-1792313789028-a16f8f60fcef",
+      "securityHeaders": {
+        "csp": true,
+        "hsts": true,
+        "nosniff": true
+      },
+      "parsed": {
+        "title": "Contact G Force Tyres Mobile | G Force Tyres Mobile",
+        "description": "Contact G Force Tyres Mobile about fitting coverage, tyre selection or an existing booking using the available business contact options.",
+        "canonical": "https://www.gforcetyres-mobile.co.uk/contact",
+        "robots": "index, follow",
+        "h1": [
+          "Contact G Force Tyres Mobile"
+        ],
+        "h2": [
+          "Business contact",
+          "Existing bookings",
+          "Fitting locations and hours"
+        ],
+        "icons": [
+          "<link rel=\"icon\" href=\"/icon.png\" type=\"image/png\" sizes=\"512x512\"/>",
+          "<link rel=\"apple-touch-icon\" href=\"/apple-icon.png\" type=\"image/png\" sizes=\"180x180\"/>"
+        ],
+        "jsonLd": [
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://www.gforcetyres-mobile.co.uk/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Contact G Force Tyres Mobile",
+                "item": "https://www.gforcetyres-mobile.co.uk/contact"
+              }
+            ]
+          }
+        ],
+        "internalLinks": [
+          "/",
+          "/#tyre-finder",
+          "/how-it-works",
+          "/coverage",
+          "/tyres",
+          "/contact",
+          "/mobile-tyre-fitting",
+          "/guides/tyre-size",
+          "/privacy",
+          "/terms",
+          "/cancellation"
+        ]
+      }
+    },
+    "/guides/tyre-size": {
+      "status": 200,
+      "latencyMs": 312,
+      "contentType": "text/html; charset=utf-8",
+      "xVercelId": "bom1::iad1::4wm2b-1792313789333-fa792c3b53b0",
+      "securityHeaders": {
+        "csp": true,
+        "hsts": true,
+        "nosniff": true
+      },
+      "parsed": {
+        "title": "How to Read Your Tyre Size | G Force Tyres Mobile",
+        "description": "Understand the width, profile and rim markings in a tyre size such as 225/45 R18, then check vehicle requirements before selecting tyres.",
+        "canonical": "https://www.gforcetyres-mobile.co.uk/guides/tyre-size",
+        "robots": "index, follow",
+        "h1": [
+          "How to read your tyre size"
+        ],
+        "h2": [
+          "What 225/45 R18 means",
+          "Check more than the three numbers",
+          "Enter the size in the finder"
+        ],
+        "icons": [
+          "<link rel=\"icon\" href=\"/icon.png\" type=\"image/png\" sizes=\"512x512\"/>",
+          "<link rel=\"apple-touch-icon\" href=\"/apple-icon.png\" type=\"image/png\" sizes=\"180x180\"/>"
+        ],
+        "jsonLd": [
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://www.gforcetyres-mobile.co.uk/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "How to read your tyre size",
+                "item": "https://www.gforcetyres-mobile.co.uk/guides/tyre-size"
+              }
+            ]
+          }
+        ],
+        "internalLinks": [
+          "/",
+          "/#tyre-finder",
+          "/how-it-works",
+          "/coverage",
+          "/tyres",
+          "/mobile-tyre-fitting",
+          "/contact",
+          "/guides/tyre-size",
+          "/privacy",
+          "/terms",
+          "/cancellation"
+        ]
+      }
+    },
+    "/tyres": {
+      "status": 200,
+      "latencyMs": 1452,
+      "contentType": "text/html; charset=utf-8",
+      "xVercelId": "bom1::iad1::4wm2b-1792313789650-312c67f9e398",
+      "securityHeaders": {
+        "csp": true,
+        "hsts": true,
+        "nosniff": true
+      },
+      "parsed": {
+        "title": "Browse Tyres by Size | G Force Tyres Mobile",
+        "description": "Compare budget, standard and premium tyres by size, season and specification.",
+        "canonical": null,
+        "robots": "noindex, follow",
+        "h1": [
+          "BROWSE BY TYRE SIZE"
+        ],
+        "h2": [
+          "A607",
+          "DX390",
+          "LS588 UHP",
+          "LS588",
+          "LS388",
+          "NS-25",
+          "NA-1",
+          "NA-1",
+          "RPX800",
+          "PremiumContact 7",
+          "EcoContact 6",
+          "Eagle F1 Asymmetric 6",
+          "Energy Saver+",
+          "Pilot Sport 5",
+          "Primacy 4+",
+          "Pilot Sport 5",
+          "Primacy 4+",
+          "CrossClimate 2",
+          "Pilot Sport 4 S",
+          "P Zero PZ4",
+          "P Zero (PZ4)",
+          "Cinturato P7 (P7C2)",
+          "P Zero PZ4",
+          "ZV7",
+          "Turanza T005",
+          "Ziex ZE310",
+          "Azenis FK510",
+          "EfficientGrip 2",
+          "EfficientGrip 2",
+          "Vector 4Seasons",
+          "Ventus S1 evo 3",
+          "Ecsta HS52",
+          "Advan Fleva V701"
+        ],
+        "icons": [
+          "<link rel=\"icon\" href=\"/icon.png\" type=\"image/png\" sizes=\"512x512\"/>",
+          "<link rel=\"apple-touch-icon\" href=\"/apple-icon.png\" type=\"image/png\" sizes=\"180x180\"/>"
+        ],
+        "jsonLd": [],
+        "internalLinks": [
+          "/",
+          "/#tyre-finder",
+          "/how-it-works",
+          "/coverage",
+          "/tyres",
+          "/tyres?",
+          "/tyres?tier=premium",
+          "/tyres?tier=standard",
+          "/tyres?tier=budget",
+          "/tyres?season=summer",
+          "/tyres?season=all-season",
+          "/booking?tyre=52225087-71ea-4ec2-a7ff-05fbe0009481&amp;qty=1&amp;w=245&amp;p=40&amp;r=19",
+          "/booking?tyre=344f43d3-3040-4bba-998d-d01bccc7516f&amp;qty=1&amp;w=225&amp;p=45&amp;r=18",
+          "/booking?tyre=b92da064-01c2-4791-a216-1d3c422870db&amp;qty=1&amp;w=225&amp;p=45&amp;r=18",
+          "/booking?tyre=b10aabf6-a5e7-49b2-8f44-e7a5735cf5a6&amp;qty=1&amp;w=225&amp;p=45&amp;r=18",
+          "/booking?tyre=0a39dfad-8b80-46fb-9465-5fcc0ca6728c&amp;qty=1&amp;w=205&amp;p=55&amp;r=16",
+          "/booking?tyre=de08b880-739c-454c-a8af-bd16fb9a4721&amp;qty=1&amp;w=225&amp;p=45&amp;r=18",
+          "/booking?tyre=4ff2f2e4-7ec7-4b44-8889-55980e8e2aaf&amp;qty=1&amp;w=205&amp;p=55&amp;r=16",
+          "/booking?tyre=73a50cd3-6b5d-427d-8ef0-22a3e5a46d59&amp;qty=1&amp;w=195&amp;p=65&amp;r=15",
+          "/booking?tyre=195f0ac2-13dc-4439-8dfd-8b4eff216446&amp;qty=1&amp;w=205&amp;p=55&amp;r=16",
+          "/booking?tyre=840d4292-dc46-418d-b1de-b16596739ebb&amp;qty=1&amp;w=225&amp;p=45&amp;r=18",
+          "/booking?tyre=7b1f0e15-0b5e-4984-a328-6e3b1dc6a2d7&amp;qty=1&amp;w=205&amp;p=55&amp;r=16",
+          "/booking?tyre=940c015d-8f7b-4e7d-9043-3335102403c3&amp;qty=1&amp;w=225&amp;p=45&amp;r=18",
+          "/booking?tyre=70661d2b-3eb6-4d2c-95f6-46411ec79caa&amp;qty=1&amp;w=195&amp;p=65&amp;r=15",
+          "/booking?tyre=2e60b672-cf3d-4138-ab80-b8b840d421c8&amp;qty=1&amp;w=255&amp;p=40&amp;r=18",
+          "/booking?tyre=1e07d031-6884-4b14-8bd0-91c74d79322b&amp;qty=1&amp;w=205&amp;p=55&amp;r=16",
+          "/booking?tyre=78612484-67f9-4e2d-a6ce-d28dfcc1c0c0&amp;qty=1&amp;w=225&amp;p=45&amp;r=18",
+          "/booking?tyre=ec942b46-5f67-4e09-8d73-1f1e67154cfb&amp;qty=1&amp;w=205&amp;p=55&amp;r=16",
+          "/booking?tyre=8a40f1da-02db-461a-8be6-21d7af708afd&amp;qty=1&amp;w=225&amp;p=45&amp;r=18",
+          "/booking?tyre=abd91929-5ed9-4a34-ba5c-b5f32fe3d194&amp;qty=1&amp;w=245&amp;p=40&amp;r=19",
+          "/booking?tyre=2da9ee25-e80f-438d-a109-137f832bd5e4&amp;qty=1&amp;w=255&amp;p=40&amp;r=18",
+          "/booking?tyre=95f9ae2b-b4dc-4fac-845f-13bae5b3c1f8&amp;qty=1&amp;w=245&amp;p=40&amp;r=19",
+          "/booking?tyre=53cbc01f-375e-4950-9987-f0806f700200&amp;qty=1&amp;w=205&amp;p=55&amp;r=16",
+          "/booking?tyre=6114996e-0e2d-441a-ae49-32070328e306&amp;qty=1&amp;w=225&amp;p=45&amp;r=18",
+          "/booking?tyre=b3218f33-8afd-4287-9489-88d569d05c72&amp;qty=1&amp;w=225&amp;p=45&amp;r=18",
+          "/booking?tyre=91c5b901-b858-415c-bb5e-9fbb81c1d4ea&amp;qty=1&amp;w=225&amp;p=45&amp;r=18",
+          "/booking?tyre=98492956-403e-4493-b2a8-a6b43ad536b5&amp;qty=1&amp;w=205&amp;p=55&amp;r=16",
+          "/booking?tyre=8e190349-c99e-45cf-8ebc-45e46473b78b&amp;qty=1&amp;w=225&amp;p=45&amp;r=18",
+          "/booking?tyre=3b414001-ec30-42e4-87eb-92db5c321f3f&amp;qty=1&amp;w=205&amp;p=55&amp;r=16",
+          "/booking?tyre=83a5023b-596a-4c82-b37e-b7dd256432bd&amp;qty=1&amp;w=225&amp;p=45&amp;r=18",
+          "/booking?tyre=e1e6289c-9e3e-464d-8dfc-7762cde49fff&amp;qty=1&amp;w=195&amp;p=65&amp;r=15",
+          "/booking?tyre=f3c62238-6e44-4529-840f-2e2b09939b5b&amp;qty=1&amp;w=225&amp;p=45&amp;r=18",
+          "/booking?tyre=a3d6cd77-78d4-4adf-8f47-81b2265627c8&amp;qty=1&amp;w=205&amp;p=55&amp;r=16",
+          "/booking?tyre=5de86fbe-953f-49d4-b816-c834e8a29755&amp;qty=1&amp;w=245&amp;p=40&amp;r=19",
+          "/mobile-tyre-fitting",
+          "/guides/tyre-size",
+          "/contact",
+          "/privacy",
+          "/terms",
+          "/cancellation"
+        ]
+      }
+    },
+    "/privacy": {
+      "status": 200,
+      "latencyMs": 305,
+      "contentType": "text/html; charset=utf-8",
+      "xVercelId": "bom1::iad1::6f5dl-1792313791305-333c7004bb0d",
+      "securityHeaders": {
+        "csp": true,
+        "hsts": true,
+        "nosniff": true
+      },
+      "parsed": {
+        "title": "Privacy Policy | G Force Tyres Mobile",
+        "description": "Privacy information for G Force Tyres Mobile. Contact the business for the full policy before providing booking details.",
+        "canonical": null,
+        "robots": "noindex, follow",
+        "h1": [
+          "Privacy policy"
+        ],
+        "h2": [
+          "Website technology"
+        ],
+        "icons": [
+          "<link rel=\"icon\" href=\"/icon.png\" type=\"image/png\" sizes=\"512x512\"/>",
+          "<link rel=\"apple-touch-icon\" href=\"/apple-icon.png\" type=\"image/png\" sizes=\"180x180\"/>"
+        ],
+        "jsonLd": [],
+        "internalLinks": [
+          "/",
+          "/#tyre-finder",
+          "/how-it-works",
+          "/coverage",
+          "/tyres",
+          "/contact",
+          "/mobile-tyre-fitting",
+          "/guides/tyre-size",
+          "/privacy",
+          "/terms",
+          "/cancellation"
+        ]
+      }
+    },
+    "/terms": {
+      "status": 200,
+      "latencyMs": 343,
+      "contentType": "text/html; charset=utf-8",
+      "xVercelId": "bom1::iad1::czdn8-1792313791614-5709778621db",
+      "securityHeaders": {
+        "csp": true,
+        "hsts": true,
+        "nosniff": true
+      },
+      "parsed": {
+        "title": "Terms and Conditions | G Force Tyres Mobile",
+        "description": "Terms information for G Force Tyres Mobile. Request the full service and payment terms before booking.",
+        "canonical": null,
+        "robots": "noindex, follow",
+        "h1": [
+          "Terms and conditions"
+        ],
+        "h2": [],
+        "icons": [
+          "<link rel=\"icon\" href=\"/icon.png\" type=\"image/png\" sizes=\"512x512\"/>",
+          "<link rel=\"apple-touch-icon\" href=\"/apple-icon.png\" type=\"image/png\" sizes=\"180x180\"/>"
+        ],
+        "jsonLd": [],
+        "internalLinks": [
+          "/",
+          "/#tyre-finder",
+          "/how-it-works",
+          "/coverage",
+          "/tyres",
+          "/contact",
+          "/mobile-tyre-fitting",
+          "/guides/tyre-size",
+          "/privacy",
+          "/terms",
+          "/cancellation"
+        ]
+      }
+    }
+  },
+  "redirects": {
+    "http://gforcetyres-mobile.co.uk/": {
+      "status": 308,
+      "location": "https://gforcetyres-mobile.co.uk/"
+    },
+    "http://www.gforcetyres-mobile.co.uk/": {
+      "status": 308,
+      "location": "https://www.gforcetyres-mobile.co.uk/"
+    },
+    "https://gforcetyres-mobile.co.uk/": {
+      "status": 308,
+      "location": "https://www.gforcetyres-mobile.co.uk/"
+    }
+  },
+  "botResponses": {
+    "standard": {
+      "status": 200,
+      "latencyMs": 304,
+      "xVercelId": "bom1::iad1::mgffb-1792313795089-a32979ae277a",
+      "contentLength": 64316
+    },
+    "googlebot": {
+      "status": 200,
+      "latencyMs": 368,
+      "xVercelId": "bom1::iad1::stkms-1792313795663-08c4b16be28b",
+      "contentLength": 64316
+    },
+    "googlebotImage": {
+      "status": 200,
+      "latencyMs": 297,
+      "xVercelId": "bom1::iad1::stkms-1792313796149-96a86f151c44",
+      "contentLength": 64316
+    },
+    "gptbot": {
+      "status": 200,
+      "latencyMs": 284,
+      "xVercelId": "bom1::iad1::stkms-1792313796639-722bcaf93ca2",
+      "contentLength": 64316
+    },
+    "claudebot": {
+      "status": 200,
+      "latencyMs": 297,
+      "xVercelId": "bom1::iad1::qjv8r-1792313796936-c6803454fb97",
+      "contentLength": 64316
+    },
+    "perplexitybot": {
+      "status": 200,
+      "latencyMs": 285,
+      "xVercelId": "bom1::iad1::qjv8r-1792313797250-d4e6119e281d",
+      "contentLength": 64316
+    },
+    "applebot": {
+      "status": 200,
+      "latencyMs": 299,
+      "xVercelId": "bom1::iad1::qjv8r-1792313797553-5b673e7c23c5",
+      "contentLength": 62507
+    }
+  },
+  "robotsTxt": {
+    "status": 200,
+    "contentType": "text/plain",
+    "content": "User-Agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api/\nDisallow: /prototype/\nDisallow: /preview/\nDisallow: /test/\n\nSitemap: https://www.gforcetyres-mobile.co.uk/sitemap.xml\n"
+  },
+  "sitemapXml": {
+    "status": 200,
+    "contentType": "application/xml",
+    "urls": [
+      "https://www.gforcetyres-mobile.co.uk",
+      "https://www.gforcetyres-mobile.co.uk/mobile-tyre-fitting",
+      "https://www.gforcetyres-mobile.co.uk/how-it-works",
+      "https://www.gforcetyres-mobile.co.uk/coverage",
+      "https://www.gforcetyres-mobile.co.uk/contact",
+      "https://www.gforcetyres-mobile.co.uk/guides/tyre-size"
+    ]
+  },
+  "faviconEndpoints": {
+    "/favicon.ico": {
+      "status": 404,
+      "contentType": "text/html; charset=utf-8",
+      "size": 28848,
+      "xVercelId": "bom1::iad1::jx85v-1792313793496-e6dc034bbc2a"
+    },
+    "/icon.png": {
+      "status": 200,
+      "contentType": "image/png",
+      "size": 20,
+      "xVercelId": "bom1::jx85v-1792313793775-b3c903ee7022"
+    },
+    "/apple-icon.png": {
+      "status": 200,
+      "contentType": "image/png",
+      "size": 20,
+      "xVercelId": "bom1::m2278-1792313793840-47a91bd2794c"
+    },
+    "/icon-48.png": {
+      "status": 404,
+      "contentType": "text/html; charset=utf-8",
+      "size": 28848,
+      "xVercelId": "bom1::iad1::4lhgj-1792313794010-0d931093db2e"
+    },
+    "/icon-192.png": {
+      "status": 404,
+      "contentType": "text/html; charset=utf-8",
+      "size": 28849,
+      "xVercelId": "bom1::iad1::9w2zz-1792313794280-f6fb7c194d96"
+    }
+  }
+}

@@ -12,6 +12,7 @@ const NAV = [
   { href: '/how-it-works', label: 'How it works' },
   { href: '/coverage', label: 'Fitting locations' },
   { href: '/tyres', label: 'Tyres' },
+  { href: '/guides', label: 'Guides' },
 ];
 
 export default function Header() {

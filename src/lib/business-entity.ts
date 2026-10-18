@@ -20,3 +20,17 @@ export function organizationSchema() {
     ...(facts.serviceAreas.length > 0 && { areaServed: facts.serviceAreas }),
   };
 }
+
+export function websiteSchema() {
+  const facts = getBusinessFacts();
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${facts.url}/#website`,
+    name: facts.name,
+    url: facts.url,
+    publisher: {
+      '@id': `${facts.url}/#organization`,
+    },
+  };
+}
