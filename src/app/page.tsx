@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { publicMetadata } from '@/lib/site';
 import StructuredData from '@/components/StructuredData';
-import { organizationSchema } from '@/lib/business-entity';
+import { organizationSchema, websiteSchema } from '@/lib/business-entity';
 import Link from 'next/link';
 import {
   ArrowRight,
@@ -68,6 +68,7 @@ export default function HomePage() {
   return (
     <>
       <StructuredData data={organizationSchema()} />
+      <StructuredData data={websiteSchema()} />
       <section className="hero-shell" aria-labelledby="hero-title">
         <div className="hero-grid-lines" aria-hidden="true" />
         <div className="hero-glow" aria-hidden="true" />

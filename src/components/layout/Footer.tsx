@@ -35,17 +35,19 @@ export default function Footer() {
               <li><Link href="/mobile-tyre-fitting" className="hover:text-ink-1">Mobile Tyre Fitting</Link></li>
               <li><Link href="/how-it-works" className="hover:text-ink-1">How It Works</Link></li>
               <li><Link href="/coverage" className="hover:text-ink-1">Fitting Locations</Link></li>
-              <li><Link href="/guides/tyre-size" className="hover:text-ink-1">Tyre Size Guide</Link></li>
+              <li><Link href="/guides" className="hover:text-ink-1">Tyre Guides &amp; Advice</Link></li>
               <li><Link href="/contact" className="hover:text-ink-1">Contact Us</Link></li>
             </ul>
           </div>
 
           <div>
-            <div className="label mb-4">Search options</div>
+            <div className="label mb-4">Tyre Guides</div>
             <ul className="space-y-2 text-sm text-ink-2">
-              <li>Postcode service check</li>
-              <li>Tyre sidewall markings</li>
-              <li>Manual tyre-size entry</li>
+              <li><Link href="/guides/tyre-size" className="hover:text-ink-1">How to Read Tyre Size</Link></li>
+              <li><Link href="/guides/puncture-repair" className="hover:text-ink-1">Puncture Repair Criteria</Link></li>
+              <li><Link href="/guides/load-speed-ratings" className="hover:text-ink-1">Load &amp; Speed Ratings</Link></li>
+              <li><Link href="/guides/tyre-replacement-signs" className="hover:text-ink-1">When to Replace Tyres</Link></li>
+              <li><Link href="/guides/mobile-fitting-checklist" className="hover:text-ink-1">Appointment Checklist</Link></li>
             </ul>
           </div>
 
